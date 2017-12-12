@@ -2,14 +2,15 @@
 package org.iolani.frc;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.iolani.frc.commands.CommandBase;
 import org.iolani.frc.commands.ExampleCommand;
-import org.iolani.frc.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,24 +19,24 @@ import org.iolani.frc.subsystems.ExampleSubsystem;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot2018 extends IterativeRobot {
 
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-	public static OI oi;
-
-	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
-
+	Command _autoCommand;
+	PowerDistributionPanel _pdp;
+	Preferences            _prefs;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		oi = new OI();
-		chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", chooser);
+		_pdp = new PowerDistributionPanel();
+    	_pdp.clearStickyFaults();
+    	
+    	_prefs = Preferences.getInstance();
+		
+		CommandBase.init();
 	}
 
 	/**
@@ -43,14 +44,18 @@ public class Robot extends IterativeRobot {
 	 * You can use it to reset any subsystem information you want to clear when
 	 * the robot is disabled.
 	 */
-	@Override
 	public void disabledInit() {
-
-	}
-
-	@Override
+    	SmartDashboard.putData(Scheduler.getInstance());
+    	
+    	int autonum = _prefs.getInt("auto-program-number", 0);
+    	SmartDashboard.putNumber("auto-num", autonum);
+    }
+    
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		
+		int autonum = _prefs.getInt("auto-program-number", 0);
+    	SmartDashboard.putNumber("auto-num", autonum);
 	}
 
 	/**
@@ -66,18 +71,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		int autonum = _prefs.getInt("auto-program-number", 0);
+    	SmartDashboard.putNumber("auto-num", autonum);
+    	// pick auto command via program number //
+    	switch(autonum) {
+    		case 0: _autoCommand = new ExampleCommand(); break;
+    		default: _autoCommand = null;
+    	}
 
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+		if (_autoCommand != null) _autoCommand.start();
 	}
 
 	/**
@@ -90,12 +92,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+		if (_autoCommand != null) _autoCommand.cancel();
 	}
 
 	/**

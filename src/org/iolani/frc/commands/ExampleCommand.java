@@ -1,16 +1,12 @@
 package org.iolani.frc.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-import org.iolani.frc.Robot;
-
 /**
- *
+ * An example command
  */
-public class ExampleCommand extends Command {
+public class ExampleCommand extends CommandBase {
 	public ExampleCommand() {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.exampleSubsystem);
+		requires(exampleSubsystem);
 	}
 
 	// Called just before this Command runs the first time
