@@ -2,6 +2,7 @@ package org.iolani.frc.commands;
 
 import org.iolani.frc.OI;
 import org.iolani.frc.subsystems.ExampleSubsystem;
+import org.iolani.frc.subsystems.NavigationSensor;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -9,6 +10,7 @@ public abstract class CommandBase extends Command {
 
 	public static OI oi;
     // Create a single static instance of all of your subsystems
+	public static final NavigationSensor navSensor 		  = new NavigationSensor();
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	
 	public static void init() {
@@ -20,6 +22,7 @@ public abstract class CommandBase extends Command {
         oi = new OI();
 
         // Show what command your subsystem is running on the SmartDashboard
+        navSensor.init();
         exampleSubsystem.init();
     }
 
