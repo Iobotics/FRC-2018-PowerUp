@@ -1,9 +1,6 @@
 package org.iolani.frc;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-
-import org.iolani.frc.commands.ExampleCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator

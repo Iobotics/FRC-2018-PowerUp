@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.iolani.frc.commands.CommandBase;
-import org.iolani.frc.commands.ExampleCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -75,7 +74,7 @@ public class Robot2018 extends IterativeRobot {
     	SmartDashboard.putNumber("auto-num", autonum);
     	// pick auto command via program number //
     	switch(autonum) {
-    		case 0: _autoCommand = new ExampleCommand(); break;
+    		//case 0: _autoCommand = new ExampleCommand(); break;
     		default: _autoCommand = null;
     	}
 
