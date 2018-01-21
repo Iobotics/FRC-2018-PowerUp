@@ -1,18 +1,19 @@
-package org.iolani.frc.commands;
+package org.usfirst.frc.team2438.robot.commands;
 
 /**
- *
+ * Cycle through drive modes
  */
-public class OperateTankDrive extends CommandBase {
+public class CycleDriveMode extends CommandBase {
 
-    public OperateTankDrive() {
+    public CycleDriveMode() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(drivetrain);
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    protected void initialize() {    	
+    	drivetrain.cycleDriveMode();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -21,7 +22,7 @@ public class OperateTankDrive extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     // Called once after isFinished returns true
@@ -31,5 +32,6 @@ public class OperateTankDrive extends CommandBase {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	end();
     }
 }

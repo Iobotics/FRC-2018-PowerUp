@@ -1,18 +1,16 @@
-package org.iolani.frc.commands;
+package org.usfirst.frc.team2438.robot.commands;
 
-import org.iolani.frc.commands.CommandBase;
+import org.usfirst.frc.team2438.robot.utils.DriveMode;
 
 /**
- * Calibrate the NavX sensor
+ * Operate tank drive
  */
-public class CalibrateNavigationSensor extends CommandBase {
+public class OperateTankDrive extends CommandBase {
 
-	//private static final int TIMEOUT_SECS = 10;
-	
-    public CalibrateNavigationSensor() {
-    	requires(navSensor);
-    	this.setRunWhenDisabled(true);
-    	//this.setTimeout(TIMEOUT_SECS);
+    public OperateTankDrive() {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	requires(drivetrain);
     }
 
     // Called just before this Command runs the first time
@@ -21,21 +19,22 @@ public class CalibrateNavigationSensor extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	drivetrain.setTank(oi.getLeftY(), oi.getRightY());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !navSensor.isCalibrating() || this.isTimedOut();
+        return drivetrain.getDriveMode() != DriveMode.Tank;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	navSensor.zeroGyro();
+    	drivetrain.setTank(0, 0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	this.end();
+    	end();
     }
 }
