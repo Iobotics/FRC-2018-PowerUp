@@ -1,14 +1,14 @@
 package org.iolani.frc.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 /**
  *
  */
-public class LiftMoveUp extends CommandBase {
+public class OperateTankDrive extends CommandBase {
 
-    public LiftMoveUp() {
-    	requires(lift);
+    public OperateTankDrive() {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	requires(drivetrain);
     }
 
     // Called just before this Command runs the first time
@@ -17,7 +17,6 @@ public class LiftMoveUp extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	lift.moveMotorRotations();
     }
 
     // Make this return true when this Command no longer needs to run execute()

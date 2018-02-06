@@ -2,24 +2,28 @@ package org.iolani.frc.commands;
 
 import org.iolani.frc.OI;
 import org.iolani.frc.subsystems.Drivetrain;
-import org.iolani.frc.subsystems.Lift;
+import org.iolani.frc.subsystems.NavigationSensor;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- *
- */
 public abstract class CommandBase extends Command {
 
-    public static OI oi;
-    public static final Drivetrain drivetrain = new Drivetrain();
-    public static final Lift lift = new Lift();
+	public static OI oi;
+    // Create a single static instance of all of your subsystems
+	public static final NavigationSensor navSensor = new NavigationSensor();
+	public static final Drivetrain drivetrain 	   = new Drivetrain();
+	
+	public static void init() {
+        // This MUST be here. If the OI creates Commands (which it very likely
+        // will), constructing it during the construction of CommandBase (from
+        // which commands extend), subsystems are not guaranteed to be
+        // yet. Thus, their requires() statements may grab null pointers. Bad
+        // news. Don't move it.
+        oi = new OI();
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    	oi = new OI();
-    	drivetrain.init();
-    	lift.init();
+        // Show what command your subsystem is running on the SmartDashboard
+        navSensor.init();
+        drivetrain.init();
     }
 
     public CommandBase(String name) {
@@ -29,4 +33,5 @@ public abstract class CommandBase extends Command {
     public CommandBase() {
         super();
     }
+    
 }
