@@ -1,10 +1,8 @@
-
 package org.usfirst.frc.team2438.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,8 +16,7 @@ import org.usfirst.frc.team2438.robot.commands.CommandBase;
  * directory.
  */
 public class Robot2018 extends IterativeRobot {
-
-	Command _autoCommand;
+	
 	PowerDistributionPanel _pdp;
 	Preferences            _prefs;
 	
@@ -44,16 +41,10 @@ public class Robot2018 extends IterativeRobot {
 	 */
 	public void disabledInit() {
     	SmartDashboard.putData(Scheduler.getInstance());
-    	
-    	int autonum = _prefs.getInt("auto-program-number", 0);
-    	SmartDashboard.putNumber("auto-num", autonum);
     }
     
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
-		
-		int autonum = _prefs.getInt("auto-program-number", 0);
-    	SmartDashboard.putNumber("auto-num", autonum);
 	}
 
 	/**
@@ -72,13 +63,8 @@ public class Robot2018 extends IterativeRobot {
 		int autonum = _prefs.getInt("auto-program-number", 0);
     	SmartDashboard.putNumber("auto-num", autonum);
     	// pick auto command via program number //
-    	switch(autonum) {
-    		//case 0: _autoCommand = new ExampleCommand(); break;
-    		default: _autoCommand = null;
-    	}
-
-		if (_autoCommand != null) _autoCommand.start();
-	}
+    	//(new AutoDriveStraight(5)).start();
+    }
 
 	/**
 	 * This function is called periodically during autonomous
@@ -90,7 +76,9 @@ public class Robot2018 extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		if (_autoCommand != null) _autoCommand.cancel();
+		Scheduler.getInstance().run();
+		
+		CommandBase.lift.resetOffset();
 	}
 
 	/**
