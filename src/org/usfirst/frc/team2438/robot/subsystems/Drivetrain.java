@@ -20,6 +20,15 @@ public class Drivetrain extends Subsystem {
 	public static final double UNITS_PER_INCH = COUNTS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
 
     private static final int TIMEOUT = 20;
+
+	private static final double kF = 0;
+	private static final double kP = 0;
+	private static final double kI = 0;
+	private static final double kD = 0;
+	private static final int iZone = 0;
+	
+	private static final int DRIVE_VELOCITY = 750;
+	public static final int DRIVE_ACCELERATION = 112;
     
 	private TalonSRX _leftFront;
     private TalonSRX _rightFront;
@@ -35,14 +44,33 @@ public class Drivetrain extends Subsystem {
 		_leftBack = new TalonSRX(RobotMap.leftBackMotor);
 		_rightFront = new TalonSRX(RobotMap.rightFrontMotor);
 		_rightBack = new TalonSRX(RobotMap.rightBackMotor);
-		
+
+    	_leftBack.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+    	_leftBack.selectProfileSlot(0, 0);
+    	_leftBack.config_kF(0, kF, TIMEOUT);
+    	_leftBack.config_kP(0, kP, TIMEOUT);
+    	_leftBack.config_kI(0, kI, TIMEOUT);
+    	_leftBack.config_kD(0, kD, TIMEOUT);
+    	_leftBack.config_IntegralZone(0, iZone, TIMEOUT);
+    	_leftBack.configMotionCruiseVelocity(DRIVE_VELOCITY, TIMEOUT);
+    	_leftBack.configMotionAcceleration(DRIVE_ACCELERATION, TIMEOUT);
+    	
+    	_rightBack.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+    	_rightBack.selectProfileSlot(0, 0);
+    	_rightBack.config_kF(0, kF, TIMEOUT);
+    	_rightBack.config_kP(0, kP, TIMEOUT);
+    	_rightBack.config_kI(0, kI, TIMEOUT);
+    	_rightBack.config_kD(0, kD, TIMEOUT);
+    	_rightBack.config_IntegralZone(0, iZone, TIMEOUT);
+    	_rightBack.configMotionCruiseVelocity(DRIVE_VELOCITY, TIMEOUT);
+    	_rightBack.configMotionAcceleration(DRIVE_ACCELERATION, TIMEOUT);
+    	
 		_leftFront.setInverted(true);
 		_leftBack.setInverted(true);
 		
-		_leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
 		_leftFront.setSelectedSensorPosition(0, 0, TIMEOUT);
 		
-		_dmode = DriveMode.Tank;
+		_dmode = DriveMode.MotionMagic;
 		_cmode = ControlMode.PercentOutput;
 	}
 	
@@ -84,6 +112,13 @@ public class Drivetrain extends Subsystem {
 		_rightBack.set(_cmode,   x + y - rotation);
 	}
 	
+	public void setMotionMagic(double pos) {
+		_leftBack.set(ControlMode.MotionMagic, pos * UNITS_PER_INCH);
+		_rightBack.set(ControlMode.MotionMagic, pos * UNITS_PER_INCH);
+		_leftFront.follow(_leftBack);
+		_rightFront.follow(_rightBack);
+	}
+	
 	/**
 	 * Cycle through drive modes
 	 */
@@ -98,6 +133,8 @@ public class Drivetrain extends Subsystem {
 			case Mecanum:
 				_dmode = DriveMode.Tank;
 				break;
+			case MotionMagic:
+				_dmode = DriveMode.MotionMagic;
 			default:
 				_dmode = DriveMode.Tank;
 		}
@@ -119,6 +156,18 @@ public class Drivetrain extends Subsystem {
 		return _leftFront.getSelectedSensorPosition(0);
 	}
 
+    public double getCurrent() {
+		return _leftBack.getOutputCurrent();
+	}
+    
+    public double getError() {
+    	return _leftBack.getClosedLoopError(0);
+    }
+    
+    public int getPosition() {
+    	return _leftBack.getSelectedSensorPosition(0);
+    }
+    
 	public void setLeftEncoderDistance(int distance) {
 		_leftFront.setSelectedSensorPosition(distance, 0, TIMEOUT);
 	}

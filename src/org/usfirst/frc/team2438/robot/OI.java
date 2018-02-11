@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CycleDriveMode;
+import org.usfirst.frc.team2438.robot.commands.OperateMotionMagicDrive;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
@@ -13,12 +15,14 @@ public class OI {
 	private final Joystick _rStick = new Joystick(3);
 	
 	private final JoystickButton _cycleDrive = new JoystickButton(_lStick, 3);
+	private final JoystickButton _positionDrive = new JoystickButton(_rStick, 2);
 	
 	//private final JoystickButton _raiseLift = new JoystickButton(_rStick, 3);
 	//private final JoystickButton _lowerLift = new JoystickButton(_rStick, 2);
 	
 	public OI() {
 		_cycleDrive.whenPressed(new CycleDriveMode());
+		
 	}
 	
 	public double getLeftX() {
@@ -39,5 +43,9 @@ public class OI {
 	
 	public double getRightThrottle() {
 		return _rStick.getZ();
+	}
+	
+	public boolean getPositionButton() {
+		return _positionDrive.get();
 	}
 }
