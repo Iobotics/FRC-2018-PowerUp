@@ -29,38 +29,72 @@ public class Lift extends Subsystem {
 	private static final int iZone = 0;
 	
 	private static final int LIFT_VELOCITY = 750;
+	public static final int MAX_LIFT_POSITION = 9970;
 	
-	private TalonSRX _lift;
+	private TalonSRX _leftLift1;
+	private TalonSRX _leftLift2;
+	private TalonSRX _rightLift1;
+	private TalonSRX _rightLift2;
 	
 	private int offset;
 	
     public void init() {
-    	_lift = new TalonSRX(RobotMap.lift);
+    	_leftLift1 = new TalonSRX(RobotMap.leftLift1);
+    	_leftLift2 = new TalonSRX(RobotMap.leftLift2);
+    	_rightLift1 = new TalonSRX(RobotMap.rightLift1);
+    	_rightLift2 = new TalonSRX(RobotMap.rightLift2);
     	
-    	_lift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
-    	_lift.selectProfileSlot(0, 0);
-    	_lift.config_kF(0, kF, TIMEOUT);
-    	_lift.config_kP(0, kP, TIMEOUT);
-    	_lift.config_kI(0, kI, TIMEOUT);
-    	_lift.config_kD(0, kD, TIMEOUT);
-    	_lift.config_IntegralZone(0, iZone, TIMEOUT);
-    	_lift.configMotionCruiseVelocity(LIFT_VELOCITY, TIMEOUT);
-    	_lift.configMotionAcceleration(LIFT_VELOCITY, TIMEOUT);
+    	_leftLift1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+    	_leftLift1.selectProfileSlot(0, 0);
+    	_leftLift1.config_kF(0, kF, TIMEOUT);
+    	_leftLift1.config_kP(0, kP, TIMEOUT);
+    	_leftLift1.config_kI(0, kI, TIMEOUT);
+    	_leftLift1.config_kD(0, kD, TIMEOUT);
+    	_leftLift1.config_IntegralZone(0, iZone, TIMEOUT);
+    	_leftLift1.configMotionCruiseVelocity(LIFT_VELOCITY, TIMEOUT);
+    	_leftLift1.configMotionAcceleration(LIFT_VELOCITY, TIMEOUT);
     	
-    	_lift.configContinuousCurrentLimit(11, 0);
-    	_lift.configPeakCurrentLimit(12, 0);
-    	_lift.configPeakCurrentDuration(100, 0);
-    	_lift.enableCurrentLimit(true);
+    	_leftLift1.configContinuousCurrentLimit(11, 0);
+    	_leftLift1.configPeakCurrentLimit(12, 0);
+    	_leftLift1.configPeakCurrentDuration(100, 0);
+    	_leftLift1.enableCurrentLimit(true);
     	
-    	_lift.setInverted(true);
-    	_lift.setSensorPhase(true);
+    	_leftLift1.setInverted(true);
+    	_leftLift1.setSensorPhase(true);
     	
-    	_lift.setSelectedSensorPosition(0, 0, TIMEOUT);
+    	_leftLift1.setSelectedSensorPosition(0, 0, TIMEOUT);
     	
-    	_lift.configForwardSoftLimitThreshold(9970, TIMEOUT);
-    	_lift.configForwardSoftLimitEnable(true, TIMEOUT);
-    	_lift.configReverseSoftLimitThreshold(0, TIMEOUT);
-    	_lift.configReverseSoftLimitEnable(true, TIMEOUT);
+    	_leftLift1.configForwardSoftLimitThreshold(MAX_LIFT_POSITION, TIMEOUT);
+    	_leftLift1.configForwardSoftLimitEnable(true, TIMEOUT);
+    	_leftLift1.configReverseSoftLimitThreshold(0, TIMEOUT);
+    	_leftLift1.configReverseSoftLimitEnable(true, TIMEOUT);
+    	
+    	_leftLift2.follow(_leftLift1);
+    	_leftLift2.setInverted(true);
+    	
+    	_rightLift1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+    	_rightLift1.selectProfileSlot(0, 0);
+    	_rightLift1.config_kF(0, kF, TIMEOUT);
+    	_rightLift1.config_kP(0, kP, TIMEOUT);
+    	_rightLift1.config_kI(0, kI, TIMEOUT);
+    	_rightLift1.config_kD(0, kD, TIMEOUT);
+    	_rightLift1.config_IntegralZone(0, iZone, TIMEOUT);
+    	_rightLift1.configMotionCruiseVelocity(LIFT_VELOCITY, TIMEOUT);
+    	_rightLift1.configMotionAcceleration(LIFT_VELOCITY, TIMEOUT);
+    	
+    	_rightLift1.configContinuousCurrentLimit(11, 0);
+    	_rightLift1.configPeakCurrentLimit(12, 0);
+    	_rightLift1.configPeakCurrentDuration(100, 0);
+    	_rightLift1.enableCurrentLimit(true);
+    	
+    	_rightLift1.setSelectedSensorPosition(0, 0, TIMEOUT);
+    	
+    	_rightLift1.configForwardSoftLimitThreshold(MAX_LIFT_POSITION, TIMEOUT);
+    	_rightLift1.configForwardSoftLimitEnable(true, TIMEOUT);
+    	_rightLift1.configReverseSoftLimitThreshold(0, TIMEOUT);
+    	_rightLift1.configReverseSoftLimitEnable(true, TIMEOUT);
+    	
+    	_rightLift2.follow(_rightLift1);
     }
     
     /**
@@ -68,18 +102,20 @@ public class Lift extends Subsystem {
      * @param input [-1, 1]
      */
     public void setPosition(double input) {
-    	// Center the range on [0, 9970]
-    	double pos = Math.round((float) ((9970)/2 * (input + 1)));
     	
-    	_lift.set(ControlMode.MotionMagic, pos);
+    	double pos = Math.round((float) ((MAX_LIFT_POSITION)/2 * (input + 1)));
+    	
+    	_leftLift1.set(ControlMode.MotionMagic, pos);
+    	_rightLift1.set(ControlMode.MotionMagic, pos);
     }
     
     public int getPosition() {
-    	return _lift.getSelectedSensorPosition(0);
+    	return _leftLift1.getSelectedSensorPosition(0);
     }
     
     public void resetOffset() {
-    	_lift.setSelectedSensorPosition(0, 0, TIMEOUT);
+    	_leftLift1.setSelectedSensorPosition(0, 0, TIMEOUT);
+    	_rightLift1.setSelectedSensorPosition(0, 0, TIMEOUT);
     }
     
     public int getOffset() {
@@ -87,15 +123,15 @@ public class Lift extends Subsystem {
     }
     
     public double getCurrent() {
-		return _lift.getOutputCurrent();
+		return _leftLift1.getOutputCurrent();
 	}
     
     public double getError() {
-    	return _lift.getClosedLoopError(0);
+    	return _leftLift1.getClosedLoopError(0);
     }
     
     public void stop() {
-    	_lift.set(ControlMode.PercentOutput, 0.0);
+    	_leftLift1.set(ControlMode.PercentOutput, 0.0);
     }
 
     public void initDefaultCommand() {
