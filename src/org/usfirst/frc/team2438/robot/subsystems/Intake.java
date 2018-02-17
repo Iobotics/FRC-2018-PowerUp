@@ -20,6 +20,8 @@ public class Intake extends Subsystem {
 	private TalonSRX _leftIntake;
 	private TalonSRX _rightIntake;
 	
+	private TalonSRX _intakeLift;
+	
 	private DoubleSolenoid _solenoid;
 	
 	private boolean solenoidActivated = false;
@@ -30,12 +32,18 @@ public class Intake extends Subsystem {
 		
 		_leftIntake.setInverted(true);
 		
+		_intakeLift = new TalonSRX(RobotMap.intakeLift);
+		
 		_solenoid = new DoubleSolenoid(0, 1);
 	}
 	
 	public void setPower(double power) {
 		_leftIntake.set(ControlMode.PercentOutput, power);
 		_rightIntake.set(ControlMode.PercentOutput, power);
+	}
+	
+	public void setLiftPower(double power) {
+		_intakeLift.set(ControlMode.PercentOutput, power);
 	}
 	
 	public void setSolenoid() {

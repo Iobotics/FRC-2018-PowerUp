@@ -1,18 +1,17 @@
 package org.usfirst.frc.team2438.robot.commands;
 
-import org.usfirst.frc.team2438.robot.utils.DriveMode;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
- * Operate tank drive
+ *
  */
-public class OperateMotionMagicDrive extends CommandBase {
+public class OperateIntakeLift extends CommandBase {
 
-    public OperateMotionMagicDrive() {
+	private double power;
+	
+    public OperateIntakeLift(double power) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(drivetrain);
+    	
+    	this.power = power;
     }
 
     // Called just before this Command runs the first time
@@ -21,24 +20,17 @@ public class OperateMotionMagicDrive extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(oi.getPositionButton()) {
-    		drivetrain.setMotionMagic(oi.getRightY()*120);
-    	}
-
-    	SmartDashboard.putNumber("Drive Position", drivetrain.getPosition());
-    	SmartDashboard.putNumber("Drive Error", drivetrain.getError());
-    	
-    	SmartDashboard.putNumber("Drive current", drivetrain.getCurrent());
+    	intake.setLiftPower(power);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return drivetrain.getDriveMode() != DriveMode.MotionMagic;
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	drivetrain.setTank(0, 0);
+    	intake.setLiftPower(0);
     }
 
     // Called when another command which requires one or more of the same

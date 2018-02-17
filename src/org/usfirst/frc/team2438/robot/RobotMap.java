@@ -21,4 +21,6 @@ public class RobotMap {
 	
 	public static final int leftIntake = 9;
 	public static final int	rightIntake = 10;
+	
+	public static final int intakeLift = 13;
 }
