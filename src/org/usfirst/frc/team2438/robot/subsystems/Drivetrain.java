@@ -26,6 +26,13 @@ public class Drivetrain extends Subsystem {
     private TalonSRX _leftBack;
     private TalonSRX _rightBack;
     
+    private double kF = 0;
+    private double kP = 1.3;
+    private double kI = 0;
+    private double kD = 0;
+    private int iZone;
+    private final int VELOCITY = 1000;
+    
     private DriveMode _dmode;
     
     private ControlMode _cmode;
@@ -36,11 +43,50 @@ public class Drivetrain extends Subsystem {
 		_rightFront = new TalonSRX(RobotMap.rightFrontMotor);
 		_rightBack = new TalonSRX(RobotMap.rightBackMotor);
 		
-		_leftFront.setInverted(true);
-		_leftBack.setInverted(true);
+		//_leftBack.setInverted(true);
+		//_leftBack.setSensorPhase(true);
+	
+		//_leftFront.setInverted(true);
 		
-		_leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
-		_leftFront.setSelectedSensorPosition(0, 0, TIMEOUT);
+		_leftBack.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+		_leftBack.setSelectedSensorPosition(0, 0, TIMEOUT);
+		
+		_leftBack.selectProfileSlot(0, 0);
+	
+		_leftBack.config_kF(0, kF, TIMEOUT);
+		_leftBack.config_kP(0, kP, TIMEOUT);
+		_leftBack.config_kI(0, kI, TIMEOUT);
+		_leftBack.config_kD(0, kD, TIMEOUT);
+		_leftBack.config_IntegralZone(0, iZone, TIMEOUT);
+		_leftBack.configMotionCruiseVelocity(VELOCITY, TIMEOUT);
+		_leftBack.configMotionAcceleration(VELOCITY, TIMEOUT);
+    	
+		/*_leftBack.configContinuousCurrentLimit(11, 0);
+		_leftBack.configPeakCurrentLimit(12, 0);
+		_leftBack.configPeakCurrentDuration(100, 0);
+		_leftBack.enableCurrentLimit(true);*/
+		
+		//_leftBack.follow(_leftFront);
+		
+		_rightBack.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+		_rightBack.setSelectedSensorPosition(0, 0, TIMEOUT);
+		
+		_rightBack.selectProfileSlot(0, 0);
+	
+		_rightBack.config_kF(0, kF, TIMEOUT);
+		_rightBack.config_kP(0, kP, TIMEOUT);
+		_rightBack.config_kI(0, kI, TIMEOUT);
+		_rightBack.config_kD(0, kD, TIMEOUT);
+		_rightBack.config_IntegralZone(0, iZone, TIMEOUT);
+		_rightBack.configMotionCruiseVelocity(VELOCITY, TIMEOUT);
+		_rightBack.configMotionAcceleration(VELOCITY, TIMEOUT);
+    	
+		_rightBack.configContinuousCurrentLimit(11, 0);
+		_rightBack.configPeakCurrentLimit(12, 0);
+		_rightBack.configPeakCurrentDuration(100, 0);
+		_rightBack.enableCurrentLimit(true);
+		
+		_rightFront.follow(_rightFront);
 		
 		_dmode = DriveMode.Tank;
 		_cmode = ControlMode.PercentOutput;
@@ -103,6 +149,10 @@ public class Drivetrain extends Subsystem {
 		}
 	}
 	
+	public void rotateWheel(double rotations) {
+		_leftBack.set(ControlMode.MotionMagic, Math.round((float) 409.6 * rotations));
+	}
+	
 	/**
 	 * Get the current drive mode
 	 * @return _dmode
@@ -115,8 +165,20 @@ public class Drivetrain extends Subsystem {
         setDefaultCommand(new OperateTankDrive());
     }
 
+    public void resetLeftEncoder() {
+    	_leftBack.setSelectedSensorPosition(0,0, TIMEOUT);
+    }
+    
 	public double getLeftEncoder() {
-		return _leftFront.getSelectedSensorPosition(0);
+		return _leftBack.getSelectedSensorPosition(0);
+	}
+	
+	public double getLeftError() {
+		return _leftBack.getClosedLoopError(0);
+	}
+	
+	public double getLeftCurrent() {
+		return _leftBack.getOutputCurrent();
 	}
 
 	public void setLeftEncoderDistance(int distance) {

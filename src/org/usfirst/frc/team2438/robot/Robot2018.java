@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2438.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
@@ -16,7 +17,7 @@ import org.usfirst.frc.team2438.robot.commands.CommandBase;
  * directory.
  */
 public class Robot2018 extends IterativeRobot {
-	
+	Compressor 			   _compressor;
 	PowerDistributionPanel _pdp;
 	Preferences            _prefs;
 	
@@ -28,6 +29,12 @@ public class Robot2018 extends IterativeRobot {
 	public void robotInit() {
 		_pdp = new PowerDistributionPanel();
     	_pdp.clearStickyFaults();
+    	
+    	//_compressor = new Compressor();
+    	//_compressor.clearAllPCMStickyFaults();
+    	//_compressor.setClosedLoopControl(true);
+    	//_compressor.start();
+    	
     	
     	_prefs = Preferences.getInstance();
 		
@@ -78,6 +85,7 @@ public class Robot2018 extends IterativeRobot {
 	public void teleopInit() {
 		Scheduler.getInstance().run();
 		
+		CommandBase.drivetrain.resetLeftEncoder();
 		CommandBase.lift.resetOffset();
 	}
 
@@ -87,5 +95,7 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("Error", CommandBase.drivetrain.getLeftError());
+		SmartDashboard.putNumber("Current", CommandBase.drivetrain.getLeftCurrent());
 	}
 }
