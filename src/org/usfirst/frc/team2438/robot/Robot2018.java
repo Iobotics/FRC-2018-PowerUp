@@ -83,7 +83,8 @@ public class Robot2018 extends IterativeRobot {
 	public void teleopInit() {
 		Scheduler.getInstance().run();
 		
-		CommandBase.lift.resetOffset();
+		CommandBase.intake.resetEncoder();
+		//CommandBase.lift.resetEncoder();
 	}
 
 	/**

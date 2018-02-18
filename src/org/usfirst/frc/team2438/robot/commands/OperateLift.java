@@ -19,10 +19,8 @@ public class OperateLift extends CommandBase {
     protected void execute() {
     	lift.setPosition(-oi.getRightThrottle());
     	
-    	//SmartDashboard.putNumber("Offset", lift.getOffset());
-    	SmartDashboard.putNumber("Lift Position", lift.getPosition());
-    	SmartDashboard.putNumber("Error", lift.getError());
-    	
+    	SmartDashboard.putNumber("Lift position", lift.getPosition());
+    	SmartDashboard.putNumber("Lift error", lift.getError());
     	SmartDashboard.putNumber("Lift current", lift.getCurrent());
     }
 

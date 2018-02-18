@@ -7,11 +7,12 @@ public class OperateIntakeLift extends CommandBase {
 
 	private double power;
 	
-    public OperateIntakeLift(double power) {
+    public OperateIntakeLift() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	requires(intake);
     	
-    	this.power = power;
+    	//this.power = power;
     }
 
     // Called just before this Command runs the first time
@@ -20,7 +21,9 @@ public class OperateIntakeLift extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	intake.setLiftPower(power);
+    	intake.setLiftPower(oi.getLeftY());
+    	
+    	//intake.setPosition(-oi.getRightThrottle());
     }
 
     // Make this return true when this Command no longer needs to run execute()

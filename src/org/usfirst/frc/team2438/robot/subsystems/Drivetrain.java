@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
+import org.usfirst.frc.team2438.robot.commands.OperateTankDrive;
 import org.usfirst.frc.team2438.robot.utils.DriveMode;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -151,8 +152,8 @@ public class Drivetrain extends Subsystem {
 	}
 
     public void initDefaultCommand() {
-        //setDefaultCommand(new OperateTankDrive());
-    	setDefaultCommand(null);
+        //setDefaultCommand(new OperateTankDrive()); 
+    	setDefaultCommand(null); 
     }
 
 	public double getLeftEncoder() {

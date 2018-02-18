@@ -29,13 +29,13 @@ public class OI {
 	
 	public OI() {
 		//_cycleDrive.whenPressed(new CycleDriveMode());
-		_intakeButton.whileHeld(new OperateIntake(1));
-		_outtakeButton.whileHeld(new OperateIntake(-1));
+		//_intakeButton.whileHeld(new OperateIntake(1));
+		//_outtakeButton.whileHeld(new OperateIntake(-1));
 		
-		_raiseIntake.whileHeld(new OperateIntakeLift(0.7));
-		_lowerIntake.whileHeld(new OperateIntakeLift(-0.5));
+		//_raiseIntake.whileHeld(new OperateIntakeLift(0.7));
+		//_lowerIntake.whileHeld(new OperateIntakeLift(-0.5));
 		
-		_solenoidButton.whenPressed(new ToggleSolenoid());
+		//_solenoidButton.whenPressed(new ToggleSolenoid());
 	}
 	
 	public double getLeftX() {

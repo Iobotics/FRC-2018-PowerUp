@@ -1,8 +1,10 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
+import org.usfirst.frc.team2438.robot.commands.OperateIntakeLift;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -16,6 +18,13 @@ public class Intake extends Subsystem {
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
+	private final double kF = 0.0;
+	private final double kP = 0.5;
+	private final double kI = 0.0;
+	private final double kD = 0.0;
+	private final int iZone = 0;
+	
+	private final int TIMEOUT = 20;
 	
 	private TalonSRX _leftIntake;
 	private TalonSRX _rightIntake;
@@ -33,6 +42,20 @@ public class Intake extends Subsystem {
 		_leftIntake.setInverted(true);
 		
 		_intakeLift = new TalonSRX(RobotMap.intakeLift);
+		_intakeLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+		_intakeLift.selectProfileSlot(0, 0);
+		_intakeLift.config_kF(0, kF, TIMEOUT);
+		_intakeLift.config_kP(0, kP, TIMEOUT);
+		_intakeLift.config_kI(0, kI, TIMEOUT);
+		_intakeLift.config_kD(0, kD, TIMEOUT);
+		_intakeLift.config_IntegralZone(0, iZone, TIMEOUT);
+		
+		_intakeLift.configContinuousCurrentLimit(15, TIMEOUT);
+		_intakeLift.configPeakCurrentLimit(20, TIMEOUT);
+		_intakeLift.configPeakCurrentDuration(1000, TIMEOUT);
+		_intakeLift.enableCurrentLimit(false);
+		
+		this.resetEncoder();
 		
 		_solenoid = new DoubleSolenoid(0, 1);
 	}
@@ -42,8 +65,25 @@ public class Intake extends Subsystem {
 		_rightIntake.set(ControlMode.PercentOutput, power);
 	}
 	
+	public void setVelocity(double velocity) {
+		_leftIntake.set(ControlMode.Velocity, velocity);
+		_leftIntake.set(ControlMode.Velocity, velocity);
+	}
+	
 	public void setLiftPower(double power) {
 		_intakeLift.set(ControlMode.PercentOutput, power);
+	}
+	
+	public void setLiftPosition(double input) {
+		// FIXME - Find equation to map input
+		int position = Math.round((float) input);
+		
+		_intakeLift.set(ControlMode.Position, position);
+	}
+	
+	public void resetEncoder() {
+		_intakeLift.setSelectedSensorPosition(0, 0, TIMEOUT);
+		_intakeLift.set(ControlMode.Position, 0);
 	}
 	
 	public void setSolenoid() {
@@ -66,9 +106,8 @@ public class Intake extends Subsystem {
 	}
 	
     public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
-    	setDefaultCommand(null);
+    	//setDefaultCommand(null);
+    	setDefaultCommand(new OperateIntakeLift());
     }
 }
 
