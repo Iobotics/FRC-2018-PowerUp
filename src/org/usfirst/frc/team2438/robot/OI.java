@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CycleDriveMode;
-import org.usfirst.frc.team2438.robot.commands.RotateWheel;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -15,33 +14,56 @@ public class OI {
 	private final Joystick _rStick = new Joystick(3);
 	
 	private final JoystickButton _cycleDrive = new JoystickButton(_lStick, 3);
-	private final JoystickButton _rotateWheel = new JoystickButton(_lStick, 2);
-	
-	//private final JoystickButton _raiseLift = new JoystickButton(_rStick, 3);
-	//private final JoystickButton _lowerLift = new JoystickButton(_rStick, 2);
 	
 	public OI() {
-		//_cycleDrive.whenPressed(new CycleDriveMode());
-		_rotateWheel.whenPressed(new RotateWheel());
+		_cycleDrive.whenPressed(new CycleDriveMode());
 	}
 	
+	/**
+	 * Get left stick X
+	 * @return x
+	 */
 	public double getLeftX() {
-		return -_lStick.getX();
+		return _lStick.getX();
 	}
 	
+	/**
+	 * Get left stick Y
+	 * @return y
+	 */
 	public double getLeftY() {
-		return _lStick.getY();
+		return -_lStick.getY();
 	}
 	
+	/**
+	 * Get right stick X
+	 * @return x
+	 */
 	public double getRightX() {
-		return -_rStick.getX();
+		return _rStick.getX();
 	}
 	
+	/**
+	 * Get right stick Y
+	 * @return y
+	 */
 	public double getRightY() {
-		return _rStick.getY();
+		return -_rStick.getY();
 	}
 	
+	/**
+	 * Get left stick throttle
+	 * @return throttle
+	 */
+	public double getLeftThrottle() {
+		return -_lStick.getZ();
+	}
+	
+	/**
+	 * Get right stick throttle
+	 * @return throttle
+	 */
 	public double getRightThrottle() {
-		return _rStick.getZ();
+		return -_rStick.getZ();
 	}
 }

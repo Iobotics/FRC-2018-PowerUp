@@ -12,12 +12,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
+// TODO - Implement Motion Magic
 public class AutoDriveStraight extends CommandBase implements PIDOutput, PIDSource {
 	
 	private final double  _distance;
 	private PIDController _pid;
 	
-	private static final double kP = 0;
+	private static final double kP = 0.1;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	
@@ -63,7 +64,7 @@ public class AutoDriveStraight extends CommandBase implements PIDOutput, PIDSour
     // Called just before this Command runs the first time
     protected void initialize() {
     	SmartDashboard.putData("DrivePID", _pid);
-    	drivetrain.setLeftEncoderDistance(0);
+    	drivetrain.resetEncoders();
     	navSensor.zeroGyro();
     	_pid.setSetpoint(_distance);
     	_pid.enable();

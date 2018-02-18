@@ -1,13 +1,12 @@
 package org.usfirst.frc.team2438.robot;
 
-import edu.wpi.first.wpilibj.Compressor;
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -17,7 +16,6 @@ import org.usfirst.frc.team2438.robot.commands.CommandBase;
  * directory.
  */
 public class Robot2018 extends IterativeRobot {
-	Compressor 			   _compressor;
 	PowerDistributionPanel _pdp;
 	Preferences            _prefs;
 	
@@ -28,13 +26,7 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		_pdp = new PowerDistributionPanel();
-    	_pdp.clearStickyFaults();
-    	
-    	//_compressor = new Compressor();
-    	//_compressor.clearAllPCMStickyFaults();
-    	//_compressor.setClosedLoopControl(true);
-    	//_compressor.start();
-    	
+    	_pdp.clearStickyFaults();    	
     	
     	_prefs = Preferences.getInstance();
 		
@@ -85,8 +77,8 @@ public class Robot2018 extends IterativeRobot {
 	public void teleopInit() {
 		Scheduler.getInstance().run();
 		
-		CommandBase.drivetrain.resetLeftEncoder();
-		CommandBase.lift.resetOffset();
+		CommandBase.drivetrain.resetEncoders();
+		CommandBase.lift.resetEncoder();
 	}
 
 	/**
@@ -95,7 +87,10 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("Error", CommandBase.drivetrain.getLeftError());
-		SmartDashboard.putNumber("Current", CommandBase.drivetrain.getLeftCurrent());
+		
+		SmartDashboard.putString("Drive Mode", CommandBase.drivetrain.getDriveMode().toString());
+		
+		SmartDashboard.putNumber("Left Drive Encoder Position", CommandBase.drivetrain.getLeftEncoder());
+		SmartDashboard.putNumber("Drive Error", CommandBase.drivetrain.getLeftError());
 	}
 }

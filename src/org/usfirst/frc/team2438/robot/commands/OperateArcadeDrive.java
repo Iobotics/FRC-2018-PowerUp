@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2438.robot.commands;
 
-import org.usfirst.frc.team2438.robot.utils.DriveMode;
+import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
 
 /**
  * Operate arcade drive
@@ -24,7 +24,7 @@ public class OperateArcadeDrive extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return drivetrain.getDriveMode() != DriveMode.Arcade;
+        return drivetrain.getDriveMode() != Drivetrain.DriveMode.Arcade;
     }
 
     // Called once after isFinished returns true

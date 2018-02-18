@@ -29,15 +29,21 @@ public class Lift extends Subsystem {
 	private static final int iZone = 0;
 	
 	private static final int LIFT_VELOCITY = 750;
+	private static final int MAX_HEIGHT = 9970;
 	
 	private TalonSRX _lift;
-	
-	private int offset;
 	
     public void init() {
     	_lift = new TalonSRX(RobotMap.lift);
     	
+    	_lift.setInverted(true);
+    	_lift.setSensorPhase(true);
+    	
+    	// Lift encoder //
     	_lift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+    	_lift.setSelectedSensorPosition(0, 0, TIMEOUT);
+    	_lift.set(ControlMode.MotionMagic, 0);
+    	
     	_lift.selectProfileSlot(0, 0);
     	_lift.config_kF(0, kF, TIMEOUT);
     	_lift.config_kP(0, kP, TIMEOUT);
@@ -47,17 +53,7 @@ public class Lift extends Subsystem {
     	_lift.configMotionCruiseVelocity(LIFT_VELOCITY, TIMEOUT);
     	_lift.configMotionAcceleration(LIFT_VELOCITY, TIMEOUT);
     	
-    	_lift.configContinuousCurrentLimit(11, 0);
-    	_lift.configPeakCurrentLimit(12, 0);
-    	_lift.configPeakCurrentDuration(100, 0);
-    	_lift.enableCurrentLimit(true);
-    	
-    	_lift.setInverted(true);
-    	_lift.setSensorPhase(true);
-    	
-    	_lift.setSelectedSensorPosition(0, 0, TIMEOUT);
-    	
-    	_lift.configForwardSoftLimitThreshold(9970, TIMEOUT);
+    	_lift.configForwardSoftLimitThreshold(MAX_HEIGHT, TIMEOUT);
     	_lift.configForwardSoftLimitEnable(true, TIMEOUT);
     	_lift.configReverseSoftLimitThreshold(0, TIMEOUT);
     	_lift.configReverseSoftLimitEnable(true, TIMEOUT);
@@ -69,7 +65,7 @@ public class Lift extends Subsystem {
      */
     public void setPosition(double input) {
     	// Center the range on [0, 9970]
-    	double pos = Math.round((float) ((9970)/2 * (input + 1)));
+    	double pos = Math.round((float) ((MAX_HEIGHT)/2 * (input + 1)));
     	
     	_lift.set(ControlMode.MotionMagic, pos);
     }
@@ -78,12 +74,9 @@ public class Lift extends Subsystem {
     	return _lift.getSelectedSensorPosition(0);
     }
     
-    public void resetOffset() {
+    public void resetEncoder() {
     	_lift.setSelectedSensorPosition(0, 0, TIMEOUT);
-    }
-    
-    public int getOffset() {
-    	return this.offset;
+    	_lift.set(ControlMode.MotionMagic, 0);
     }
     
     public double getCurrent() {
@@ -99,8 +92,8 @@ public class Lift extends Subsystem {
     }
 
     public void initDefaultCommand() {
-    	setDefaultCommand(new OperateLift());
     	//setDefaultCommand(null);
+    	setDefaultCommand(new OperateLift());
     }
 }
 
