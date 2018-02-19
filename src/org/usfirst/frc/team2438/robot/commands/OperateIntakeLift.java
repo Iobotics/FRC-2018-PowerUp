@@ -1,18 +1,16 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  *
  */
 public class OperateIntakeLift extends CommandBase {
-
-	private double power;
 	
     public OperateIntakeLift() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(intake);
-    	
-    	//this.power = power;
     }
 
     // Called just before this Command runs the first time
@@ -23,7 +21,9 @@ public class OperateIntakeLift extends CommandBase {
     protected void execute() {
     	intake.setLiftPower(oi.getLeftY());
     	
-    	//intake.setPosition(-oi.getRightThrottle());
+    	SmartDashboard.putNumber("Intake position", intake.getLiftPosition());
+    	SmartDashboard.putNumber("Intake error", intake.getLiftError());
+    	SmartDashboard.putNumber("Intake current", intake.getLiftCurrent());
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -112,8 +112,8 @@ public class Lift extends Subsystem {
     }
 
     public void initDefaultCommand() {
-    	//setDefaultCommand(new OperateLift());
-    	setDefaultCommand(null);
+    	setDefaultCommand(new OperateLift());
+    	//setDefaultCommand(null);
     }
 }
 

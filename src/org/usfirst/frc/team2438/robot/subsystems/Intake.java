@@ -16,15 +16,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
-	private final double kF = 0.0;
-	private final double kP = 0.5;
-	private final double kI = 0.0;
-	private final double kD = 0.0;
-	private final int iZone = 0;
+	private static final double kF = 0;
+	private static final double kP = 0.5;
+	private static final double kI = 0;
+	private static final double kD = 0;
+	private static final int iZone = 0;
 	
-	private final int TIMEOUT = 20;
+	private static final int TALON_TIMEOUT = 20;
 	
 	private TalonSRX _leftIntake;
 	private TalonSRX _rightIntake;
@@ -41,18 +39,19 @@ public class Intake extends Subsystem {
 		
 		_leftIntake.setInverted(true);
 		
+		// Intake lift encoder //
 		_intakeLift = new TalonSRX(RobotMap.intakeLift);
-		_intakeLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TIMEOUT);
+		_intakeLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
 		_intakeLift.selectProfileSlot(0, 0);
-		_intakeLift.config_kF(0, kF, TIMEOUT);
-		_intakeLift.config_kP(0, kP, TIMEOUT);
-		_intakeLift.config_kI(0, kI, TIMEOUT);
-		_intakeLift.config_kD(0, kD, TIMEOUT);
-		_intakeLift.config_IntegralZone(0, iZone, TIMEOUT);
+		_intakeLift.config_kF(0, kF, TALON_TIMEOUT);
+		_intakeLift.config_kP(0, kP, TALON_TIMEOUT);
+		_intakeLift.config_kI(0, kI, TALON_TIMEOUT);
+		_intakeLift.config_kD(0, kD, TALON_TIMEOUT);
+		_intakeLift.config_IntegralZone(0, iZone, TALON_TIMEOUT);
 		
-		_intakeLift.configContinuousCurrentLimit(15, TIMEOUT);
-		_intakeLift.configPeakCurrentLimit(20, TIMEOUT);
-		_intakeLift.configPeakCurrentDuration(1000, TIMEOUT);
+		_intakeLift.configContinuousCurrentLimit(15, TALON_TIMEOUT);
+		_intakeLift.configPeakCurrentLimit(20, TALON_TIMEOUT);
+		_intakeLift.configPeakCurrentDuration(1000, TALON_TIMEOUT);
 		_intakeLift.enableCurrentLimit(false);
 		
 		this.resetEncoder();
@@ -67,7 +66,7 @@ public class Intake extends Subsystem {
 	
 	public void setVelocity(double velocity) {
 		_leftIntake.set(ControlMode.Velocity, velocity);
-		_leftIntake.set(ControlMode.Velocity, velocity);
+		_rightIntake.set(ControlMode.Velocity, velocity);
 	}
 	
 	public void setLiftPower(double power) {
@@ -75,18 +74,30 @@ public class Intake extends Subsystem {
 	}
 	
 	public void setLiftPosition(double input) {
-		// FIXME - Find equation to map input
+		// TODO - Find equation to map input
 		int position = Math.round((float) input);
 		
 		_intakeLift.set(ControlMode.Position, position);
 	}
 	
+	public int getLiftPosition() {
+		return _intakeLift.getSelectedSensorPosition(0);
+	}
+	
+	public int getLiftError() {
+		return _intakeLift.getClosedLoopError(0);
+	}
+	
+	public double getLiftCurrent() {
+		return _intakeLift.getOutputCurrent();
+	}
+	
 	public void resetEncoder() {
-		_intakeLift.setSelectedSensorPosition(0, 0, TIMEOUT);
+		_intakeLift.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 		_intakeLift.set(ControlMode.Position, 0);
 	}
 	
-	public void setSolenoid() {
+	public void toggleSolenoid() {
 		if(!solenoidActivated) {
 			_solenoid.set(Value.kForward);
 		}
@@ -98,7 +109,6 @@ public class Intake extends Subsystem {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

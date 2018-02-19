@@ -32,11 +32,13 @@ public class Robot2018 extends IterativeRobot {
     	
     	_compressor = new Compressor();
     	_compressor.clearAllPCMStickyFaults();
-    	_compressor.start();
+    	_compressor.stop();
     	
     	_prefs = Preferences.getInstance();
 		
 		CommandBase.init();
+		
+		CommandBase.resetEncoders();
 	}
 
 	/**
@@ -82,9 +84,6 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		Scheduler.getInstance().run();
-		
-		CommandBase.intake.resetEncoder();
-		//CommandBase.lift.resetEncoder();
 	}
 
 	/**

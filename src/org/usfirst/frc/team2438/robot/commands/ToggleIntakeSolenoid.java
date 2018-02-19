@@ -3,9 +3,9 @@ package org.usfirst.frc.team2438.robot.commands;
 /**
  *
  */
-public class ToggleSolenoid extends CommandBase {
+public class ToggleIntakeSolenoid extends CommandBase {
 
-    public ToggleSolenoid() {
+    public ToggleIntakeSolenoid() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(intake);
@@ -13,7 +13,7 @@ public class ToggleSolenoid extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	intake.setSolenoid();
+    	intake.toggleSolenoid();
     }
 
     // Called repeatedly when this Command is scheduled to run
