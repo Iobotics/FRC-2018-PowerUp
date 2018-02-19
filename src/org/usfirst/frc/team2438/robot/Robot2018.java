@@ -52,6 +52,8 @@ public class Robot2018 extends IterativeRobot {
     
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		
+		SmartDashboard.putNumber("Right Throttle", CommandBase.oi.getRightThrottle());
 	}
 
 	/**
@@ -92,5 +94,7 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		
+		SmartDashboard.putNumber("Total current", _pdp.getTotalCurrent());
 	}
 }

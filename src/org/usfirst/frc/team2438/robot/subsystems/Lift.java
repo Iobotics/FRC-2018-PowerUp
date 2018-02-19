@@ -22,8 +22,8 @@ public class Lift extends Subsystem {
 
 	private static final int TIMEOUT = 10;
 	
-	private static final double kF = 0;
-	private static final double kP = 0.5;
+	private static final double kF = 0.075;
+	private static final double kP = 0;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
@@ -72,6 +72,8 @@ public class Lift extends Subsystem {
     	_rightLift1.follow(_leftLift2);
     	_rightLift2.follow(_leftLift2);
     	
+    	//_rightLift2.follow(_rightLift1);
+    	
     	this.resetEncoder();
     }
     
@@ -99,6 +101,10 @@ public class Lift extends Subsystem {
     	_leftLift2.set(ControlMode.MotionMagic, 0);
     }
     
+    public void setCurrent(double current) {
+    	_leftLift2.set(ControlMode.Current, current);
+    }
+    
     public double getCurrent() {
 		return _leftLift2.getOutputCurrent();
 	}
@@ -108,7 +114,7 @@ public class Lift extends Subsystem {
     }
     
     public void stop() {
-    	_leftLift2.set(ControlMode.PercentOutput, 0);
+    	_rightLift1.set(ControlMode.PercentOutput, 0);
     }
 
     public void initDefaultCommand() {

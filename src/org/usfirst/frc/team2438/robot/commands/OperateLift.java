@@ -17,9 +17,12 @@ public class OperateLift extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	lift.setPosition(oi.getRightThrottle());
+    	double current = (oi.getRightY() * 9) + 2.5;
     	
-    	SmartDashboard.putNumber("Lift position", lift.getPosition());
+    	lift.setCurrent(current);
+    	
+    	//SmartDashboard.putNumber("Lift position", lift.getPosition());
+    	SmartDashboard.putNumber("Lift setpoint", current);
     	SmartDashboard.putNumber("Lift error", lift.getError());
     	SmartDashboard.putNumber("Lift current", lift.getCurrent());
     }
