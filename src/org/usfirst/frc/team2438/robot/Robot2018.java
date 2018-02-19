@@ -53,7 +53,7 @@ public class Robot2018 extends IterativeRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		
-		SmartDashboard.putNumber("Right Throttle", CommandBase.oi.getRightThrottle());
+		SmartDashboard.putNumber("Lift distance", CommandBase.lift.getHeight());
 	}
 
 	/**

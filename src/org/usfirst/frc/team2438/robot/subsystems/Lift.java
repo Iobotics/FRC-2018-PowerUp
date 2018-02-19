@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -29,12 +30,16 @@ public class Lift extends Subsystem {
 	private static final int iZone = 0;
 	
 	private static final int LIFT_VELOCITY = 2200;
-	public static final int MAX_LIFT_POSITION = 53000;
+	private static final int MAX_LIFT_POSITION = 53000;
+	
+	private static final double VOLTS_PER_INCH = 0.009766;
 	
 	private TalonSRX _leftLift1;
 	private TalonSRX _leftLift2;
 	private TalonSRX _rightLift1;
 	private TalonSRX _rightLift2;
+	
+	private AnalogInput _rangeSensor;
 	
     public void init() {
     	_leftLift1 = new TalonSRX(RobotMap.leftLift1);
@@ -75,6 +80,8 @@ public class Lift extends Subsystem {
     	//_rightLift2.follow(_rightLift1);
     	
     	this.resetEncoder();
+    	
+    	_rangeSensor = new AnalogInput(0);
     }
     
     public void setPower(double power) {
@@ -111,6 +118,16 @@ public class Lift extends Subsystem {
     
     public double getError() {
     	return _leftLift2.getClosedLoopError(0);
+    }
+    
+    /**
+     * Gets distance in inches
+     * @return distance
+     */
+    public double getHeight() {
+    	double height = _rangeSensor.getAverageVoltage() / VOLTS_PER_INCH;
+    	
+    	return height;
     }
     
     public void stop() {
