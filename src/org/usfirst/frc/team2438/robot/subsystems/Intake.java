@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 
-	private static final double kF = 0;
-	private static final double kP = 0.5;
+	private static final double kF = 0.1;
+	private static final double kP = 0;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
@@ -54,6 +54,8 @@ public class Intake extends Subsystem {
 		_intakeLift.configPeakCurrentDuration(1000, TALON_TIMEOUT);
 		_intakeLift.enableCurrentLimit(false);
 		
+		_intakeLift.configNeutralDeadband(0.03, TALON_TIMEOUT);
+		
 		this.resetEncoder();
 		
 		_solenoid = new DoubleSolenoid(0, 1);
@@ -78,6 +80,10 @@ public class Intake extends Subsystem {
 		int position = Math.round((float) input);
 		
 		_intakeLift.set(ControlMode.Position, position);
+	}
+	
+	public void setLiftCurrent(double current) {
+		_intakeLift.set(ControlMode.Current, current);
 	}
 	
 	public int getLiftPosition() {
@@ -116,7 +122,6 @@ public class Intake extends Subsystem {
 	}
 	
     public void initDefaultCommand() {
-    	//setDefaultCommand(null);
     	setDefaultCommand(new OperateIntakeLift());
     }
 }

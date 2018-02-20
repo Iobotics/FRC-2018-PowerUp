@@ -32,7 +32,7 @@ public class Robot2018 extends IterativeRobot {
     	
     	_compressor = new Compressor();
     	_compressor.clearAllPCMStickyFaults();
-    	_compressor.stop();
+    	_compressor.start();
     	
     	_prefs = Preferences.getInstance();
 		

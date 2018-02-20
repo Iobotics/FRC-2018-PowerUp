@@ -19,7 +19,11 @@ public class OperateIntakeLift extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	intake.setLiftPower(oi.getLeftY());
+
+    	double current = (oi.getRightThrottle() * 5) + 0.5;
+    	
+    	intake.setLiftCurrent(current);
+    	//intake.setLiftPower(oi.getLeftY());
     	
     	SmartDashboard.putNumber("Intake position", intake.getLiftPosition());
     	SmartDashboard.putNumber("Intake error", intake.getLiftError());

@@ -65,19 +65,29 @@ public class Lift extends Subsystem {
     	_leftLift2.setInverted(true);
     	_leftLift2.setSensorPhase(true);
     	
-    	_leftLift2.configForwardSoftLimitThreshold(MAX_LIFT_POSITION, TIMEOUT);
-    	_leftLift2.configForwardSoftLimitEnable(true, TIMEOUT);
-    	_leftLift2.configReverseSoftLimitThreshold(0, TIMEOUT);
-    	_leftLift2.configReverseSoftLimitEnable(true, TIMEOUT);
+    	_leftLift1.selectProfileSlot(0, 0);
+    	_leftLift1.config_kF(0, kF, TIMEOUT);
+    	_leftLift1.config_kP(0, kP, TIMEOUT);
+    	_leftLift1.config_kI(0, kI, TIMEOUT);
+    	_leftLift1.config_kD(0, kD, TIMEOUT);
+    	_leftLift1.config_IntegralZone(0, iZone, TIMEOUT);
     	
-    	_leftLift1.follow(_leftLift2);
     	_leftLift1.setInverted(true);
     	
+    	_rightLift2.selectProfileSlot(0, 0);
+    	_rightLift2.config_kF(0, kF, TIMEOUT);
+    	_rightLift2.config_kP(0, kP, TIMEOUT);
+    	_rightLift2.config_kI(0, kI, TIMEOUT);
+    	_rightLift2.config_kD(0, kD, TIMEOUT);
+    	_rightLift2.config_IntegralZone(0, iZone, TIMEOUT);
     	
-    	_rightLift1.follow(_leftLift2);
-    	_rightLift2.follow(_leftLift2);
-    	
-    	//_rightLift2.follow(_rightLift1);
+    	//_rightLift1.follow(_rightLift2);
+    	_rightLift1.selectProfileSlot(0, 0);
+    	_rightLift1.config_kF(0, kF, TIMEOUT);
+    	_rightLift1.config_kP(0, kP, TIMEOUT);
+    	_rightLift1.config_kI(0, kI, TIMEOUT);
+    	_rightLift1.config_kD(0, kD, TIMEOUT);
+    	_rightLift1.config_IntegralZone(0, iZone, TIMEOUT);
     	
     	this.resetEncoder();
     	
@@ -109,11 +119,27 @@ public class Lift extends Subsystem {
     }
     
     public void setCurrent(double current) {
+    	_leftLift1.set(ControlMode.Current, current);
+    	_rightLift1.set(ControlMode.Current, -current);
+    	
     	_leftLift2.set(ControlMode.Current, current);
+    	_rightLift2.set(ControlMode.Current, -current);
     }
     
-    public double getCurrent() {
-		return _leftLift2.getOutputCurrent();
+    public double getCurrent(int num) {
+    	double current = 0;
+    	
+    	switch(num) {
+    		case 1:
+    			current = _leftLift1.getOutputCurrent();
+    		case 2:
+    			current = _leftLift2.getOutputCurrent();
+    		case 3:
+    			current = _rightLift1.getOutputCurrent();
+    		case 4:
+    			current = _rightLift2.getOutputCurrent();
+    	}
+		return current;
 	}
     
     public double getError() {
@@ -131,12 +157,15 @@ public class Lift extends Subsystem {
     }
     
     public void stop() {
+    	_leftLift1.set(ControlMode.PercentOutput, 0);
     	_rightLift1.set(ControlMode.PercentOutput, 0);
+    	_leftLift2.set(ControlMode.PercentOutput, 0);
+    	_rightLift2.set(ControlMode.PercentOutput, 0);
     }
 
     public void initDefaultCommand() {
-    	setDefaultCommand(new OperateLift());
-    	//setDefaultCommand(null);
+    	//setDefaultCommand(new OperateLift());
+    	setDefaultCommand(null);
     }
 }
 

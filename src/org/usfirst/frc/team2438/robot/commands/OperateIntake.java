@@ -9,7 +9,6 @@ public class OperateIntake extends CommandBase {
     public OperateIntake(double power) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(intake);
     	this.power = power;
     }
 

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
+import org.usfirst.frc.team2438.robot.commands.OperateLift;
 import org.usfirst.frc.team2438.robot.commands.ToggleIntakeSolenoid;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -16,16 +17,23 @@ public class OI {
 	
 	//private final JoystickButton _cycleDrive = new JoystickButton(_lStick, 3);
 	//private final JoystickButton _positionDrive = new JoystickButton(_rStick, 2);
-	private final JoystickButton _intakeButton = new JoystickButton(_rStick, 3);
-	private final JoystickButton _outtakeButton = new JoystickButton(_rStick, 5);
-	private final JoystickButton _solenoidButton = new JoystickButton(_lStick, 2);
+	private final JoystickButton _intakeButton = new JoystickButton(_rStick, 1);
+	private final JoystickButton _outtakeButton = new JoystickButton(_lStick, 1);
 	
-	public OI() {
+	private final JoystickButton _lowerLiftButton = new JoystickButton(_lStick, 2);
+	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 2);
+	
+	private final JoystickButton _solenoidButton = new JoystickButton(_rStick, 10);
+	
+	public OI() {		
 		//_cycleDrive.whenPressed(new CycleDriveMode());
-		//_intakeButton.whileHeld(new OperateIntake(1));
-		//_outtakeButton.whileHeld(new OperateIntake(-1));
+		_intakeButton.whileHeld(new OperateIntake(1));
+		_outtakeButton.whileHeld(new OperateIntake(-1));
 		
-		//_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
+		_lowerLiftButton.whileHeld(new OperateLift(1));
+		_raiseLiftButton.whileHeld(new OperateLift(-1));
+		
+		_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
 	}
 	
 	public double getLeftX() {
