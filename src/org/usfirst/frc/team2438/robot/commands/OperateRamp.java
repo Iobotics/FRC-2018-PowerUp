@@ -1,19 +1,26 @@
 package org.usfirst.frc.team2438.robot.commands;
 
-/**
- * Cycle through drive modes
- */
-public class CycleDriveMode extends CommandBase {
+import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampSide;
 
-    public CycleDriveMode() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(drivetrain);
+/**
+ *
+ */
+public class OperateRamp extends CommandBase {
+	
+	private RampSide side;
+	
+    public OperateRamp(RampSide side) {
+    	requires(ramp);
+    	this.side = side;
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {    	
-    	drivetrain.cycleDriveMode();
+    protected void initialize() {
+    	if(side == RampSide.left) {
+    		ramp.toggleLeftRamp();
+    	} else {
+    		ramp.toggleRightRamp();
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run

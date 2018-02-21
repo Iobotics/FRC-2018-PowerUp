@@ -5,6 +5,7 @@ import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team2438.robot.subsystems.Intake;
 import org.usfirst.frc.team2438.robot.subsystems.Lift;
 import org.usfirst.frc.team2438.robot.subsystems.NavigationSensor;
+import org.usfirst.frc.team2438.robot.subsystems.Ramp;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,6 +17,7 @@ public abstract class CommandBase extends Command {
 	public static final Drivetrain drivetrain 	   = new Drivetrain();
 	public static final Lift lift = new Lift();
 	public static final Intake intake = new Intake();
+	public static final Ramp ramp = new Ramp();
 	
 	public static void init() {
         // This MUST be here. If the OI creates Commands (which it very likely
@@ -30,6 +32,7 @@ public abstract class CommandBase extends Command {
         drivetrain.init();
         lift.init(); 
         intake.init();
+        ramp.init();
     }
 	
 	public static void resetEncoders() {

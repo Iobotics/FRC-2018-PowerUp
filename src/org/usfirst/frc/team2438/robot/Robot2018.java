@@ -1,13 +1,14 @@
 package org.usfirst.frc.team2438.robot;
 
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoInitRobot;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,8 +53,6 @@ public class Robot2018 extends IterativeRobot {
     
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
-		
-		SmartDashboard.putNumber("Lift distance", CommandBase.lift.getHeight());
 	}
 
 	/**
@@ -69,10 +68,8 @@ public class Robot2018 extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		int autonum = _prefs.getInt("auto-program-number", 0);
-    	SmartDashboard.putNumber("auto-num", autonum);
     	// pick auto command via program number //
-    	//(new AutoDriveStraight(5)).start();
+    	new AutoInitRobot().start();
     }
 
 	/**
@@ -94,7 +91,5 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		
-		SmartDashboard.putNumber("Total current", _pdp.getTotalCurrent());
 	}
 }

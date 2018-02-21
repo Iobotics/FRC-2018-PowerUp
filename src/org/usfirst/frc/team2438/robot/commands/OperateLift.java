@@ -1,7 +1,5 @@
 package org.usfirst.frc.team2438.robot.commands;
 
-import org.usfirst.frc.team2438.robot.RobotMap;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -30,12 +28,7 @@ public class OperateLift extends CommandBase {
     	//SmartDashboard.putNumber("Lift position", lift.getPosition());
     	SmartDashboard.putNumber("Lift setpoint", current);
     	SmartDashboard.putNumber("Lift error", lift.getError());
-    	//SmartDashboard.putNumber("Lift current", lift.getCurrent());
-    	
-    	SmartDashboard.putNumber("Lift output #1", lift.getCurrent(1));
-    	SmartDashboard.putNumber("Lift output #2", lift.getCurrent(2));
-    	SmartDashboard.putNumber("Lift output #3", lift.getCurrent(3));
-    	SmartDashboard.putNumber("Lift output #4", lift.getCurrent(4));
+    	SmartDashboard.putNumber("Lift current", lift.getCurrent(1));
     }
 
     // Make this return true when this Command no longer needs to run execute()

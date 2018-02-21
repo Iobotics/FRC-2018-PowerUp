@@ -1,35 +1,34 @@
 package org.usfirst.frc.team2438.robot.commands;
 
-import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampPosition;
 
 /**
- * Operate arcade drive
+ *
  */
-public class OperateArcadeDrive extends CommandBase {
+public class DropRamp extends CommandBase {
 
-    public OperateArcadeDrive() {
+    public DropRamp() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(drivetrain);
+    	requires(ramp);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	ramp.setRampPosition(RampPosition.down);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	drivetrain.setArcade(oi.getLeftX(), oi.getRightY());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return drivetrain.getDriveMode() != Drivetrain.DriveMode.Arcade;
+        return true;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	drivetrain.setArcade(0, 0);
     }
 
     // Called when another command which requires one or more of the same

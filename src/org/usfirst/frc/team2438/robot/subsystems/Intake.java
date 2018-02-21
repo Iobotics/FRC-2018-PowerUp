@@ -39,8 +39,9 @@ public class Intake extends Subsystem {
 		
 		_leftIntake.setInverted(true);
 		
-		// Intake lift encoder //
 		_intakeLift = new TalonSRX(RobotMap.intakeLift);
+		
+		// Intake lift encoder //
 		_intakeLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
 		_intakeLift.selectProfileSlot(0, 0);
 		_intakeLift.config_kF(0, kF, TALON_TIMEOUT);
@@ -107,7 +108,7 @@ public class Intake extends Subsystem {
 		if(!solenoidActivated) {
 			_solenoid.set(Value.kForward);
 		}
-		else if(solenoidActivated) {
+		else {
 			_solenoid.set(Value.kReverse);
 		}
 		solenoidActivated = !solenoidActivated;
@@ -119,6 +120,13 @@ public class Intake extends Subsystem {
 		}
 		
 		_solenoid.set(Value.kOff);
+	}
+	
+	public void stop() {
+		_leftIntake.set(ControlMode.PercentOutput, 0);
+		_rightIntake.set(ControlMode.PercentOutput, 0);
+		
+		_intakeLift.set(ControlMode.PercentOutput, 0);
 	}
 	
     public void initDefaultCommand() {

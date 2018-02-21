@@ -63,7 +63,7 @@ public class AutoDriveStraight extends CommandBase implements PIDOutput, PIDSour
     // Called just before this Command runs the first time
     protected void initialize() {
     	SmartDashboard.putData("DrivePID", _pid);
-    	drivetrain.setLeftEncoderDistance(0);
+    	drivetrain.setLeftEncoderPosition(0);
     	navSensor.zeroGyro();
     	_pid.setSetpoint(_distance);
     	_pid.enable();
