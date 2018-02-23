@@ -13,19 +13,32 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  */
 public class AutoTurn extends CommandBase implements PIDOutput, PIDSource {
 
+	private double _degrees;
 	private PIDController _pid;
 	
 	private final double kP = 0;
 	private final double kI = 0;
 	private final double kD = 0;
 	
-    public AutoTurn() {
+    public AutoTurn(double degrees, double power, double timeout) {
         requires(drivetrain);
         requires(navSensor);
+        
+        _degrees = degrees;
+        
+        if (timeout > 0) {
+        	this.setTimeout(timeout);
+        }
+        
+        _pid = new PIDController(kP, kI, kD, this, this);
+        _pid.setAbsoluteTolerance(1);
+        _pid.setOutputRange(-power, power);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	_pid.setSetpoint(_degrees);
+    	_pid.enable();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -34,7 +47,7 @@ public class AutoTurn extends CommandBase implements PIDOutput, PIDSource {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return _pid.onTarget() || this.isTimedOut();
     }
 
     // Called once after isFinished returns true
@@ -60,13 +73,11 @@ public class AutoTurn extends CommandBase implements PIDOutput, PIDSource {
 
 	@Override
 	public double pidGet() {
-		// TODO Auto-generated method stub
-		return 0;
+		return navSensor.getGyro();
 	}
 
 	@Override
-	public void pidWrite(double output) {
-		// TODO Auto-generated method stub
-		
+	public void pidWrite(double leftPower) {
+		drivetrain.setTank(leftPower, -leftPower);
 	}
 }
