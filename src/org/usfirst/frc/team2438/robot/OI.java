@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CycleDriveMode;
+import org.usfirst.frc.team2438.robot.commands.OperateDriveToPos;
+import org.usfirst.frc.team2438.robot.commands.ToggleLeds;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -14,9 +16,13 @@ public class OI {
 	private final Joystick _rStick = new Joystick(3);
 	
 	private final JoystickButton _cycleDrive = new JoystickButton(_lStick, 3);
+	private final JoystickButton _driveToPos = new JoystickButton(_rStick, 2);
+	private final JoystickButton _toggleLights = new JoystickButton(_lStick, 2);
 	
 	public OI() {
 		_cycleDrive.whenPressed(new CycleDriveMode());
+		_driveToPos.whenPressed(new OperateDriveToPos());
+		_toggleLights.whenPressed(new ToggleLeds());
 	}
 	
 	/**

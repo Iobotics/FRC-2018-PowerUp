@@ -7,6 +7,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -32,12 +36,16 @@ public class Drivetrain extends Subsystem {
     private TalonSRX _leftBack;
     private TalonSRX _rightBack;
     
+    private SerialPort _serial;
+    
     private double kF = 0;
-    private double kP = 6.0;
+    private double kP = 8.0;
     private double kI = 0;
     private double kD = 0;
     private int iZone = 0;
-    private final int DEFAULT_VELOCITY = 1000;
+    private final int DEFAULT_VELOCITY = 4;
+    
+    private boolean ledToggle = true;
     
     private DriveMode _dmode;
 	
@@ -46,10 +54,12 @@ public class Drivetrain extends Subsystem {
 		_leftBack = new TalonSRX(RobotMap.leftBackMotor);
 		_rightFront = new TalonSRX(RobotMap.rightFrontMotor);
 		_rightBack = new TalonSRX(RobotMap.rightBackMotor);
+
+		//_serial = new SerialPort(9600, Port.kUSB1);
 		
 		_leftFront.setInverted(true);
 		_leftBack.setInverted(true);
-		_rightBack.setSensorPhase(true);
+		//_rightBack.setSensorPhase(true);
 		
 		_leftFront.follow(_leftBack);
 		_rightFront.follow(_rightBack);
@@ -83,6 +93,10 @@ public class Drivetrain extends Subsystem {
 		_rightBack.config_IntegralZone(0, iZone, TALON_TIMEOUT);
 		_rightBack.configMotionCruiseVelocity(DEFAULT_VELOCITY, TALON_TIMEOUT);
 		_rightBack.configMotionAcceleration(DEFAULT_VELOCITY, TALON_TIMEOUT);
+		
+		//_serial.writeString("0");
+		
+		
 	}
 	
 	/**
@@ -168,10 +182,15 @@ public class Drivetrain extends Subsystem {
 		_leftBack.configMotionCruiseVelocity(cruiseVelocity, TALON_TIMEOUT);
 		_leftBack.configMotionAcceleration(cruiseVelocity, TALON_TIMEOUT);
 		
+		_rightBack.configMotionCruiseVelocity(cruiseVelocity, TALON_TIMEOUT);
+		_rightBack.configMotionAcceleration(cruiseVelocity, TALON_TIMEOUT);
+		
 		int position = Math.round((float) (UNITS_PER_INCH * inches));
 		
-		_leftBack.set(ControlMode.MotionMagic, position);
-		_rightBack.set(ControlMode.MotionMagic, position);
+		_leftBack.set(ControlMode.MotionMagic,  -position);
+		_rightBack.set(ControlMode.MotionMagic, -position);
+		_leftFront.follow(_leftBack);
+		_rightFront.follow(_rightBack);
 	}
 
     public void resetEncoders() {
@@ -210,5 +229,15 @@ public class Drivetrain extends Subsystem {
 		//setDefaultCommand(null);
         setDefaultCommand(new OperateTankDrive());
     }
+	public void sendSerial() {
+		if(ledToggle) {
+			_serial.writeString("10");
+		}
+
+		if(!ledToggle) {
+			_serial.writeString("0");
+		}
+		ledToggle = !ledToggle;
+	}
 }
 

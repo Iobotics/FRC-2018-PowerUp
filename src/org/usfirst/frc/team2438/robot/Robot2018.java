@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
+import org.usfirst.frc.team2438.robot.commands.auto.DriveForwardMotionMagic;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -26,7 +27,7 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		_pdp = new PowerDistributionPanel();
-    	_pdp.clearStickyFaults();    	
+    	_pdp.clearStickyFaults();
     	
     	_prefs = Preferences.getInstance();
 		
@@ -59,10 +60,12 @@ public class Robot2018 extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		CommandBase.drivetrain.resetEncoders();
 		int autonum = _prefs.getInt("auto-program-number", 0);
     	SmartDashboard.putNumber("auto-num", autonum);
     	// pick auto command via program number //
     	//(new AutoDriveStraight(5)).start();
+    	(new DriveForwardMotionMagic()).start();
     }
 
 	/**
@@ -71,6 +74,10 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("Drive Error Left", CommandBase.drivetrain.getLeftError());	
+		SmartDashboard.putNumber("Drive Error Right", CommandBase.drivetrain.getRightError());
+		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
+
 	}
 
 	@Override
@@ -91,6 +98,8 @@ public class Robot2018 extends IterativeRobot {
 		SmartDashboard.putString("Drive Mode", CommandBase.drivetrain.getDriveMode().toString());
 		
 		SmartDashboard.putNumber("Left Drive Encoder Position", CommandBase.drivetrain.getLeftEncoder());
+		SmartDashboard.putNumber("Right Drive Encoder Position", CommandBase.drivetrain.getRightEncoder());
+		
 		SmartDashboard.putNumber("Drive Error", CommandBase.drivetrain.getLeftError());
 	}
 }

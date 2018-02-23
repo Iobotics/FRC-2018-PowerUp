@@ -1,13 +1,13 @@
 package org.usfirst.frc.team2438.robot.commands;
 
-import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Operate tank drive
+ *
  */
-public class OperateTankDrive extends CommandBase {
+public class OperateDriveToPos extends CommandBase {
 
-    public OperateTankDrive() {
+    public OperateDriveToPos() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(drivetrain);
@@ -19,12 +19,13 @@ public class OperateTankDrive extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	drivetrain.setTank(-oi.getLeftY(), -oi.getRightY());
+    	drivetrain.driveToPosition(4*Math.PI);
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return drivetrain.getDriveMode() != Drivetrain.DriveMode.Tank;
+        return false;
     }
 
     // Called once after isFinished returns true
@@ -35,6 +36,6 @@ public class OperateTankDrive extends CommandBase {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	end();
+    	this.end();
     }
 }
