@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoTurn;
 import org.usfirst.frc.team2438.robot.commands.auto.DriveForwardMotionMagic;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -65,7 +66,7 @@ public class Robot2018 extends IterativeRobot {
     	SmartDashboard.putNumber("auto-num", autonum);
     	// pick auto command via program number //
     	//(new AutoDriveStraight(5)).start();
-    	(new DriveForwardMotionMagic()).start();
+    	(new AutoTurn(90,0.5,5)).start();
     }
 
 	/**
@@ -74,8 +75,8 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("Drive Error Left", CommandBase.drivetrain.getLeftError());	
-		SmartDashboard.putNumber("Drive Error Right", CommandBase.drivetrain.getRightError());
+		//SmartDashboard.putNumber("Drive Error Left", CommandBase.drivetrain.getLeftError());	
+		//SmartDashboard.putNumber("Drive Error Right", CommandBase.drivetrain.getRightError());
 		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
 
 	}

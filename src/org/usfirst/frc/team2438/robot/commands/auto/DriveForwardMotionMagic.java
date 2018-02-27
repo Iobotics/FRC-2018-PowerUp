@@ -21,7 +21,7 @@ public class DriveForwardMotionMagic extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	drivetrain.driveToPosition(36);
+    	drivetrain.driveToPosition(168);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -41,7 +41,7 @@ public class NavigationSensor extends Subsystem implements PIDSource {
 	}
 	
 	public double pidGet() {
-		return this.getGyro();
+		return  this.getGyro();
 	}
 	
 	public void debug() {

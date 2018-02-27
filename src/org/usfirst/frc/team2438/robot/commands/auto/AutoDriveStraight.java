@@ -18,7 +18,7 @@ public class AutoDriveStraight extends CommandBase implements PIDOutput, PIDSour
 	private final double  _distance;
 	private PIDController _pid;
 	
-	private static final double kP = 0.1;
+	private static final double kP = 1;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	
