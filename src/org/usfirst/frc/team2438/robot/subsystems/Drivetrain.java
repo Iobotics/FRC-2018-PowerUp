@@ -2,6 +2,7 @@ package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
 import org.usfirst.frc.team2438.robot.commands.OperateTankDrive;
+import org.usfirst.frc.team2438.robot.subsystems.Drivetrain.ProfileSlot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -14,11 +15,25 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Drivetrain extends Subsystem {
 	
+	public static enum ProfileSlot {
+		MotionMagic,
+		Velocity
+	}
+	
 	private static final double COUNTS_PER_ROTATION = 256 * 4;  // ppr * 4
 	private static final double WHEEL_DIAMETER 		= 6; 	 	// inches
 	private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 	public static final double UNITS_PER_INCH 		= COUNTS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
-
+	private static final double MAX_SPEED = 0;
+	
+	//Velocity Control Constants
+	private double vkF = 0;
+	private double vkP = 0;
+	private double vkI = 0;
+	private double vkD = 0;
+	private int viZone = 0;
+	    
+	//Motion Magic constants
 	private static final double kF = 0;
 	private static final double kP = 0;
 	private static final double kI = 0;
@@ -47,9 +62,22 @@ public class Drivetrain extends Subsystem {
 		_leftBack.setInverted(true);
 		
 		// Left encoder //
+		
+		//Velocity Control
+		_leftFront.configNominalOutputForward(0, TALON_TIMEOUT);
+		_leftFront.configNominalOutputReverse(0, TALON_TIMEOUT);
+		_leftFront.configPeakOutputForward(1, TALON_TIMEOUT);
+		_leftFront.configPeakOutputReverse(-1, TALON_TIMEOUT);
+		
+		_leftFront.config_kF(1, vkF, TALON_TIMEOUT);
+		_leftFront.config_kP(1, vkP, TALON_TIMEOUT);
+		_leftFront.config_kI(1, vkI, TALON_TIMEOUT);
+		_leftFront.config_kD(1, vkD, TALON_TIMEOUT);
+		_leftFront.config_IntegralZone(1, viZone, TALON_TIMEOUT);
+		
+		//Motion Magic
 		_leftFront.setSensorPhase(true);
 		_leftFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
-		_leftFront.selectProfileSlot(0, 0);
 		_leftFront.config_kF(0, kF, TALON_TIMEOUT);
 		_leftFront.config_kP(0, kP, TALON_TIMEOUT);
 		_leftFront.config_kI(0, kI, TALON_TIMEOUT);
@@ -59,8 +87,21 @@ public class Drivetrain extends Subsystem {
 		_leftFront.configMotionAcceleration(DRIVE_ACCELERATION, TALON_TIMEOUT);
     	
     	// Right encoder //
+		
+		//Velocity Control
+		_rightFront.configNominalOutputForward(0, TALON_TIMEOUT);
+		_rightFront.configNominalOutputReverse(0, TALON_TIMEOUT);
+		_rightFront.configPeakOutputForward(1, TALON_TIMEOUT);
+		_rightFront.configPeakOutputReverse(-1, TALON_TIMEOUT);
+		
+		_rightFront.config_kF(1, vkF, TALON_TIMEOUT);
+		_rightFront.config_kP(1, vkP, TALON_TIMEOUT);
+		_rightFront.config_kI(1, vkI, TALON_TIMEOUT);
+		_rightFront.config_kD(1, vkD, TALON_TIMEOUT);
+		_rightFront.config_IntegralZone(1, viZone, TALON_TIMEOUT);
+		
+		//Motion Magic
 		_rightFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
-		_rightFront.selectProfileSlot(0, 0);
     	_rightFront.config_kF(0, kF, TALON_TIMEOUT);
     	_rightFront.config_kP(0, kP, TALON_TIMEOUT);
     	_rightFront.config_kI(0, kI, TALON_TIMEOUT);
@@ -68,6 +109,8 @@ public class Drivetrain extends Subsystem {
     	_rightFront.config_IntegralZone(0, iZone, TALON_TIMEOUT);
     	_rightFront.configMotionCruiseVelocity(DRIVE_VELOCITY, TALON_TIMEOUT);
     	_rightFront.configMotionAcceleration(DRIVE_ACCELERATION, TALON_TIMEOUT);
+    	
+    	this.setProfileSlot(ProfileSlot.MotionMagic);
     	
     	this.resetEncoders();
 	}
@@ -98,6 +141,25 @@ public class Drivetrain extends Subsystem {
 		_rightBack.set(ControlMode.PercentOutput,  -x + y);
 	}
 
+	public void setProfileSlot(ProfileSlot slot){
+		if(slot == ProfileSlot.MotionMagic) {
+			_leftBack.selectProfileSlot(0,0);
+			_rightBack.selectProfileSlot(0, 0);
+		}
+		else if (slot == ProfileSlot.Velocity) {
+			_leftBack.selectProfileSlot(0,0);
+			_rightBack.selectProfileSlot(0, 0);
+		}
+	}
+	
+	public void setVelocity(double rightVelocity, double leftVelocity) {
+		_leftBack.follow(_leftFront);
+		_rightBack.follow(_rightFront);
+		setProfileSlot(ProfileSlot.Velocity);
+		_leftFront.set(ControlMode.Velocity, leftVelocity * MAX_SPEED);
+		_rightFront.set(ControlMode.Velocity, rightVelocity * MAX_SPEED);
+	}
+	
 	public double getLeftEncoder() {
 		return _leftFront.getSelectedSensorPosition(0);
 	}
