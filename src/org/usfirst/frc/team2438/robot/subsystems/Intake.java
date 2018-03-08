@@ -39,7 +39,7 @@ public class Intake extends Subsystem {
 		
 		_leftIntake.setInverted(true);
 		
-		_intakeLift = new TalonSRX(RobotMap.intakeLift);
+		_intakeLift = new TalonSRX(RobotMap.intakeArm);
 		
 		// Intake lift encoder //
 		_intakeLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
@@ -130,7 +130,8 @@ public class Intake extends Subsystem {
 	}
 	
     public void initDefaultCommand() {
-    	setDefaultCommand(new OperateIntakeLift());
+    	setDefaultCommand(null);
+    	//setDefaultCommand(new OperateIntakeLift());
     }
 }
 

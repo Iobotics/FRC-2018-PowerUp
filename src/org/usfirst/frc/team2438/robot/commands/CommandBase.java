@@ -30,16 +30,10 @@ public abstract class CommandBase extends Command {
         // Show what command your subsystem is running on the SmartDashboard
         navSensor.init();
         drivetrain.init();
-        lift.init(); 
-        intake.init();
-        ramp.init();
+        //lift.init(); 
+        //intake.init();
+        //ramp.init();
     }
-	
-	public static void resetEncoders() {
-		drivetrain.resetEncoders();
-		lift.resetEncoder();
-		intake.resetEncoder();
-	}
 
     public CommandBase(String name) {
         super(name);

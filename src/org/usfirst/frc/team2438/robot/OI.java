@@ -23,13 +23,13 @@ public class OI {
 	private final JoystickButton _intakeButton = new JoystickButton(_rStick, 1);
 	private final JoystickButton _outtakeButton = new JoystickButton(_lStick, 1);
 	
-	private final JoystickButton _lowerLiftButton = new JoystickButton(_lStick, 2);
-	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 2);
+	private final JoystickButton _lowerLiftButton = new JoystickButton(_rStick, 2);
+	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 3);
 	
 	private final JoystickButton _raiseRightRamp = new JoystickButton(_lStick, 5);
 	private final JoystickButton _raiseLeftRamp = new JoystickButton(_lStick, 4);
 
-	private final JoystickButton _dropRamps = new JoystickButton(_lStick,9);
+	private final JoystickButton _dropRamps = new JoystickButton(_lStick, 9);
 	
 	// TODO - Repurpose for proper servo activation
 	private final JoystickButton _activateServo = new JoystickButton(_lStick, 10);
@@ -38,21 +38,21 @@ public class OI {
 	private final JoystickButton _solenoidButton = new JoystickButton(_rStick, 10);
 	
 	public OI() {
-		_intakeButton.whileHeld(new OperateIntake(1));
-		_outtakeButton.whileHeld(new OperateIntake(-1));
+		//_intakeButton.whileHeld(new OperateIntake(1));
+		//_outtakeButton.whileHeld(new OperateIntake(-1));
 		
-		_lowerLiftButton.whileHeld(new OperateLift(1));
-		_raiseLiftButton.whileHeld(new OperateLift(-1));
+		//_lowerLiftButton.whileHeld(new OperateLift(-0.1));
+		//_raiseLiftButton.whileHeld(new OperateLift(0.15));
 		
-		_raiseLeftRamp.whenPressed(new OperateRamp(RampSide.left));
-		_raiseRightRamp.whenPressed(new OperateRamp(RampSide.right));
+		//_raiseLeftRamp.whenPressed(new OperateRamp(RampSide.left));
+		//_raiseRightRamp.whenPressed(new OperateRamp(RampSide.right));
 		
-		_dropRamps.whenPressed(new DropRamp());
+		//_dropRamps.whenPressed(new DropRamp());
 		
-		_activateServo.whenPressed(new ActivateServo(RampPosition.ramp));
-		_deactivateServo.whenPressed(new ActivateServo(RampPosition.up));
+		//_activateServo.whenPressed(new ActivateServo(RampPosition.ramp));
+		//_deactivateServo.whenPressed(new ActivateServo(RampPosition.up));
 		
-		_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
+		//_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
 	}
 	
 	public double getLeftX() {

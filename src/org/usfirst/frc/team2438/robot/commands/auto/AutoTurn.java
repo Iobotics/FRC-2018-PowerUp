@@ -16,7 +16,7 @@ public class AutoTurn extends CommandBase implements PIDOutput {
 	private double _degrees;
 	private PIDController _pid;
 	
-	private final double kP = 0;
+	private final double kP = 0.003;
 	private final double kI = 0;
 	private final double kD = 0;
 	

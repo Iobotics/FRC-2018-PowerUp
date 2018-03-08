@@ -7,20 +7,18 @@ package org.usfirst.frc.team2438.robot;
  * floating around.
  */
 public class RobotMap {	
-	public static final int leftFrontMotor  = 1;
-	public static final int rightFrontMotor = 2;
-	public static final int leftMiddleMotor   = 3;
-	public static final int rightMiddleMotor  = 6;
-	public static final int leftBackMotor   = 5;
-	public static final int rightBackMotor  = 4;
+	public static final int frontLeftMotor   = 1;
+	public static final int frontRightMotor  = 2;
+	public static final int backLeftMotor    = 3;
+	public static final int backRightMotor   = 4;
 	
-	public static final int leftLift1 = 7;
-	public static final int leftLift2 = 8;
-	public static final int rightLift1 = 9;
-	public static final int rightLift2 = 10;
+	public static final int frontLeftLift  = 5;
+	public static final int frontRightLift = 6;
+	public static final int backLeftLift   = 7;
+	public static final int backRightLift  = 8;
 	
-	public static final int leftIntake = 11;
-	public static final int	rightIntake = 12;
+	public static final int leftIntake  = 9;
+	public static final int	rightIntake = 10;
 	
-	public static final int intakeLift = 13;
+	public static final int intakeArm = 11;
 }

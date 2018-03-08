@@ -1,32 +1,24 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
-import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
+
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class AutoDriveStraight extends CommandBase {
-	
-	private final double  _distance;
-	
-	public AutoDriveStraight(double inches) {
-    	this(inches, -1);
-    }
-	
-    public AutoDriveStraight(double inches, double timeout) {
+public class VelocityTest extends CommandBase {
+
+    public VelocityTest() {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
     	requires(drivetrain);
     	
-    	_distance = inches * Drivetrain.UNITS_PER_INCH;
-    	
-    	if(timeout > 0) {
-    		this.setTimeout(timeout);
-    	}
     }
-    
+
     // Called just before this Command runs the first time
     protected void initialize() {
-    	drivetrain.setTargetDistance(_distance);
+    	drivetrain.setVelocity(1 , 1);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -35,17 +27,17 @@ public class AutoDriveStraight extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return this.isTimedOut();
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	drivetrain.setTank(0.0, 0.0);
+    	drivetrain.setVelocity(0,0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	this.end();
+    	end();
     }
 }

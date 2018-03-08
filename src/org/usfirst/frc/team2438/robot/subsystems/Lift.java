@@ -4,6 +4,7 @@ import org.usfirst.frc.team2438.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -27,71 +28,48 @@ public class Lift extends Subsystem {
 	
 	private static final int TALON_TIMEOUT = 20;
 	
-	private TalonSRX _leftLift1;
-	private TalonSRX _leftLift2;
-	private TalonSRX _rightLift1;
-	private TalonSRX _rightLift2;
+	private TalonSRX _frontLeftLift;
+	private TalonSRX _frontRightLift;
+	private TalonSRX _backLeftLift;
+	private TalonSRX _backRightLift;
 	
 	private AnalogInput _rangeSensor;
 	
     public void init() {
-    	_leftLift1 = new TalonSRX(RobotMap.leftLift1);
-    	_leftLift2 = new TalonSRX(RobotMap.leftLift2);
-    	_rightLift1 = new TalonSRX(RobotMap.rightLift1);
-    	_rightLift2 = new TalonSRX(RobotMap.rightLift2);
+    	_frontLeftLift = new TalonSRX(RobotMap.frontLeftLift);
+    	_frontRightLift = new TalonSRX(RobotMap.frontRightLift);
+    	_backLeftLift = new TalonSRX(RobotMap.backLeftLift);
+    	_backRightLift = new TalonSRX(RobotMap.backRightLift);
     	
-    	_leftLift2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
-    	_leftLift2.selectProfileSlot(0, 0);
-    	_leftLift2.config_kF(0, kF, TALON_TIMEOUT);
-    	_leftLift2.config_kP(0, kP, TALON_TIMEOUT);
-    	_leftLift2.config_kI(0, kI, TALON_TIMEOUT);
-    	_leftLift2.config_kD(0, kD, TALON_TIMEOUT);
-    	_leftLift2.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-    	_leftLift2.configMotionCruiseVelocity(LIFT_VELOCITY, TALON_TIMEOUT);
-    	_leftLift2.configMotionAcceleration(LIFT_VELOCITY, TALON_TIMEOUT);
+    	_frontLeftLift.setInverted(true);
+    	_backLeftLift.setInverted(true);
     	
-    	//_leftLift2.configContinuousCurrentLimit(22, TALON_TIMEOUT);
-    	//_leftLift2.configPeakCurrentLimit(24, TALON_TIMEOUT);
-    	//_leftLift2.configPeakCurrentDuration(2500, TALON_TIMEOUT);
-    	//_leftLift2.enableCurrentLimit(true);
+    	_frontLeftLift.setNeutralMode(NeutralMode.Brake);
+    	_frontRightLift.setNeutralMode(NeutralMode.Brake);
+    	_backLeftLift.setNeutralMode(NeutralMode.Brake);
+    	_backRightLift.setNeutralMode(NeutralMode.Brake);
     	
-    	_leftLift2.setInverted(true);
-    	_leftLift2.setSensorPhase(true);
-    	
-    	_leftLift1.selectProfileSlot(0, 0);
-    	_leftLift1.config_kF(0, kF, TALON_TIMEOUT);
-    	_leftLift1.config_kP(0, kP, TALON_TIMEOUT);
-    	_leftLift1.config_kI(0, kI, TALON_TIMEOUT);
-    	_leftLift1.config_kD(0, kD, TALON_TIMEOUT);
-    	_leftLift1.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-    	
-    	_leftLift1.setInverted(true);
-    	
-    	_rightLift2.selectProfileSlot(0, 0);
-    	_rightLift2.config_kF(0, kF, TALON_TIMEOUT);
-    	_rightLift2.config_kP(0, kP, TALON_TIMEOUT);
-    	_rightLift2.config_kI(0, kI, TALON_TIMEOUT);
-    	_rightLift2.config_kD(0, kD, TALON_TIMEOUT);
-    	_rightLift2.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-    	
-    	_rightLift1.selectProfileSlot(0, 0);
-    	_rightLift1.config_kF(0, kF, TALON_TIMEOUT);
-    	_rightLift1.config_kP(0, kP, TALON_TIMEOUT);
-    	_rightLift1.config_kI(0, kI, TALON_TIMEOUT);
-    	_rightLift1.config_kD(0, kD, TALON_TIMEOUT);
-    	_rightLift1.config_IntegralZone(0, iZone, TALON_TIMEOUT);
+    	_frontRightLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
+    	_frontRightLift.selectProfileSlot(0, 0);
+    	_frontRightLift.config_kF(0, kF, TALON_TIMEOUT);
+    	_frontRightLift.config_kP(0, kP, TALON_TIMEOUT);
+    	_frontRightLift.config_kI(0, kI, TALON_TIMEOUT);
+    	_frontRightLift.config_kD(0, kD, TALON_TIMEOUT);
+    	_frontRightLift.config_IntegralZone(0, iZone, TALON_TIMEOUT);
+    	_frontRightLift.configMotionCruiseVelocity(LIFT_VELOCITY, TALON_TIMEOUT);
+    	_frontRightLift.configMotionAcceleration(LIFT_VELOCITY, TALON_TIMEOUT);
     	
     	this.resetEncoder();
     	
-    	_rangeSensor = new AnalogInput(0);
+    	//_rangeSensor = new AnalogInput(0);
     }
     
     public void setPower(double power) {
-    	_leftLift1.set(ControlMode.Current, power);
-    	_rightLift1.set(ControlMode.Current, -power);
+    	_frontLeftLift.set(ControlMode.PercentOutput, power);
+    	_backLeftLift.set(ControlMode.PercentOutput, power);
     	
-    	_leftLift2.set(ControlMode.Current, power);
-    	_rightLift2.set(ControlMode.Current, -power);
+    	_frontRightLift.set(ControlMode.PercentOutput, power);
+    	_backRightLift.set(ControlMode.PercentOutput, power);
     }
     
     /**
@@ -102,24 +80,24 @@ public class Lift extends Subsystem {
     	
     	double pos = Math.round((float) ((MAX_LIFT_POSITION)/2 * (input + 1)));
     	
-    	_leftLift2.set(ControlMode.MotionMagic, pos);
+    	_frontRightLift.set(ControlMode.MotionMagic, pos);
     }
     
     public int getPosition() {
-    	return _leftLift2.getSelectedSensorPosition(0);
+    	return _frontRightLift.getSelectedSensorPosition(0);
     }
     
     public void resetEncoder() {
-    	_leftLift2.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-    	_leftLift2.set(ControlMode.MotionMagic, 0);
+    	_frontRightLift.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+    	_frontRightLift.set(ControlMode.MotionMagic, 0);
     }
     
     public void setCurrent(double current) {
-    	_leftLift1.set(ControlMode.Current, current);
-    	_rightLift1.set(ControlMode.Current, -current);
+    	_frontLeftLift.set(ControlMode.Current, current);
+    	_backLeftLift.set(ControlMode.Current, -current);
     	
-    	_leftLift2.set(ControlMode.Current, current);
-    	_rightLift2.set(ControlMode.Current, -current);
+    	_frontRightLift.set(ControlMode.Current, current);
+    	_backRightLift.set(ControlMode.Current, -current);
     }
     
     public double getCurrent(int num) {
@@ -127,19 +105,19 @@ public class Lift extends Subsystem {
     	
     	switch(num) {
     		case 1:
-    			current = _leftLift1.getOutputCurrent();
+    			current = _frontLeftLift.getOutputCurrent();
     		case 2:
-    			current = _leftLift2.getOutputCurrent();
+    			current = _frontRightLift.getOutputCurrent();
     		case 3:
-    			current = _rightLift1.getOutputCurrent();
+    			current = _backLeftLift.getOutputCurrent();
     		case 4:
-    			current = _rightLift2.getOutputCurrent();
+    			current = _backRightLift.getOutputCurrent();
     	}
 		return current;
 	}
     
     public double getError() {
-    	return _leftLift2.getClosedLoopError(0);
+    	return _frontRightLift.getClosedLoopError(0);
     }
     
     /**
@@ -153,10 +131,10 @@ public class Lift extends Subsystem {
     }
     
     public void stop() {
-    	_leftLift1.set(ControlMode.PercentOutput, 0);
-    	_rightLift1.set(ControlMode.PercentOutput, 0);
-    	_leftLift2.set(ControlMode.PercentOutput, 0);
-    	_rightLift2.set(ControlMode.PercentOutput, 0);
+    	_frontLeftLift.set(ControlMode.PercentOutput, 0);
+    	_backLeftLift.set(ControlMode.PercentOutput, 0);
+    	_frontRightLift.set(ControlMode.PercentOutput, 0);
+    	_backRightLift.set(ControlMode.PercentOutput, 0);
     }
 
     public void initDefaultCommand() {

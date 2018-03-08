@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OperateLift extends CommandBase {
 	
-	private double input;
+	private double power;
 	
-    public OperateLift(double input) {
+    public OperateLift(double power) {
         // Use requires() here to declare subsystem dependencies
     	requires(lift);
     	
-    	this.input = input;
+    	this.power = power;
     }
 
     // Called just before this Command runs the first time
@@ -21,13 +21,8 @@ public class OperateLift extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double current = (input * 5);
+    	lift.setPower(power);
     	
-    	lift.setCurrent(current);
-    	
-    	//SmartDashboard.putNumber("Lift position", lift.getPosition());
-    	SmartDashboard.putNumber("Lift setpoint", current);
-    	SmartDashboard.putNumber("Lift error", lift.getError());
     	SmartDashboard.putNumber("Lift current", lift.getCurrent(1));
     }
 

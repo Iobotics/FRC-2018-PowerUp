@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
-import org.usfirst.frc.team2438.robot.commands.auto.AutoInitRobot;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoTest;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -33,13 +33,11 @@ public class Robot2018 extends IterativeRobot {
     	
     	_compressor = new Compressor();
     	_compressor.clearAllPCMStickyFaults();
-    	_compressor.start();
+    	_compressor.stop();
     	
     	_prefs = Preferences.getInstance();
 		
 		CommandBase.init();
-		
-		CommandBase.resetEncoders();
 	}
 
 	/**
@@ -69,7 +67,9 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
     	// pick auto command via program number //
-    	new AutoInitRobot().start();
+    	//(new AutoInitRobot()).start();
+		CommandBase.drivetrain.resetEncoders();
+		(new AutoTest()).start();
     }
 
 	/**
@@ -78,11 +78,17 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("Left Velocity", CommandBase.drivetrain.getLeftVelocity());
+		SmartDashboard.putNumber("Right Velocity", CommandBase.drivetrain.getRightVelocity());
+		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
+
 	}
 
 	@Override
 	public void teleopInit() {
 		Scheduler.getInstance().run();
+		
+		CommandBase.drivetrain.resetEncoders();
 	}
 
 	/**

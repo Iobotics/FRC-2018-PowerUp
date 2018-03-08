@@ -52,7 +52,9 @@ public class NavigationSensor extends Subsystem implements PIDSource {
 		SmartDashboard.putData("imu", _ahrs);
 	}
 	
-    public void initDefaultCommand() { }
+    public void initDefaultCommand() {
+    	setDefaultCommand(null);
+    }
     
     public PIDSourceType getPIDSourceType() {
     	return _ahrs.getPIDSourceType();
