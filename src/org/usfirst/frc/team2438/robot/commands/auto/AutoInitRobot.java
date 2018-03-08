@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.DropRamp;
-import org.usfirst.frc.team2438.robot.commands.OperateIntakeLift;
+import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -29,7 +29,7 @@ public class AutoInitRobot extends CommandGroup {
         // arm.
     	
     	addSequential(new DropRamp());
-    	addSequential(new OperateIntakeLift());
+    	//addSequential(new OperateIntakeArm());
     	//addSequential(new OperateLift());
     }
 }

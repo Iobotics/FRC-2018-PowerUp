@@ -26,6 +26,9 @@ public class OI {
 	private final JoystickButton _lowerLiftButton = new JoystickButton(_rStick, 2);
 	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 3);
 	
+	private final JoystickButton _lowerIntakeButton = new JoystickButton(_lStick, 2);
+	private final JoystickButton _raiseIntakeButton = new JoystickButton(_lStick, 3);
+	
 	private final JoystickButton _raiseRightRamp = new JoystickButton(_lStick, 5);
 	private final JoystickButton _raiseLeftRamp = new JoystickButton(_lStick, 4);
 
@@ -41,8 +44,11 @@ public class OI {
 		//_intakeButton.whileHeld(new OperateIntake(1));
 		//_outtakeButton.whileHeld(new OperateIntake(-1));
 		
-		//_lowerLiftButton.whileHeld(new OperateLift(-0.1));
-		//_raiseLiftButton.whileHeld(new OperateLift(0.15));
+		_lowerLiftButton.whileHeld(new OperateLift(-0.3));
+		_raiseLiftButton.whileHeld(new OperateLift(0.35));
+		
+		_lowerIntakeButton.whileHeld(new OperateLift(-0.3));
+		_raiseIntakeButton.whileHeld(new OperateLift(0.35));
 		
 		//_raiseLeftRamp.whenPressed(new OperateRamp(RampSide.left));
 		//_raiseRightRamp.whenPressed(new OperateRamp(RampSide.right));

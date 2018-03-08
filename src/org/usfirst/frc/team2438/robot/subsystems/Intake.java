@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
-import org.usfirst.frc.team2438.robot.commands.OperateIntakeLift;
+import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -27,7 +27,7 @@ public class Intake extends Subsystem {
 	private TalonSRX _leftIntake;
 	private TalonSRX _rightIntake;
 	
-	private TalonSRX _intakeLift;
+	private TalonSRX _intakeArm;
 	
 	private DoubleSolenoid _solenoid;
 	
@@ -39,25 +39,25 @@ public class Intake extends Subsystem {
 		
 		_leftIntake.setInverted(true);
 		
-		_intakeLift = new TalonSRX(RobotMap.intakeArm);
+		_intakeArm = new TalonSRX(RobotMap.intakeArm);
 		
 		// Intake lift encoder //
-		_intakeLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
-		_intakeLift.selectProfileSlot(0, 0);
-		_intakeLift.config_kF(0, kF, TALON_TIMEOUT);
-		_intakeLift.config_kP(0, kP, TALON_TIMEOUT);
-		_intakeLift.config_kI(0, kI, TALON_TIMEOUT);
-		_intakeLift.config_kD(0, kD, TALON_TIMEOUT);
-		_intakeLift.config_IntegralZone(0, iZone, TALON_TIMEOUT);
+		_intakeArm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
+		_intakeArm.selectProfileSlot(0, 0);
+		_intakeArm.config_kF(0, kF, TALON_TIMEOUT);
+		_intakeArm.config_kP(0, kP, TALON_TIMEOUT);
+		_intakeArm.config_kI(0, kI, TALON_TIMEOUT);
+		_intakeArm.config_kD(0, kD, TALON_TIMEOUT);
+		_intakeArm.config_IntegralZone(0, iZone, TALON_TIMEOUT);
 		
-		_intakeLift.configContinuousCurrentLimit(15, TALON_TIMEOUT);
-		_intakeLift.configPeakCurrentLimit(20, TALON_TIMEOUT);
-		_intakeLift.configPeakCurrentDuration(1000, TALON_TIMEOUT);
-		_intakeLift.enableCurrentLimit(false);
+		/*_intakeArm.configContinuousCurrentLimit(15, TALON_TIMEOUT);
+		_intakeArm.configPeakCurrentLimit(20, TALON_TIMEOUT);
+		_intakeArm.configPeakCurrentDuration(1000, TALON_TIMEOUT);
+		_intakeArm.enableCurrentLimit(false);*/
 		
-		_intakeLift.configNeutralDeadband(0.03, TALON_TIMEOUT);
+		//_intakeArm.configNeutralDeadband(0.03, TALON_TIMEOUT);
 		
-		this.resetEncoder();
+		//this.resetEncoder();
 		
 		_solenoid = new DoubleSolenoid(0, 1);
 	}
@@ -73,35 +73,35 @@ public class Intake extends Subsystem {
 	}
 	
 	public void setLiftPower(double power) {
-		_intakeLift.set(ControlMode.PercentOutput, power);
+		_intakeArm.set(ControlMode.PercentOutput, power);
 	}
 	
 	public void setLiftPosition(double input) {
 		// TODO - Find equation to map input
 		int position = Math.round((float) input);
 		
-		_intakeLift.set(ControlMode.Position, position);
+		_intakeArm.set(ControlMode.Position, position);
 	}
 	
 	public void setLiftCurrent(double current) {
-		_intakeLift.set(ControlMode.Current, current);
+		_intakeArm.set(ControlMode.Current, current);
 	}
 	
 	public int getLiftPosition() {
-		return _intakeLift.getSelectedSensorPosition(0);
+		return _intakeArm.getSelectedSensorPosition(0);
 	}
 	
 	public int getLiftError() {
-		return _intakeLift.getClosedLoopError(0);
+		return _intakeArm.getClosedLoopError(0);
 	}
 	
 	public double getLiftCurrent() {
-		return _intakeLift.getOutputCurrent();
+		return _intakeArm.getOutputCurrent();
 	}
 	
 	public void resetEncoder() {
-		_intakeLift.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-		_intakeLift.set(ControlMode.Position, 0);
+		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		_intakeArm.set(ControlMode.Position, 0);
 	}
 	
 	public void toggleSolenoid() {
@@ -126,7 +126,7 @@ public class Intake extends Subsystem {
 		_leftIntake.set(ControlMode.PercentOutput, 0);
 		_rightIntake.set(ControlMode.PercentOutput, 0);
 		
-		_intakeLift.set(ControlMode.PercentOutput, 0);
+		_intakeArm.set(ControlMode.PercentOutput, 0);
 	}
 	
     public void initDefaultCommand() {

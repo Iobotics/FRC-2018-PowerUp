@@ -5,12 +5,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class OperateIntakeLift extends CommandBase {
+public class OperateIntakeArm extends CommandBase {
 	
-    public OperateIntakeLift() {
+	private double power;
+	
+    public OperateIntakeArm(double power) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(intake);
+    	
+    	this.power = power;
     }
 
     // Called just before this Command runs the first time
@@ -19,15 +23,9 @@ public class OperateIntakeLift extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-
-    	double current = (oi.getRightThrottle() * 5) + 0.5;
     	
-    	intake.setLiftCurrent(current);
-    	//intake.setLiftPower(oi.getLeftY());
-    	
-    	SmartDashboard.putNumber("Intake position", intake.getLiftPosition());
-    	SmartDashboard.putNumber("Intake error", intake.getLiftError());
-    	SmartDashboard.putNumber("Intake current", intake.getLiftCurrent());
+    	//intake.setLiftCurrent(current);
+    	intake.setLiftPower(power);
     }
 
     // Make this return true when this Command no longer needs to run execute()
