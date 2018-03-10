@@ -5,6 +5,7 @@ import org.usfirst.frc.team2438.robot.commands.OperateTankDrive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -209,7 +210,7 @@ public class Drivetrain extends Subsystem {
 	}
     
     public double getError() {
-    	return _backLeft.getClosedLoopError(0);
+    	return _backLeft.getClosedLoopError(0) / this.UNITS_PER_INCH;
     }
     
     public int getPosition() {

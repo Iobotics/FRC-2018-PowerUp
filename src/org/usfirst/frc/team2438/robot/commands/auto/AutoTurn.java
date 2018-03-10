@@ -13,19 +13,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class AutoTurn extends CommandBase implements PIDOutput {
 	
+	private static final double GYRO_TOLERANCE = 1.0;
+	
 	private double _degrees;
 	private PIDController _pid;
 	
-	private final double kP = 0.003;
+	private final double kP = 0.002;
 	private final double kI = 0;
 	private final double kD = 0;
 	
 	public AutoTurn(double degrees) {
-		this(degrees, 0.5, 10);
+		this(degrees, 0.5, -1);
 	}
 	
 	public AutoTurn(double degrees, double power) {
-		this(degrees, power, 10);
+		this(degrees, power, -1);
 	}
 	
     public AutoTurn(double degrees, double power, double timeout) {
@@ -40,11 +42,10 @@ public class AutoTurn extends CommandBase implements PIDOutput {
         
         //Sets up PID variables
         _pid = new PIDController(kP, kI, kD, navSensor, this);
-        _pid.setAbsoluteTolerance(1.0);
+        _pid.setAbsoluteTolerance(GYRO_TOLERANCE);
         _pid.setInputRange(-180.0, 180.0);
         _pid.setOutputRange(-power, power);
         _pid.setContinuous(true);
-        this.setTimeout(timeout);
     }
 
     //Sets the target then start PID
@@ -55,7 +56,10 @@ public class AutoTurn extends CommandBase implements PIDOutput {
     	_pid.setSetpoint(_degrees);
     	_pid.enable();
     }
-
+    
+    private boolean onTarget() {    	
+    	return (Math.abs(_pid.getError()) < GYRO_TOLERANCE);
+    }
    
     protected void execute() {
     	SmartDashboard.putNumber("Drive setpoint", _pid.getSetpoint());
@@ -64,7 +68,7 @@ public class AutoTurn extends CommandBase implements PIDOutput {
  
     //Finishes When On target or Timed Out
     protected boolean isFinished() {
-        return _pid.onTarget() || this.isTimedOut();
+        return this.onTarget() || this.isTimedOut();
     }
 
     protected void end() {

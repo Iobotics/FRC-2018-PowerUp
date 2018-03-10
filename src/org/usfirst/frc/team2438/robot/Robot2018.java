@@ -33,7 +33,7 @@ public class Robot2018 extends IterativeRobot {
     	
     	_compressor = new Compressor();
     	_compressor.clearAllPCMStickyFaults();
-    	_compressor.start();
+    	_compressor.stop();
     	
     	_prefs = Preferences.getInstance();
 		
@@ -69,7 +69,7 @@ public class Robot2018 extends IterativeRobot {
     	// pick auto command via program number //
     	//(new AutoInitRobot()).start();
 		CommandBase.drivetrain.resetEncoders();
-		//(new AutoTest()).start();
+		(new AutoTest()).start();
     }
 
 	/**
@@ -97,5 +97,7 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("Lift Position", CommandBase.lift.getPosition());
+		SmartDashboard.putNumber("Distance sensor", CommandBase.lift.getHeight());
 	}
 }

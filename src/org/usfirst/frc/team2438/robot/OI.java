@@ -41,11 +41,11 @@ public class OI {
 	private final JoystickButton _solenoidButton = new JoystickButton(_rStick, 10);
 	
 	public OI() {
-		//_intakeButton.whileHeld(new OperateIntake(1));
-		//_outtakeButton.whileHeld(new OperateIntake(-1));
+		_intakeButton.whileHeld(new OperateIntake(1));
+		_outtakeButton.whileHeld(new OperateIntake(-1));
 		
-		_lowerLiftButton.whileHeld(new OperateLift(-0.3));
-		_raiseLiftButton.whileHeld(new OperateLift(0.35));
+		_lowerLiftButton.whileHeld(new OperateLift(-0.1));
+		_raiseLiftButton.whileHeld(new OperateLift(0.15));
 		
 		_lowerIntakeButton.whileHeld(new OperateLift(-0.3));
 		_raiseIntakeButton.whileHeld(new OperateLift(0.35));

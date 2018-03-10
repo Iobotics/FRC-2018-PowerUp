@@ -31,7 +31,7 @@ public abstract class CommandBase extends Command {
         navSensor.init();
         drivetrain.init();
         lift.init(); 
-        //intake.init();
+        intake.init();
         //ramp.init();
     }
 

@@ -44,6 +44,8 @@ public class Lift extends Subsystem {
     	_frontLeftLift.setInverted(true);
     	_backLeftLift.setInverted(true);
     	
+    	_frontRightLift.setSensorPhase(true);
+    	
     	_frontLeftLift.setNeutralMode(NeutralMode.Brake);
     	_frontRightLift.setNeutralMode(NeutralMode.Brake);
     	_backLeftLift.setNeutralMode(NeutralMode.Brake);
@@ -61,7 +63,7 @@ public class Lift extends Subsystem {
     	
     	this.resetEncoder();
     	
-    	//_rangeSensor = new AnalogInput(0);
+    	_rangeSensor = new AnalogInput(0);
     }
     
     public void setPower(double power) {
