@@ -18,7 +18,9 @@ public class OperateIntake extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	intake.setPower(power);
+    	if(!intake.getLimitSwitch() || intake.getLimitSwitch() && power < 0) {
+    		intake.setPower(power);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

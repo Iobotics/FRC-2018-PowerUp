@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Lift extends Subsystem {
 	
 	private static final double kF = 0.075;
-	private static final double kP = 0;
+	private static final double kP = 0.05;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
@@ -51,6 +51,11 @@ public class Lift extends Subsystem {
     	_backLeftLift.setNeutralMode(NeutralMode.Brake);
     	_backRightLift.setNeutralMode(NeutralMode.Brake);
     	
+
+    	_frontLeftLift.follow(_frontRightLift);
+    	_backLeftLift.follow(_frontRightLift);
+    	_backRightLift.follow(_frontRightLift);
+    	
     	_frontRightLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
     	_frontRightLift.selectProfileSlot(0, 0);
     	_frontRightLift.config_kF(0, kF, TALON_TIMEOUT);
@@ -67,22 +72,19 @@ public class Lift extends Subsystem {
     }
     
     public void setPower(double power) {
-    	_frontLeftLift.set(ControlMode.PercentOutput, power);
-    	_backLeftLift.set(ControlMode.PercentOutput, power);
+    	//_frontLeftLift.set(ControlMode.PercentOutput, power);
+    	//_backLeftLift.set(ControlMode.PercentOutput, power);
     	
     	_frontRightLift.set(ControlMode.PercentOutput, power);
-    	_backRightLift.set(ControlMode.PercentOutput, power);
+    	//_backRightLift.set(ControlMode.PercentOutput, power);
     }
     
     /**
      * Sets the lift position
      * @param input [-1, 1]
      */
-    public void setPosition(double input) {
-    	
-    	double pos = Math.round((float) ((MAX_LIFT_POSITION)/2 * (input + 1)));
-    	
-    	_frontRightLift.set(ControlMode.MotionMagic, pos);
+    public void setPosition(double input) {    	
+    	_frontRightLift.set(ControlMode.MotionMagic, input);
     }
     
     public int getPosition() {
@@ -133,10 +135,7 @@ public class Lift extends Subsystem {
     }
     
     public void stop() {
-    	_frontLeftLift.set(ControlMode.PercentOutput, 0);
-    	_backLeftLift.set(ControlMode.PercentOutput, 0);
     	_frontRightLift.set(ControlMode.PercentOutput, 0);
-    	_backRightLift.set(ControlMode.PercentOutput, 0);
     }
 
     public void initDefaultCommand() {

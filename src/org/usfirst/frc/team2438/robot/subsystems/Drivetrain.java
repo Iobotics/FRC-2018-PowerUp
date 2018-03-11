@@ -210,7 +210,7 @@ public class Drivetrain extends Subsystem {
 	}
     
     public double getError() {
-    	return _backLeft.getClosedLoopError(0) / this.UNITS_PER_INCH;
+    	return _backLeft.getClosedLoopError(0);
     }
     
     public int getPosition() {

@@ -1,12 +1,12 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
-import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Intake extends Subsystem {
 
 	private static final double kF = 0.1;
-	private static final double kP = 0;
+	private static final double kP = 0.3;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
@@ -31,7 +31,9 @@ public class Intake extends Subsystem {
 	
 	private DoubleSolenoid _solenoid;
 	
-	private boolean solenoidActivated = false;
+	private DigitalInput _switch;
+	
+	private boolean solenoidActivated = true;
 	
 	public void init() {
 		_leftIntake = new TalonSRX(RobotMap.leftIntake);
@@ -50,6 +52,10 @@ public class Intake extends Subsystem {
 		_intakeArm.config_kD(0, kD, TALON_TIMEOUT);
 		_intakeArm.config_IntegralZone(0, iZone, TALON_TIMEOUT);
 		
+		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		
+		this.setLiftPosition(0);
+		
 		/*_intakeArm.configContinuousCurrentLimit(15, TALON_TIMEOUT);
 		_intakeArm.configPeakCurrentLimit(20, TALON_TIMEOUT);
 		_intakeArm.configPeakCurrentDuration(1000, TALON_TIMEOUT);
@@ -60,6 +66,8 @@ public class Intake extends Subsystem {
 		//this.resetEncoder();
 		
 		_solenoid = new DoubleSolenoid(0, 1);
+		
+		_switch = new DigitalInput(0);
 	}
 	
 	public void setPower(double power) {
@@ -77,7 +85,6 @@ public class Intake extends Subsystem {
 	}
 	
 	public void setLiftPosition(double input) {
-		// TODO - Find equation to map input
 		int position = Math.round((float) input);
 		
 		_intakeArm.set(ControlMode.Position, position);
@@ -112,6 +119,22 @@ public class Intake extends Subsystem {
 			_solenoid.set(Value.kReverse);
 		}
 		solenoidActivated = !solenoidActivated;
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		_solenoid.set(Value.kOff);
+	}
+	
+	public boolean getLimitSwitch() {
+		return _switch.get();
+	}
+	
+	public void initSolenoids() {
+		_solenoid.set(Value.kForward);
 		
 		try {
 			Thread.sleep(500);

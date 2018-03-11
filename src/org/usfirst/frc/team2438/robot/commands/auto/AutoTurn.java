@@ -52,6 +52,7 @@ public class AutoTurn extends CommandBase implements PIDOutput {
     protected void initialize() {
     	navSensor.zeroGyro();
     	Timer.delay(0.75);
+    	drivetrain.resetEncoders();
     	_pid.reset();
     	_pid.setSetpoint(_degrees);
     	_pid.enable();
@@ -68,6 +69,7 @@ public class AutoTurn extends CommandBase implements PIDOutput {
  
     //Finishes When On target or Timed Out
     protected boolean isFinished() {
+    	SmartDashboard.putBoolean("Done turning", this.onTarget() || this.isTimedOut());
         return this.onTarget() || this.isTimedOut();
     }
 

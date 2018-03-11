@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -35,7 +37,7 @@ public class OperateIntakeArm extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	intake.setLiftPower(0);
+    	intake.setLiftPosition(intake.getLiftPosition());
     }
 
     // Called when another command which requires one or more of the same

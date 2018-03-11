@@ -12,6 +12,8 @@ public class AutoDriveStraight extends CommandBase {
 	
 	private static final double THRESHOLD = 1.0;
 	
+	private double _error = 5.0;
+	
 	private final double  _distance;
 	
 	public AutoDriveStraight(double inches) {
@@ -30,12 +32,16 @@ public class AutoDriveStraight extends CommandBase {
     
     // Called just before this Command runs the first time
     protected void initialize() {
+    	drivetrain.resetEncoders();
     	drivetrain.setTargetDistance(_distance);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	SmartDashboard.putNumber("DriveStraight Setpoint", _distance);
     	SmartDashboard.putNumber("DriveStraight Error", drivetrain.getError());
+    	
+    	_error = drivetrain.getError();
     }
     
     private boolean onTarget() {
@@ -44,6 +50,7 @@ public class AutoDriveStraight extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	SmartDashboard.putBoolean("Done driving", this.onTarget() || this.isTimedOut());
         return this.onTarget() || this.isTimedOut();
     }
 

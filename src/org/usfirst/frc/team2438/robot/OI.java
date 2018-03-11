@@ -1,13 +1,9 @@
 package org.usfirst.frc.team2438.robot;
 
-import org.usfirst.frc.team2438.robot.commands.ActivateServo;
-import org.usfirst.frc.team2438.robot.commands.DropRamp;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
+import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 import org.usfirst.frc.team2438.robot.commands.OperateLift;
-import org.usfirst.frc.team2438.robot.commands.OperateRamp;
 import org.usfirst.frc.team2438.robot.commands.ToggleIntakeSolenoid;
-import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampPosition;
-import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampSide;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -47,8 +43,8 @@ public class OI {
 		_lowerLiftButton.whileHeld(new OperateLift(-0.1));
 		_raiseLiftButton.whileHeld(new OperateLift(0.15));
 		
-		_lowerIntakeButton.whileHeld(new OperateLift(-0.3));
-		_raiseIntakeButton.whileHeld(new OperateLift(0.35));
+		_lowerIntakeButton.whileHeld(new OperateIntakeArm(-0.3));
+		_raiseIntakeButton.whileHeld(new OperateIntakeArm(0.35));
 		
 		//_raiseLeftRamp.whenPressed(new OperateRamp(RampSide.left));
 		//_raiseRightRamp.whenPressed(new OperateRamp(RampSide.right));
@@ -58,7 +54,7 @@ public class OI {
 		//_activateServo.whenPressed(new ActivateServo(RampPosition.ramp));
 		//_deactivateServo.whenPressed(new ActivateServo(RampPosition.up));
 		
-		//_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
+		_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
 	}
 	
 	public double getLeftX() {

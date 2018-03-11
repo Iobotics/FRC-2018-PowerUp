@@ -33,7 +33,7 @@ public class Robot2018 extends IterativeRobot {
     	
     	_compressor = new Compressor();
     	_compressor.clearAllPCMStickyFaults();
-    	_compressor.stop();
+    	_compressor.start();
     	
     	_prefs = Preferences.getInstance();
 		
@@ -81,7 +81,6 @@ public class Robot2018 extends IterativeRobot {
 		SmartDashboard.putNumber("Left Velocity", CommandBase.drivetrain.getLeftVelocity());
 		SmartDashboard.putNumber("Right Velocity", CommandBase.drivetrain.getRightVelocity());
 		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
-
 	}
 
 	@Override
@@ -89,6 +88,7 @@ public class Robot2018 extends IterativeRobot {
 		Scheduler.getInstance().run();
 		
 		CommandBase.drivetrain.resetEncoders();
+		CommandBase.intake.initSolenoids();
 	}
 
 	/**
@@ -99,5 +99,8 @@ public class Robot2018 extends IterativeRobot {
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("Lift Position", CommandBase.lift.getPosition());
 		SmartDashboard.putNumber("Distance sensor", CommandBase.lift.getHeight());
+		SmartDashboard.putNumber("Intake arm position", CommandBase.intake.getLiftPosition());
+		SmartDashboard.putNumber("Intake Arm Current", CommandBase.intake.getLiftCurrent());
+		SmartDashboard.putBoolean("Intake Limit Switch", CommandBase.intake.getLimitSwitch());
 	}
 }
