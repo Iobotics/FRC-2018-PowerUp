@@ -51,7 +51,6 @@ public class Lift extends Subsystem {
     	_backLeftLift.setNeutralMode(NeutralMode.Brake);
     	_backRightLift.setNeutralMode(NeutralMode.Brake);
     	
-
     	_frontLeftLift.follow(_frontRightLift);
     	_backLeftLift.follow(_frontRightLift);
     	_backRightLift.follow(_frontRightLift);
@@ -67,6 +66,7 @@ public class Lift extends Subsystem {
     	_frontRightLift.configMotionAcceleration(LIFT_VELOCITY, TALON_TIMEOUT);
     	
     	this.resetEncoder();
+    	this.setPosition(0);
     	
     	_rangeSensor = new AnalogInput(0);
     }
@@ -93,7 +93,6 @@ public class Lift extends Subsystem {
     
     public void resetEncoder() {
     	_frontRightLift.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-    	_frontRightLift.set(ControlMode.MotionMagic, 0);
     }
     
     public void setCurrent(double current) {

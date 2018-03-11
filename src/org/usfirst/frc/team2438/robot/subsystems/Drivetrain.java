@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -166,6 +167,7 @@ public class Drivetrain extends Subsystem {
 		_frontRight.follow(_backRight);
 		
 		setProfileSlot(ProfileSlot.MotionMagic);
+		System.out.println("I'm working! Distance: " + distance + ", Encoder Position: " + this.getLeftEncoder());
 		
 		_backLeft.set(ControlMode.MotionMagic, distance);
 		_backRight.set(ControlMode.MotionMagic, distance);
@@ -197,12 +199,9 @@ public class Drivetrain extends Subsystem {
 		return _frontRight.getSelectedSensorPosition(0);
 	}
 	
-	public void resetEncoders() {
+	public void resetEncoders() {		
 		_backLeft.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 		_backRight.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-		
-		_backLeft.set(ControlMode.MotionMagic, 0);
-		_backRight.set(ControlMode.MotionMagic, 0);
 	}
 
     public double getCurrent() {

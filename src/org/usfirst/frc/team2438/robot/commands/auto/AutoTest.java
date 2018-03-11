@@ -1,5 +1,8 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
+import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
+import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -25,13 +28,22 @@ public class AutoTest extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
+    	//addSequential(new AutoDriveStraight(210));
+    	//addParallel(new LiftToPosition(22894));
+    	//addSequential(new AutoTurn(70, 0.1));
+    	//addSequential(new ArmToPosition(578));
+    	//addSequential(new AutoShoot());
+    	
     	addSequential(new AutoDriveStraight(48));
+    	addSequential(new AutoTurn(-90, 0.1));
+    	
+    	/*addSequential(new AutoDriveStraight(48));
     	addSequential(new AutoTurn(-90, 0.1));
     	addSequential(new AutoDriveStraight(48));
     	addSequential(new AutoTurn(-90, 0.1));
     	addSequential(new AutoDriveStraight(48));
     	addSequential(new AutoTurn(-90, 0.1));
     	addSequential(new AutoDriveStraight(48));
-    	addSequential(new AutoTurn(-90, 0.1));
+    	addSequential(new AutoTurn(-90, 0.1));*/
     }
 }

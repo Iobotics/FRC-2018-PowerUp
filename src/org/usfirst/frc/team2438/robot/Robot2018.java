@@ -68,7 +68,6 @@ public class Robot2018 extends IterativeRobot {
 	public void autonomousInit() {
     	// pick auto command via program number //
     	//(new AutoInitRobot()).start();
-		CommandBase.drivetrain.resetEncoders();
 		(new AutoTest()).start();
     }
 
@@ -88,6 +87,8 @@ public class Robot2018 extends IterativeRobot {
 		Scheduler.getInstance().run();
 		
 		CommandBase.drivetrain.resetEncoders();
+		CommandBase.lift.resetEncoder();
+		CommandBase.intake.resetEncoder();
 		CommandBase.intake.initSolenoids();
 	}
 

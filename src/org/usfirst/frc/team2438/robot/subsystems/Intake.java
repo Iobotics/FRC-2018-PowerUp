@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 
-	private static final double kF = 0.1;
-	private static final double kP = 0.3;
+	private static final double kF = 0;
+	private static final double kP = 0.4;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
@@ -54,6 +54,7 @@ public class Intake extends Subsystem {
 		
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 		
+		this.resetEncoder();
 		this.setLiftPosition(0);
 		
 		/*_intakeArm.configContinuousCurrentLimit(15, TALON_TIMEOUT);
@@ -108,7 +109,6 @@ public class Intake extends Subsystem {
 	
 	public void resetEncoder() {
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-		_intakeArm.set(ControlMode.Position, 0);
 	}
 	
 	public void toggleSolenoid() {

@@ -12,7 +12,7 @@ public class AutoDriveStraight extends CommandBase {
 	
 	private static final double THRESHOLD = 1.0;
 	
-	private double _error = 5.0;
+	private double _error;
 	
 	private final double  _distance;
 	
@@ -34,18 +34,20 @@ public class AutoDriveStraight extends CommandBase {
     protected void initialize() {
     	drivetrain.resetEncoders();
     	drivetrain.setTargetDistance(_distance);
+    	
+    	_error = 5.0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	SmartDashboard.putNumber("DriveStraight Setpoint", _distance);
-    	SmartDashboard.putNumber("DriveStraight Error", drivetrain.getError());
+    	SmartDashboard.putNumber("DriveStraight Error", _error);
     	
     	_error = drivetrain.getError();
     }
     
     private boolean onTarget() {
-    	return (drivetrain.getError() < THRESHOLD);
+    	return (_error < THRESHOLD);
     }
 
     // Make this return true when this Command no longer needs to run execute()

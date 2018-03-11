@@ -3,6 +3,7 @@ package org.usfirst.frc.team2438.robot;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
 import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 import org.usfirst.frc.team2438.robot.commands.OperateLift;
+import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
 import org.usfirst.frc.team2438.robot.commands.ToggleIntakeSolenoid;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -30,6 +31,8 @@ public class OI {
 
 	private final JoystickButton _dropRamps = new JoystickButton(_lStick, 9);
 	
+	private final JoystickButton _resetEncoders = new JoystickButton(_rStick, 11);
+	
 	// TODO - Repurpose for proper servo activation
 	private final JoystickButton _activateServo = new JoystickButton(_lStick, 10);
 	private final JoystickButton _deactivateServo = new JoystickButton(_rStick, 7);
@@ -53,6 +56,8 @@ public class OI {
 		
 		//_activateServo.whenPressed(new ActivateServo(RampPosition.ramp));
 		//_deactivateServo.whenPressed(new ActivateServo(RampPosition.up));
+		
+		_resetEncoders.whenPressed(new ResetEncoders());
 		
 		_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
 	}
