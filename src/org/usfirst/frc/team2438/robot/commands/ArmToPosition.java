@@ -34,19 +34,14 @@ public class ArmToPosition extends CommandBase {
     	SmartDashboard.putNumber("Intake current", intake.getLiftCurrent());
     }
     
-    private boolean onTarget() {
-    	// FIXME
-    	return true;
-    }
-
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return this.onTarget() || this.isTimedOut();
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	intake.stop();
+    	
     }
 
     // Called when another command which requires one or more of the same

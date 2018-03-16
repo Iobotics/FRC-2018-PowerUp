@@ -86,10 +86,11 @@ public class Robot2018 extends IterativeRobot {
 	public void teleopInit() {
 		Scheduler.getInstance().run();
 		
-		CommandBase.drivetrain.resetEncoders();
+		CommandBase.intake.initSolenoids();
+		
 		CommandBase.lift.resetEncoder();
 		CommandBase.intake.resetEncoder();
-		CommandBase.intake.initSolenoids();
+		CommandBase.intake.setLiftPosition(1);
 	}
 
 	/**
@@ -99,9 +100,11 @@ public class Robot2018 extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("Lift Position", CommandBase.lift.getPosition());
+		SmartDashboard.putNumber("Lift Erorr", CommandBase.lift.getError());
 		SmartDashboard.putNumber("Distance sensor", CommandBase.lift.getHeight());
 		SmartDashboard.putNumber("Intake arm position", CommandBase.intake.getLiftPosition());
 		SmartDashboard.putNumber("Intake Arm Current", CommandBase.intake.getLiftCurrent());
+		SmartDashboard.putString("Control Mode", CommandBase.lift.getMode());
 		SmartDashboard.putBoolean("Intake Limit Switch", CommandBase.intake.getLimitSwitch());
 	}
 }

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -8,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class LiftToPosition extends CommandBase {
 	
 	private int position;
+	
+	private static final double THRESHOLD = 0;
 	
 	public LiftToPosition(int position) {
         this(position, -1);
@@ -25,23 +28,27 @@ public class LiftToPosition extends CommandBase {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() { }
+    protected void initialize() {
+    	lift.setPosition(position);
+    	Timer.delay(0.5);
+    	System.out.println("Im working");
+    }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	lift.setPosition(position);
+    	//lift.setPosition(position);
     	
     	SmartDashboard.putNumber("Lift current", lift.getCurrent(1));
     }
     
     private boolean onTarget() {
     	// FIXME
-    	return true;
+    	return (lift.getError() < THRESHOLD);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return this.onTarget() || this.isTimedOut();
+        return this.isTimedOut();
     }
 
     // Called once after isFinished returns true

@@ -34,6 +34,8 @@ public class AutoTest extends CommandGroup {
     	//addSequential(new ArmToPosition(578));
     	//addSequential(new AutoShoot());
     	
+    	//addSequential(new AutoTurn(90));
+    	
     	addSequential(new AutoDriveStraight(12));
     	addSequential(new AutoTurn(-90, 0.1));
     	addSequential(new AutoDriveStraight(12));

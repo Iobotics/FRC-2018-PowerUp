@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Lift extends Subsystem {
 	
-	private static final double kF = 0.075;
-	private static final double kP = 0.05;
+	private static final double kF = 0;
+	private static final double kP = 0.42;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
@@ -65,18 +65,19 @@ public class Lift extends Subsystem {
     	_frontRightLift.configMotionCruiseVelocity(LIFT_VELOCITY, TALON_TIMEOUT);
     	_frontRightLift.configMotionAcceleration(LIFT_VELOCITY, TALON_TIMEOUT);
     	
+    	/*_frontRightLift.configForwardSoftLimitThreshold(51000, TALON_TIMEOUT);
+    	_frontRightLift.configForwardSoftLimitEnable(true, TALON_TIMEOUT);
+    	_frontRightLift.configReverseSoftLimitThreshold(0, TALON_TIMEOUT);
+    	_frontRightLift.configReverseSoftLimitEnable(true, TALON_TIMEOUT);*/
+    	
     	this.resetEncoder();
-    	this.setPosition(0);
+    	//this.setPosition(0);
     	
     	_rangeSensor = new AnalogInput(0);
     }
     
-    public void setPower(double power) {
-    	//_frontLeftLift.set(ControlMode.PercentOutput, power);
-    	//_backLeftLift.set(ControlMode.PercentOutput, power);
-    	
-    	_frontRightLift.set(ControlMode.PercentOutput, power);
-    	//_backRightLift.set(ControlMode.PercentOutput, power);
+    public void setPower(double power) { 
+    	_frontRightLift  .set(ControlMode.PercentOutput, power);
     }
     
     /**
@@ -85,6 +86,7 @@ public class Lift extends Subsystem {
      */
     public void setPosition(double input) {    	
     	_frontRightLift.set(ControlMode.MotionMagic, input);
+    	System.out.println("im working too");
     }
     
     public int getPosition() {
@@ -133,6 +135,14 @@ public class Lift extends Subsystem {
     	return height;
     }
     
+    public String getMode() {
+    	if (_frontRightLift.getControlMode() == ControlMode.MotionMagic) {
+    		return "Motion Magic";
+    	}
+    	else {
+    		return "Something Else";
+    	}
+    }
     public void stop() {
     	_frontRightLift.set(ControlMode.PercentOutput, 0);
     }

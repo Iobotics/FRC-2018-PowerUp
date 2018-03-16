@@ -17,9 +17,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Intake extends Subsystem {
 
 	private static final double kF = 0;
-	private static final double kP = 0.4;
-	private static final double kI = 0;
-	private static final double kD = 0;
+	private static final double kP = 1.1;
+	private static final double kI = 0.001;
+	private static final double kD = 0.1;
 	private static final int iZone = 0;
 	
 	private static final int TALON_TIMEOUT = 20;
@@ -55,7 +55,7 @@ public class Intake extends Subsystem {
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 		
 		this.resetEncoder();
-		this.setLiftPosition(0);
+		//this.setLiftPosition(0);
 		
 		/*_intakeArm.configContinuousCurrentLimit(15, TALON_TIMEOUT);
 		_intakeArm.configPeakCurrentLimit(20, TALON_TIMEOUT);
@@ -108,6 +108,7 @@ public class Intake extends Subsystem {
 	}
 	
 	public void resetEncoder() {
+		this.stop();
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 	}
 	

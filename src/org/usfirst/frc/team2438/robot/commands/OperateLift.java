@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -33,8 +34,8 @@ public class OperateLift extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	lift.setPosition(lift.getPosition());
-    	//lift.stop();
+    	//lift.setPosition(lift.getPosition());
+    	lift.stop();
     }
 
     // Called when another command which requires one or more of the same
