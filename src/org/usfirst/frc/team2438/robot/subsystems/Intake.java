@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -15,11 +16,29 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Intake extends Subsystem {
+	
+	public static enum Position {
+		home(0),
+		init(0),
+		autoSwitch(0),
+		autoScale(1000);
+		//autoReverse(0);
+		
+		private int encoderPosition;
+		
+		Position(int encoderPosition) {
+			this.encoderPosition = encoderPosition;
+		}
+		
+		int getPosition() {
+			return encoderPosition;
+		}
+	}
 
 	private static final double kF = 0;
-	private static final double kP = 1.1;
-	private static final double kI = 0.001;
-	private static final double kD = 0.1;
+	private static final double kP = 0.95;
+	private static final double kI = 0.0005;
+	private static final double kD = 0.05;
 	private static final int iZone = 0;
 	
 	private static final int TALON_TIMEOUT = 20;
@@ -32,8 +51,11 @@ public class Intake extends Subsystem {
 	private DoubleSolenoid _solenoid;
 	
 	private DigitalInput _switch;
+	private AnalogInput _potentiometer;
 	
 	private boolean solenoidActivated = true;
+	
+	private Position armPosition;
 	
 	public void init() {
 		_leftIntake = new TalonSRX(RobotMap.leftIntake);
@@ -69,6 +91,7 @@ public class Intake extends Subsystem {
 		_solenoid = new DoubleSolenoid(0, 1);
 		
 		_switch = new DigitalInput(0);
+		_potentiometer = new AnalogInput(1);
 	}
 	
 	public void setPower(double power) {
@@ -157,5 +180,61 @@ public class Intake extends Subsystem {
     	setDefaultCommand(null);
     	//setDefaultCommand(new OperateIntakeLift());
     }
-}
 
+	public Position getArmPosition() {
+		return armPosition;
+	}
+
+	public void setArmPosition(Position armPosition) {
+		this.setLiftPosition(armPosition.getPosition());
+		this.armPosition = armPosition;
+	}
+	
+	public void cyclePositionUp() {
+		switch(armPosition) {
+			case home:
+				this.setLiftPosition(Position.init.getPosition());
+				armPosition = Position.init;
+				break;
+			case init:
+				this.setLiftPosition(Position.autoSwitch.getPosition());
+				armPosition = Position.autoSwitch;
+				break;
+			case autoSwitch:
+				this.setLiftPosition(Position.autoScale.getPosition());
+				armPosition = Position.autoScale;
+				break;
+			/*case autoScale:
+				this.setLiftPosition(Position.autoReverse.getPosition());
+				armPosition = Position.autoReverse;
+				break;*/
+			default:
+				this.setLiftPosition(Position.home.getPosition());
+				armPosition = Position.home;
+		}
+	}
+	
+	public void cyclePositionDown() {
+		switch(armPosition) {
+			/*case autoReverse:
+				this.setLiftPosition(Position.autoScale.getPosition());
+				armPosition = Position.autoScale;
+				break;*/
+			case autoScale:
+				this.setLiftPosition(Position.autoSwitch.getPosition());
+				armPosition = Position.autoSwitch;
+				break;				
+			case autoSwitch:
+				this.setLiftPosition(Position.init.getPosition());
+				armPosition = Position.init;
+				break;				
+			case init:
+				this.setLiftPosition(Position.home.getPosition());
+				armPosition = Position.home;
+				break;			
+			default:
+				this.setLiftPosition(Position.home.getPosition());
+				armPosition = Position.home;
+		}
+	}
+}

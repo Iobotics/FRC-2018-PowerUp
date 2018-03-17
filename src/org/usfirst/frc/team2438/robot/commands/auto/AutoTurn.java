@@ -23,11 +23,11 @@ public class AutoTurn extends CommandBase implements PIDOutput {
 	private final double kD = 0;
 	
 	public AutoTurn(double degrees) {
-		this(degrees, 0.5, -1);
+		this(degrees, 0.5, 2.4);
 	}
 	
 	public AutoTurn(double degrees, double power) {
-		this(degrees, power, -1);
+		this(degrees, power, 2.4);
 	}
 	
     public AutoTurn(double degrees, double power, double timeout) {
@@ -58,11 +58,13 @@ public class AutoTurn extends CommandBase implements PIDOutput {
     	_pid.enable();
     }
     
-    private boolean onTarget() {    	
-    	return (Math.abs(_pid.getError()) < GYRO_TOLERANCE);
+    private boolean onTarget() {
+    	return false;
+    	//return (Math.abs(_pid.getError()) < GYRO_TOLERANCE);
     }
    
     protected void execute() {
+    	SmartDashboard.putNumber("Heading", navSensor.getGyro());
     	SmartDashboard.putNumber("Drive setpoint", _pid.getSetpoint());
     	SmartDashboard.putNumber("Drive Turn error", _pid.getError());
     }

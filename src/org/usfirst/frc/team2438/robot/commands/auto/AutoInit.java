@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.CalibrateNavigationSensor;
+import org.usfirst.frc.team2438.robot.commands.DropRamp;
+import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -27,7 +29,8 @@ public class AutoInit extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	//addParallel(new CalibrateNavigationSensor());
+    	addParallel(new CalibrateNavigationSensor());
+    	//addSequential(new DropRamp()); 
     	//addSequential(new LiftToPosition(0));
     }
 }

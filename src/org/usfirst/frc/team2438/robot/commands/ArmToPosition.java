@@ -10,7 +10,7 @@ public class ArmToPosition extends CommandBase {
 	private int position;
 	
 	public ArmToPosition(int position) {
-        this(position, -1);
+        this(position, 1.75);
     }
 	
     public ArmToPosition(int position, double timeout) {
@@ -25,18 +25,18 @@ public class ArmToPosition extends CommandBase {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() { }
+    protected void initialize() { 
+    	intake.setLiftPosition(position);
+    }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	intake.setLiftPosition(position);
-    	
     	SmartDashboard.putNumber("Intake current", intake.getLiftCurrent());
     }
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return this.isTimedOut();
     }
 
     // Called once after isFinished returns true

@@ -9,14 +9,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoScale extends CommandGroup {
+public class AutoSide extends CommandGroup {
 	
 	private static enum Side {
 		left,
 		right
 	}
 
-    public AutoScale() {
+    public AutoSide() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -35,23 +35,34 @@ public class AutoScale extends CommandGroup {
         // arm.
     	addSequential(new AutoInit());
 		
-    	Side botSide = Side.left;
+    	Side botSide = Side.right;
+    	Side switchSide = Side.right;
     	Side scaleSide = Side.left;
     	
 		int botSideCoefficient = 1;
 		if (botSide == Side.left) {
 			botSideCoefficient = -1;
 		}
+		
+		if (switchSide == botSide) {
+			addSequential(new AutoDriveStraight(168.0));
 
-		if (scaleSide == botSide){
+			//addParallel(new LiftToPosition(25000));
+			addSequential(new AutoTurn(90.0 * botSideCoefficient));
+
+			addSequential(new AutoDriveStraight(26.7));
+		} else if (switchSide == null) {
+			addSequential(new AutoDriveStraight(168.0));
+		} else if (scaleSide == botSide){
 			addSequential(new AutoDriveStraight(324.0));
 
-			addParallel(new LiftToPosition(48000));
+			//addParallel(new LiftToPosition(48000));
 			addSequential(new AutoTurn(90.0 * botSideCoefficient));
 
 			addSequential(new AutoDriveStraight(10.7));
 
-			addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
+			//addSequential(new ArmToPosition(1000)); //practice bot only, not programming
+			// bot
 		}
 		else{
 
@@ -59,12 +70,13 @@ public class AutoScale extends CommandGroup {
 
 			addSequential(new AutoDriveStraight(166.0));
 			
-			addParallel(new LiftToPosition(48000));
-			addSequential(new AutoTurn(-90.0 * botSideCoefficient));
+			//addParallel(new LiftToPosition(25000));
+			addSequential(new AutoTurn(90.0 * botSideCoefficient));
 
-			addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
 		}
 
-	addSequential(new OperateIntake(-1.0));
+		if (switchSide != null) {
+			//addSequential(new OperateIntake(-1.0));
+		}
     }
 }

@@ -28,23 +28,25 @@ public class AutoTest extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	//addSequential(new AutoDriveStraight(210));
-    	//addParallel(new LiftToPosition(22894));
-    	//addSequential(new AutoTurn(70, 0.1));
-    	//addSequential(new ArmToPosition(578));
-    	//addSequential(new AutoShoot());
+    	addParallel(new AutoDriveStraight(156));
     	
-    	//addSequential(new AutoTurn(90));
+    	addSequential(new ArmToPosition(465));
+    	addSequential(new LiftToPosition(19820));
     	
-    	addSequential(new AutoDriveStraight(12));
-    	addSequential(new AutoTurn(-90, 0.1));
-    	addSequential(new AutoDriveStraight(12));
-    	addSequential(new AutoTurn(-90, 0.1));
-    	addSequential(new AutoDriveStraight(12));
-    	addSequential(new AutoTurn(-90, 0.1));
-    	addSequential(new AutoDriveStraight(12));
-    	addSequential(new AutoTurn(-90, 0.1));
+    	addSequential(new AutoTurn(-90));
     	
-    
+    	addSequential(new AutoShoot());
+    	
+    	addSequential(new AutoDriveStraight(-12));
+    	
+    	addSequential(new LiftToPosition(0));
+    	addSequential(new ArmToPosition(0));
+    	
+    	/*addParallel(new LiftToPosition(51000, 3));
+    	addParallel(new ArmToPosition(1000, 3));
+    	addSequential(new AutoTurn (90));
+    	addSequential(new AutoShoot());
+    	addSequential(new LiftToPosition(0, 3));
+    	addSequential(new ArmToPosition(0, 3));*/
     }
 }

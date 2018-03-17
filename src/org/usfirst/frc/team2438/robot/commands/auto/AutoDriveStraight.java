@@ -20,7 +20,7 @@ public class AutoDriveStraight extends CommandBase {
 	private final double  _distance;
 	
 	public AutoDriveStraight(double inches) {
-    	this(inches, -1);
+    	this(inches, 4);
     }
 	
     public AutoDriveStraight(double inches, double timeout) {
@@ -51,8 +51,8 @@ public class AutoDriveStraight extends CommandBase {
     }
     
     private boolean onTarget() {
-    	
-    	return (_error < THRESHOLD);
+    	return false;
+    	//return (_error < THRESHOLD);
     }
 
     // Make this return true when this Command no longer needs to run execute()

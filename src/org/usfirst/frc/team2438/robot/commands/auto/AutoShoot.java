@@ -17,9 +17,10 @@ public class AutoShoot extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	intake.setPower(-1);
+    	intake.setPower(-0.28);
     	Timer.delay(2);
     	intake.setPower(0);
+    	Timer.delay(1);
     }
 
     // Called repeatedly when this Command is scheduled to run

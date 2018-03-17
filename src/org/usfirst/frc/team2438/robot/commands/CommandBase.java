@@ -32,7 +32,7 @@ public abstract class CommandBase extends Command {
         drivetrain.init();
         lift.init(); 
         intake.init();
-        //ramp.init();
+        ramp.init();
     }
 
     public CommandBase(String name) {

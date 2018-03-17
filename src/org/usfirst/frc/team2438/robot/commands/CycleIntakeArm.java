@@ -1,24 +1,27 @@
-package org.usfirst.frc.team2438.robot.commands.auto;
-
-import org.usfirst.frc.team2438.robot.commands.CommandBase;
-
-import edu.wpi.first.wpilibj.command.Command;
+package org.usfirst.frc.team2438.robot.commands;
 
 /**
  *
  */
-public class VelocityTest extends CommandBase {
+public class CycleIntakeArm extends CommandBase {
+	
+	private boolean up;
 
-    public VelocityTest() {
+    public CycleIntakeArm(boolean up) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(drivetrain);
+    	requires(intake);
     	
+    	this.up = up;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	drivetrain.setVelocity(1 , 1);
+    	if(up) {
+    		intake.cyclePositionUp();
+    	} else {
+    		intake.cyclePositionDown();
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -27,12 +30,11 @@ public class VelocityTest extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	drivetrain.setVelocity(0,0);
     }
 
     // Called when another command which requires one or more of the same

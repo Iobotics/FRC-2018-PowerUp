@@ -10,10 +10,8 @@ public class LiftToPosition extends CommandBase {
 	
 	private int position;
 	
-	private static final double THRESHOLD = 0;
-	
 	public LiftToPosition(int position) {
-        this(position, -1);
+        this(position, 2.5);
     }
 	
     public LiftToPosition(int position, double timeout) {
@@ -31,7 +29,6 @@ public class LiftToPosition extends CommandBase {
     protected void initialize() {
     	lift.setPosition(position);
     	Timer.delay(0.5);
-    	System.out.println("Im working");
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -39,11 +36,6 @@ public class LiftToPosition extends CommandBase {
     	//lift.setPosition(position);
     	
     	SmartDashboard.putNumber("Lift current", lift.getCurrent(1));
-    }
-    
-    private boolean onTarget() {
-    	// FIXME
-    	return (lift.getError() < THRESHOLD);
     }
 
     // Make this return true when this Command no longer needs to run execute()

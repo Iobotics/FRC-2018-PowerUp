@@ -106,5 +106,6 @@ public class Robot2018 extends IterativeRobot {
 		SmartDashboard.putNumber("Intake Arm Current", CommandBase.intake.getLiftCurrent());
 		SmartDashboard.putString("Control Mode", CommandBase.lift.getMode());
 		SmartDashboard.putBoolean("Intake Limit Switch", CommandBase.intake.getLimitSwitch());
+		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
 	}
 }

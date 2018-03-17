@@ -15,6 +15,23 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Lift extends Subsystem {
 	
+	public static enum Position {
+		home(0),
+		init(0),
+		autoSwitch(30500),
+		autoScale(51500);
+		
+		private int encoderPosition;
+		
+		Position(int encoderPosition) {
+			this.encoderPosition = encoderPosition;
+		}
+		
+		int getPosition() {
+			return encoderPosition;
+		}
+	}
+	
 	private static final double kF = 0;
 	private static final double kP = 0.42;
 	private static final double kI = 0;
@@ -22,7 +39,7 @@ public class Lift extends Subsystem {
 	private static final int iZone = 0;
 	
 	private static final int LIFT_VELOCITY = 2200; // TODO
-	private static final int MAX_LIFT_POSITION = 53000; // FIXME
+	private static final int MAX_LIFT_POSITION = 51000; // FIXME
 	
 	private static final double VOLTS_PER_INCH = 0.009766;
 	
@@ -34,6 +51,8 @@ public class Lift extends Subsystem {
 	private TalonSRX _backRightLift;
 	
 	private AnalogInput _rangeSensor;
+	
+	private Position liftPosition;
 	
     public void init() {
     	_frontLeftLift = new TalonSRX(RobotMap.frontLeftLift);
@@ -151,5 +170,54 @@ public class Lift extends Subsystem {
     	//setDefaultCommand(new OperateLift());
     	setDefaultCommand(null);
     }
+
+	public Position getLiftPosition() {
+		return liftPosition;
+	}
+
+	public void setLiftPosition(Position liftPosition) {
+		this.setPosition(liftPosition.getPosition());
+		this.liftPosition = liftPosition;
+	}
+	
+	public void cyclePositionUp() {
+		switch(liftPosition) {
+			case home:
+				this.setPosition(Position.init.getPosition());
+				liftPosition = Position.init;
+				break;
+			case init:
+				this.setPosition(Position.autoSwitch.getPosition());
+				liftPosition = Position.autoSwitch;
+				break;
+			case autoSwitch:
+				this.setPosition(Position.autoScale.getPosition());
+				liftPosition = Position.autoScale;
+				break;
+			default:
+				this.setPosition(Position.home.getPosition());
+				liftPosition = Position.home;
+		}
+	}
+	
+	public void cyclePositionDown() {
+		switch(liftPosition) {
+			case autoScale:
+				this.setPosition(Position.autoSwitch.getPosition());
+				liftPosition = Position.autoSwitch;
+				break;				
+			case autoSwitch:
+				this.setPosition(Position.init.getPosition());
+				liftPosition = Position.init;
+				break;				
+			case init:
+				this.setPosition(Position.home.getPosition());
+				liftPosition = Position.home;
+				break;	
+			default:
+				this.setPosition(Position.home.getPosition());
+				liftPosition = Position.home;
+		}
+	}
 }
 

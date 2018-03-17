@@ -1,13 +1,21 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
+import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
+import org.usfirst.frc.team2438.robot.commands.OperateIntake;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class AutoSwitch extends CommandGroup {
+public class AutoCenter extends CommandGroup {
 
-    public AutoSwitch() {
+	public static enum Side {
+		left,
+		right
+	}
+	
+    public AutoCenter() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -25,27 +33,34 @@ public class AutoSwitch extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	/*addSequential(new AutoDriveStraight(0.0));
+    	addSequential(new AutoDriveStraight(0.0));
     	
+		Side side = Side.right;
+		double distance = 0;
     	double angle = 90.0;
-    	if(side == right) {
+    	if(side == Side.right) {
     		angle *= -1;
+    		distance = 29;
     	}
+    	else {
+    		distance = 130;
+    	}
+
     	
     	addSequential(new AutoTurn(angle));
     	
-    	addSequential(new AutoDriveStraight(0.0));
+    	addSequential(new AutoDriveStraight(distance));
     	
     	angle *= -1;
     	addSequential(new AutoTurn(angle));
     	
-    	addParallel(new RaiseLift());
-    	addSequential(new AutoDriveStraight(0.0));
+    	addParallel(new LiftToPosition(25000));
+    	addSequential(new AutoDriveStraight(20.0));
     	
     	if(side != null) {
-    		addSequential(new OuttakeBox());
+    		addSequential(new OperateIntake(-1.0));
     	} else {
     		this.end();
-    	}*/
+    	}
     }
 }
