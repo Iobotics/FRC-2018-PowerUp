@@ -46,12 +46,12 @@ public class AutoScale extends CommandGroup {
 		if (scaleSide == botSide){
 			addSequential(new AutoDriveStraight(324.0));
 
-			addParallel(new LiftToPosition(48000));
+			//addParallel(new LiftToPosition(48000));
 			addSequential(new AutoTurn(90.0 * botSideCoefficient));
 
 			addSequential(new AutoDriveStraight(10.7));
 
-			addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
+			//addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
 		}
 		else{
 
@@ -59,10 +59,10 @@ public class AutoScale extends CommandGroup {
 
 			addSequential(new AutoDriveStraight(166.0));
 			
-			addParallel(new LiftToPosition(48000));
+			//addParallel(new LiftToPosition(48000));
 			addSequential(new AutoTurn(-90.0 * botSideCoefficient));
 
-			addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
+			//addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
 		}
 
 	addSequential(new OperateIntake(-1.0));

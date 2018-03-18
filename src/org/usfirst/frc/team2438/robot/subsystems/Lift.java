@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
+import org.usfirst.frc.team2438.robot.commands.TargetCounter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -16,19 +17,25 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Lift extends Subsystem {
 	
 	public static enum Position {
-		home(0),
-		init(0),
-		autoSwitch(30500),
-		autoScale(51500);
+		home(0, 0),
+		autoSwitch(30500, 430),
+		autoScale(51500, 1000),
+		autoReverse(0, 0); // FIXME
 		
-		private int encoderPosition;
+		private int liftPosition;
+		private int armPosition;
 		
-		Position(int encoderPosition) {
-			this.encoderPosition = encoderPosition;
+		Position(int liftPosition, int armPosition) {
+			this.liftPosition = liftPosition;
+			this.armPosition = armPosition;
 		}
 		
-		int getPosition() {
-			return encoderPosition;
+		int getLiftPosition() {
+			return liftPosition;
+		}
+		
+		int getArmPosition() {
+			return armPosition;
 		}
 	}
 	
@@ -52,7 +59,9 @@ public class Lift extends Subsystem {
 	
 	private AnalogInput _rangeSensor;
 	
-	private Position liftPosition;
+	private Position _liftPosition;
+	
+	private TargetCounter _targetCounter;
 	
     public void init() {
     	_frontLeftLift = new TalonSRX(RobotMap.frontLeftLift);
@@ -93,6 +102,9 @@ public class Lift extends Subsystem {
     	//this.setPosition(0);
     	
     	_rangeSensor = new AnalogInput(0);
+    	
+    	_targetCounter = new TargetCounter();
+    	System.out.println("First");
     }
     
     public void setPower(double power) { 
@@ -172,26 +184,27 @@ public class Lift extends Subsystem {
     }
 
 	public Position getLiftPosition() {
-		return liftPosition;
+		return _liftPosition;
 	}
 
-	public void setLiftPosition(Position liftPosition) {
-		this.setPosition(liftPosition.getPosition());
-		this.liftPosition = liftPosition;
+	public void setPosition(Position liftPosition) {
+		this.setPosition(liftPosition.getLiftPosition());
+		_liftPosition = liftPosition;
 	}
 	
-	public void cyclePositionUp() {
+	public TargetCounter getTargetCounter() {
+		System.out.println("Second");
+		return _targetCounter;
+	}
+	
+	/*public void cyclePositionUp() {
 		switch(liftPosition) {
 			case home:
-				this.setPosition(Position.init.getPosition());
-				liftPosition = Position.init;
-				break;
-			case init:
-				this.setPosition(Position.autoSwitch.getPosition());
-				liftPosition = Position.autoSwitch;
+				this.setPosition(Position.autoSwitch.getLiftPosition());
+				liftPosition = Position.autoScale;
 				break;
 			case autoSwitch:
-				this.setPosition(Position.autoScale.getPosition());
+				this.setPosition(Position.autoScale.getLiftPosition());
 				liftPosition = Position.autoScale;
 				break;
 			default:
@@ -207,17 +220,12 @@ public class Lift extends Subsystem {
 				liftPosition = Position.autoSwitch;
 				break;				
 			case autoSwitch:
-				this.setPosition(Position.init.getPosition());
-				liftPosition = Position.init;
-				break;				
-			case init:
 				this.setPosition(Position.home.getPosition());
 				liftPosition = Position.home;
-				break;	
 			default:
 				this.setPosition(Position.home.getPosition());
 				liftPosition = Position.home;
 		}
-	}
+	}*/
 }
 

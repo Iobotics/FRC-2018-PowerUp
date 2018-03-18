@@ -1,5 +1,6 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.auto;
 
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -7,16 +8,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Operate the lift
  */
-public class ArmToPosition extends CommandBase {
-	
-	private static final int ERROR_THRESHOLD = 200;
+public class AutoArmToPosition extends CommandBase {
 	
 	private Position position;
-	private TargetCounter targetCounter;
 	
-    public ArmToPosition(Position position) {
+	public AutoArmToPosition(Position position) {
+        this(position, 1.75);
+    }
+	
+    public AutoArmToPosition(Position position, double timeout) {
         // Use requires() here to declare subsystem dependencies
     	requires(intake);
+    	
+    	if(timeout > 0) {
+    		this.setTimeout(timeout);
+    	}
     	
     	this.position = position;
     }
@@ -24,25 +30,22 @@ public class ArmToPosition extends CommandBase {
     // Called just before this Command runs the first time
     protected void initialize() { 
     	//intake.setLiftPosition(position);
-    	targetCounter = intake.getTargetCounter();
-    	
     	intake.setArmPosition(position);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	SmartDashboard.putNumber("Arm Error", intake.getLiftError());
     	SmartDashboard.putNumber("Intake current", intake.getLiftCurrent());
     }
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return targetCounter.onTarget(intake.getLiftError(), ERROR_THRESHOLD);
+        return this.isTimedOut();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	targetCounter.reset();
+    	
     }
 
     // Called when another command which requires one or more of the same

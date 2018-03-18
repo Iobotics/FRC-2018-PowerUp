@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -8,25 +10,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class LiftToPosition extends CommandBase {
 	
-	private int position;
+	private static final int ERROR_THRESHOLD = 250;
 	
-	public LiftToPosition(int position) {
-        this(position, 2.5);
-    }
+	private Position position;
+	private TargetCounter targetCounter;
 	
-    public LiftToPosition(int position, double timeout) {
+    public LiftToPosition(Position position) {
         // Use requires() here to declare subsystem dependencies
     	requires(lift);
-    	
-    	if(timeout > 0) {
-    		this.setTimeout(timeout);
-    	}
     	
     	this.position = position;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	//lift.setPosition(position);
+
+    	targetCounter = lift.getTargetCounter();
+    	
     	lift.setPosition(position);
     	Timer.delay(0.5);
     }
@@ -40,17 +41,19 @@ public class LiftToPosition extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return this.isTimedOut();
+        return targetCounter.onTarget(lift.getError(), ERROR_THRESHOLD);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	lift.stop();
+    	//lift.stop();
+    	targetCounter.reset();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	lift.stop();
     	end();
     }
 }

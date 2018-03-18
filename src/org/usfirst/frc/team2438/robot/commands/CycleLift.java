@@ -17,11 +17,11 @@ public class CycleLift extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if(up) {
+    	/*if(up) {
     		lift.cyclePositionUp();
     	} else {
     		lift.cyclePositionDown();
-    	}
+    	}*/
     }
 
     // Called repeatedly when this Command is scheduled to run

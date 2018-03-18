@@ -1,7 +1,9 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
+import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
 import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -30,8 +32,10 @@ public class AutoTest extends CommandGroup {
     	
     	addParallel(new AutoDriveStraight(156));
     	
-    	addSequential(new ArmToPosition(465));
-    	addSequential(new LiftToPosition(19820));
+    	//addSequential(new ArmToPosition(465));
+    	//addSequential(new LiftToPosition(19820));
+    	
+    	addSequential(new LiftAndArmToPos(Position.autoSwitch));
     	
     	addSequential(new AutoTurn(-90));
     	
@@ -39,8 +43,10 @@ public class AutoTest extends CommandGroup {
     	
     	addSequential(new AutoDriveStraight(-12));
     	
-    	addSequential(new LiftToPosition(0));
-    	addSequential(new ArmToPosition(0));
+    	//addSequential(new LiftToPosition(0));
+    	//addSequential(new ArmToPosition(0));
+    	
+    	addSequential(new LiftAndArmToPos(Position.home));
     	
     	/*addParallel(new LiftToPosition(51000, 3));
     	addParallel(new ArmToPosition(1000, 3));

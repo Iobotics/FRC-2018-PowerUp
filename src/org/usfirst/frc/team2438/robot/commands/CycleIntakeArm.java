@@ -17,11 +17,11 @@ public class CycleIntakeArm extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if(up) {
+    	/*if(up) {
     		intake.cyclePositionUp();
     	} else {
     		intake.cyclePositionDown();
-    	}
+    	}*/
     }
 
     // Called repeatedly when this Command is scheduled to run

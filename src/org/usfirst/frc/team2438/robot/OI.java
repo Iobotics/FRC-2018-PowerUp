@@ -1,13 +1,12 @@
 package org.usfirst.frc.team2438.robot;
 
-import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
-import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
+import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
 import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 import org.usfirst.frc.team2438.robot.commands.OperateLift;
 import org.usfirst.frc.team2438.robot.commands.OperateRamp;
-import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
 import org.usfirst.frc.team2438.robot.commands.ToggleIntakeSolenoid;
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampSide;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -27,9 +26,9 @@ public class OI {
 	private final JoystickButton _lowerLiftButton = new JoystickButton(_rStick, 7);
 	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 6);
 	
-	private final JoystickButton _homeLiftButton = new JoystickButton(_rStick, 2);
-	private final JoystickButton _switchLiftButton = new JoystickButton(_rStick, 3);
-	private final JoystickButton _scaleLiftButton = new JoystickButton(_rStick, 4);
+	private final JoystickButton _homeButton = new JoystickButton(_rStick, 2);
+	private final JoystickButton _switchButton = new JoystickButton(_rStick, 3);
+	private final JoystickButton _scaleButton = new JoystickButton(_rStick, 4);
 	
 	private final JoystickButton _lowerIntakeButton = new JoystickButton(_lStick, 2);
 	private final JoystickButton _raiseIntakeButton = new JoystickButton(_lStick, 3);
@@ -53,13 +52,12 @@ public class OI {
 		_lowerLiftButton.whileHeld(new OperateLift(-0.1));
 		_raiseLiftButton.whileHeld(new OperateLift(0.15));
 		
-		_homeLiftButton.whenPressed(new LiftToPosition(1));
-		_switchLiftButton.whenPressed(new LiftToPosition(30500));
-		_scaleLiftButton.whenPressed(new LiftToPosition(51500));
+		_homeButton.whenPressed(new LiftAndArmToPos(Position.home));
+		_switchButton.whenPressed(new LiftAndArmToPos(Position.autoSwitch));
+		_scaleButton.whenPressed(new LiftAndArmToPos(Position.autoScale));
 		
 		_lowerIntakeButton.whileHeld(new OperateIntakeArm(-0.3));
 		_raiseIntakeButton.whileHeld(new OperateIntakeArm(0.3));
-		_shootIntakeButton.whenPressed(new ArmToPosition(1000));
 		
 		_raiseLeftRamp.whenPressed(new OperateRamp(RampSide.left));
 		_raiseRightRamp.whenPressed(new OperateRamp(RampSide.right));

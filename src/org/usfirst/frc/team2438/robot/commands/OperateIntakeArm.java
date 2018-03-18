@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  *
  */
@@ -21,9 +23,9 @@ public class OperateIntakeArm extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
-    	//intake.setLiftCurrent(current);
     	intake.setLiftPower(power);
+    	
+    	SmartDashboard.putNumber("Intake Arm Error", intake.getLiftError());
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
+import org.usfirst.frc.team2438.robot.commands.TargetCounter;
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -17,28 +19,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Intake extends Subsystem {
 	
-	public static enum Position {
-		home(0),
-		init(0),
-		autoSwitch(0),
-		autoScale(1000);
-		//autoReverse(0);
-		
-		private int encoderPosition;
-		
-		Position(int encoderPosition) {
-			this.encoderPosition = encoderPosition;
-		}
-		
-		int getPosition() {
-			return encoderPosition;
-		}
-	}
-
 	private static final double kF = 0;
-	private static final double kP = 0.95;
-	private static final double kI = 0.0005;
-	private static final double kD = 0.05;
+	private static final double kP = 1.1;
+	private static final double kI = 0;
+	private static final double kD = 0;
 	private static final int iZone = 0;
 	
 	private static final int TALON_TIMEOUT = 20;
@@ -53,9 +37,9 @@ public class Intake extends Subsystem {
 	private DigitalInput _switch;
 	private AnalogInput _potentiometer;
 	
-	private boolean solenoidActivated = true;
+	private boolean _solenoidActivated = true;
 	
-	private Position armPosition;
+	private TargetCounter _targetCounter;
 	
 	public void init() {
 		_leftIntake = new TalonSRX(RobotMap.leftIntake);
@@ -73,6 +57,8 @@ public class Intake extends Subsystem {
 		_intakeArm.config_kI(0, kI, TALON_TIMEOUT);
 		_intakeArm.config_kD(0, kD, TALON_TIMEOUT);
 		_intakeArm.config_IntegralZone(0, iZone, TALON_TIMEOUT);
+		_intakeArm.configMotionCruiseVelocity(1470, TALON_TIMEOUT);
+		_intakeArm.configMotionAcceleration(1470, TALON_TIMEOUT);
 		
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 		
@@ -92,6 +78,8 @@ public class Intake extends Subsystem {
 		
 		_switch = new DigitalInput(0);
 		_potentiometer = new AnalogInput(1);
+		
+		_targetCounter = new TargetCounter();
 	}
 	
 	public void setPower(double power) {
@@ -108,10 +96,8 @@ public class Intake extends Subsystem {
 		_intakeArm.set(ControlMode.PercentOutput, power);
 	}
 	
-	public void setLiftPosition(double input) {
-		int position = Math.round((float) input);
-		
-		_intakeArm.set(ControlMode.Position, position);
+	public void setLiftPosition(int position) {
+		_intakeArm.set(ControlMode.MotionMagic, position);
 	}
 	
 	public void setLiftCurrent(double current) {
@@ -136,13 +122,13 @@ public class Intake extends Subsystem {
 	}
 	
 	public void toggleSolenoid() {
-		if(!solenoidActivated) {
+		if(!_solenoidActivated) {
 			_solenoid.set(Value.kForward);
 		}
 		else {
 			_solenoid.set(Value.kReverse);
 		}
-		solenoidActivated = !solenoidActivated;
+		_solenoidActivated = !_solenoidActivated;
 		
 		try {
 			Thread.sleep(500);
@@ -181,60 +167,51 @@ public class Intake extends Subsystem {
     	//setDefaultCommand(new OperateIntakeLift());
     }
 
-	public Position getArmPosition() {
-		return armPosition;
+	public void setArmPosition(Position position) {
+		this.setLiftPosition(position.getArmPosition());
 	}
 
-	public void setArmPosition(Position armPosition) {
-		this.setLiftPosition(armPosition.getPosition());
-		this.armPosition = armPosition;
+	public TargetCounter getTargetCounter() {
+		return _targetCounter;
 	}
 	
-	public void cyclePositionUp() {
-		switch(armPosition) {
+	/*public void cyclePositionUp() {
+		switch(_armPosition) {
 			case home:
-				this.setLiftPosition(Position.init.getPosition());
-				armPosition = Position.init;
-				break;
-			case init:
-				this.setLiftPosition(Position.autoSwitch.getPosition());
-				armPosition = Position.autoSwitch;
+				this.setLiftPosition(ArmPosition.autoSwitch.getPosition());
+				_armPosition = ArmPosition.autoSwitch;
 				break;
 			case autoSwitch:
-				this.setLiftPosition(Position.autoScale.getPosition());
-				armPosition = Position.autoScale;
+				this.setLiftPosition(ArmPosition.autoScale.getPosition());
+				_armPosition = ArmPosition.autoScale;
 				break;
-			/*case autoScale:
+			case autoScale:
 				this.setLiftPosition(Position.autoReverse.getPosition());
 				armPosition = Position.autoReverse;
-				break;*/
+				break;
 			default:
-				this.setLiftPosition(Position.home.getPosition());
-				armPosition = Position.home;
+				this.setLiftPosition(ArmPosition.home.getPosition());
+				_armPosition = ArmPosition.home;
 		}
 	}
 	
 	public void cyclePositionDown() {
-		switch(armPosition) {
-			/*case autoReverse:
+		switch(_armPosition) {
+			case autoReverse:
 				this.setLiftPosition(Position.autoScale.getPosition());
 				armPosition = Position.autoScale;
-				break;*/
+				break;
 			case autoScale:
-				this.setLiftPosition(Position.autoSwitch.getPosition());
-				armPosition = Position.autoSwitch;
+				this.setLiftPosition(ArmPosition.autoSwitch.getPosition());
+				_armPosition = ArmPosition.autoSwitch;
 				break;				
 			case autoSwitch:
-				this.setLiftPosition(Position.init.getPosition());
-				armPosition = Position.init;
-				break;				
-			case init:
-				this.setLiftPosition(Position.home.getPosition());
-				armPosition = Position.home;
-				break;			
+				this.setLiftPosition(ArmPosition.home.getPosition());
+				_armPosition = ArmPosition.home;
+				break;		
 			default:
-				this.setLiftPosition(Position.home.getPosition());
-				armPosition = Position.home;
+				this.setLiftPosition(ArmPosition.home.getPosition());
+				_armPosition = ArmPosition.home;
 		}
-	}
+	}*/
 }

@@ -54,7 +54,7 @@ public class AutoCenter extends CommandGroup {
     	angle *= -1;
     	addSequential(new AutoTurn(angle));
     	
-    	addParallel(new LiftToPosition(25000));
+    	//addParallel(new LiftToPosition(25000));
     	addSequential(new AutoDriveStraight(20.0));
     	
     	if(side != null) {
