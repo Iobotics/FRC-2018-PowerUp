@@ -19,7 +19,7 @@ public class ActivateServo extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	ramp.setRampPosition(position);
+    	//ramp.setRampPosition(position);
     }
 
     // Called repeatedly when this Command is scheduled to run

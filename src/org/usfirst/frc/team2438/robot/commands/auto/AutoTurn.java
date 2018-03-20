@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
+import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -17,13 +18,14 @@ public class AutoTurn extends CommandBase implements PIDOutput {
 	
 	private double _degrees;
 	private PIDController _pid;
+	private TargetCounter _targetCounter;
 	
-	private final double kP = 0.002;
+	private final double kP = 0.0015;
 	private final double kI = 0;
 	private final double kD = 0;
 	
 	public AutoTurn(double degrees) {
-		this(degrees, 0.5, 2.4);
+		this(degrees, 0.7, 2.4);
 	}
 	
 	public AutoTurn(double degrees, double power) {
@@ -56,11 +58,9 @@ public class AutoTurn extends CommandBase implements PIDOutput {
     	_pid.reset();
     	_pid.setSetpoint(_degrees);
     	_pid.enable();
-    }
-    
-    private boolean onTarget() {
-    	return false;
-    	//return (Math.abs(_pid.getError()) < GYRO_TOLERANCE);
+    	
+    	_targetCounter = drivetrain.getTargetCounter();
+    	_targetCounter.reset();
     }
    
     protected void execute() {
@@ -71,8 +71,7 @@ public class AutoTurn extends CommandBase implements PIDOutput {
  
     //Finishes When On target or Timed Out
     protected boolean isFinished() {
-    	SmartDashboard.putBoolean("Done turning", this.onTarget() || this.isTimedOut());
-        return this.onTarget() || this.isTimedOut();
+        return _targetCounter.onTarget(_pid.getError(), 1.5) || this.isTimedOut();
     }
 
     protected void end() {

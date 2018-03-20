@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
+
 /**
  *
  */
@@ -19,7 +21,14 @@ public class OperateIntake extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if(!intake.getLimitSwitch() || intake.getLimitSwitch() && power < 0) {
-    		intake.setPower(power);
+    		if(power > 0) {
+    			intake.setPosition(0);
+    		}
+    		if(lift.getLiftPosition() == Position.autoSwitch) {
+    			intake.setPower(power * 0.28);
+    		} else {
+    			intake.setPower(power);
+    		}
     	}
     }
 
@@ -30,6 +39,7 @@ public class OperateIntake extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
+    	intake.setPosition(Position.home.getArmPosition());
     	intake.setPower(0);
     }
 

@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2438.robot;
 
+import org.usfirst.frc.team2438.robot.commands.DropRamp;
 import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
+import org.usfirst.frc.team2438.robot.commands.LockRamp;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
 import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 import org.usfirst.frc.team2438.robot.commands.OperateLift;
@@ -23,8 +25,8 @@ public class OI {
 	private final JoystickButton _intakeButton = new JoystickButton(_rStick, 1);
 	private final JoystickButton _outtakeButton = new JoystickButton(_lStick, 1);
 	
-	private final JoystickButton _lowerLiftButton = new JoystickButton(_rStick, 7);
 	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 6);
+	private final JoystickButton _lowerLiftButton = new JoystickButton(_rStick, 7);
 	
 	private final JoystickButton _homeButton = new JoystickButton(_rStick, 2);
 	private final JoystickButton _switchButton = new JoystickButton(_rStick, 3);
@@ -32,16 +34,16 @@ public class OI {
 	
 	private final JoystickButton _lowerIntakeButton = new JoystickButton(_lStick, 2);
 	private final JoystickButton _raiseIntakeButton = new JoystickButton(_lStick, 3);
-	private final JoystickButton _shootIntakeButton = new JoystickButton(_lStick, 4);
 	
 	private final JoystickButton _raiseRightRamp = new JoystickButton(_lStick, 8);
 	private final JoystickButton _raiseLeftRamp = new JoystickButton(_lStick, 9);
 
-	private final JoystickButton _dropRamps = new JoystickButton(_lStick, 9);
+	private final JoystickButton _dropLeftRamp = new JoystickButton(_lStick, 10);
+	private final JoystickButton _dropRightRamp = new JoystickButton(_lStick, 11);
 	
 	// TODO - Repurpose for proper servo activation
-	private final JoystickButton _activateServo = new JoystickButton(_lStick, 10);
-	private final JoystickButton _deactivateServo = new JoystickButton(_rStick, 7);
+	//private final JoystickButton _activateServo = new JoystickButton(_lStick, 10);
+	//private final JoystickButton _deactivateServo = new JoystickButton(_rStick, 7);
 	
 	private final JoystickButton _solenoidButton = new JoystickButton(_lStick, 5);
 	
@@ -62,7 +64,8 @@ public class OI {
 		_raiseLeftRamp.whenPressed(new OperateRamp(RampSide.left));
 		_raiseRightRamp.whenPressed(new OperateRamp(RampSide.right));
 		
-		//_dropRamps.whenPressed(new DropRamp());
+		_dropLeftRamp.whenPressed(new DropRamp(RampSide.left));
+		_dropRightRamp.whenPressed(new DropRamp(RampSide.right));
 		
 		//_activateServo.whenPressed(new ActivateServo(RampPosition.ramp));
 		//_deactivateServo.whenPressed(new ActivateServo(RampPosition.up));

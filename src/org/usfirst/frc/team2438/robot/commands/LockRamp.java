@@ -1,23 +1,21 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampPosition;
+
 /**
  *
  */
-public class ResetEncoders extends CommandBase {
+public class LockRamp extends CommandBase {
 
-    public ResetEncoders() {
+    public LockRamp() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(drivetrain);
-    	requires(lift);
-    	requires(intake);
+    	requires(ramp);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	drivetrain.resetEncoders();
-		lift.resetEncoder();
-		intake.resetEncoder();
+    	//ramp.toggleRampPosition(RampPosition.up);
     }
 
     // Called repeatedly when this Command is scheduled to run

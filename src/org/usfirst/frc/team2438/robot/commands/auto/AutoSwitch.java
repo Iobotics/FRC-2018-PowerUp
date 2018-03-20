@@ -1,16 +1,16 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.DropRamp;
-import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
+import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- * Initializes the robot
+ *
  */
-public class AutoInitRobot extends CommandGroup {
+public class AutoSwitch extends CommandGroup {
 
-    public AutoInitRobot() {
+    public AutoSwitch() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -28,8 +28,20 @@ public class AutoInitRobot extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	addSequential(new DropRamp());
-    	//addSequential(new OperateIntakeArm());
-    	//addSequential(new OperateLift());
+    	addSequential(new AutoInit());
+    	
+    	addParallel(new AutoDriveStraight(156));
+    	
+    	addSequential(new LiftAndArmToPos(Position.autoSwitch));
+    	
+    	addSequential(new AutoTurn(-90));
+    	
+    	addSequential(new AutoDriveStraight(16));
+    	
+    	addSequential(new AutoShoot(0.28));
+    	
+    	addSequential(new AutoDriveStraight(-20));
+    	
+    	addSequential(new LiftAndArmToPos(Position.home));
     }
 }

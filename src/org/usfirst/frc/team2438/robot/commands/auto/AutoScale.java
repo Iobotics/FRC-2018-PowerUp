@@ -1,8 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
-import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
-import org.usfirst.frc.team2438.robot.commands.OperateIntake;
+import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -10,11 +9,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class AutoScale extends CommandGroup {
-	
-	private static enum Side {
-		left,
-		right
-	}
 
     public AutoScale() {
         // Add Commands here:
@@ -33,38 +27,52 @@ public class AutoScale extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new AutoInit());
-		
-    	Side botSide = Side.left;
-    	Side scaleSide = Side.left;
     	
-		int botSideCoefficient = 1;
-		if (botSide == Side.left) {
-			botSideCoefficient = -1;
+    	//addSequential(new AutoInit());
+		
+    	AutoSide botSide = AutoSide.right;
+    	AutoSide switchSide = AutoSide.left;
+    	AutoSide scaleSide = AutoSide.right;
+    	
+    	double extraDistance = 0;
+    	
+    	addSequential(new AutoInit());
+    	
+		int botSideCoefficient = -1;
+		if (botSide == AutoSide.left) {
+			botSideCoefficient = 1;
 		}
+		
+		if (switchSide == null) {
+			addSequential(new AutoDriveStraight(168.0));
+		}
+		else if (switchSide == botSide) {
+			extraDistance = 26.7;
+			
+			addParallel(new LiftAndArmToPos(Position.autoSwitch));
+			addSequential(new AutoDriveStraight(168.0));
 
-		if (scaleSide == botSide){
-			addSequential(new AutoDriveStraight(324.0));
-
-			//addParallel(new LiftToPosition(48000));
 			addSequential(new AutoTurn(90.0 * botSideCoefficient));
 
-			addSequential(new AutoDriveStraight(10.7));
-
-			//addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
+			addSequential(new AutoDriveStraight(extraDistance));
 		}
-		else{
-
+		else if (scaleSide == botSide){			
+			addParallel(new LiftAndArmToPos(Position.autoScale));
+			
+			addSequential(new AutoDriveStraight(258.0));
+			
+			addSequential(new AutoTurn(30.0 * botSideCoefficient));
+		}
+		/*else {
 			addSequential(new AutoDriveStraight(215.0));
 
 			addSequential(new AutoDriveStraight(166.0));
 			
-			//addParallel(new LiftToPosition(48000));
-			addSequential(new AutoTurn(-90.0 * botSideCoefficient));
+			//addParallel(new LiftToPosition(25000));
+			addSequential(new AutoTurn(90.0 * botSideCoefficient));
+		}*/
 
-			//addSequential(new ArmToPosition(1000)); //practice bot only, not programming bot
-		}
-
-	addSequential(new OperateIntake(-1.0));
+		addSequential(new AutoShoot(1.0));
+		addSequential(new LiftAndArmToPos(Position.home));
     }
 }

@@ -1,18 +1,19 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
-import org.usfirst.frc.team2438.robot.commands.TargetCounter;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
+import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
  *
@@ -25,6 +26,11 @@ public class Intake extends Subsystem {
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
+	private static final int MM_VEL = 1500;
+	private static final int MM_ACC = 2000;
+	
+	private static final int ERROR_THRESHOLD = 200;
+	
 	private static final int TALON_TIMEOUT = 20;
 	
 	private TalonSRX _leftIntake;
@@ -35,7 +41,7 @@ public class Intake extends Subsystem {
 	private DoubleSolenoid _solenoid;
 	
 	private DigitalInput _switch;
-	private AnalogInput _potentiometer;
+	private Potentiometer _potentiometer;
 	
 	private boolean _solenoidActivated = true;
 	
@@ -57,8 +63,8 @@ public class Intake extends Subsystem {
 		_intakeArm.config_kI(0, kI, TALON_TIMEOUT);
 		_intakeArm.config_kD(0, kD, TALON_TIMEOUT);
 		_intakeArm.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-		_intakeArm.configMotionCruiseVelocity(1470, TALON_TIMEOUT);
-		_intakeArm.configMotionAcceleration(1470, TALON_TIMEOUT);
+		_intakeArm.configMotionCruiseVelocity(MM_VEL, TALON_TIMEOUT);
+		_intakeArm.configMotionAcceleration(MM_ACC, TALON_TIMEOUT);
 		
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 		
@@ -70,16 +76,14 @@ public class Intake extends Subsystem {
 		_intakeArm.configPeakCurrentDuration(1000, TALON_TIMEOUT);
 		_intakeArm.enableCurrentLimit(false);*/
 		
-		//_intakeArm.configNeutralDeadband(0.03, TALON_TIMEOUT);
-		
 		//this.resetEncoder();
 		
 		_solenoid = new DoubleSolenoid(0, 1);
 		
 		_switch = new DigitalInput(0);
-		_potentiometer = new AnalogInput(1);
+		_potentiometer = new AnalogPotentiometer(1, 360, 0);
 		
-		_targetCounter = new TargetCounter();
+		_targetCounter = new TargetCounter(ERROR_THRESHOLD);
 	}
 	
 	public void setPower(double power) {
@@ -92,27 +96,27 @@ public class Intake extends Subsystem {
 		_rightIntake.set(ControlMode.Velocity, velocity);
 	}
 	
-	public void setLiftPower(double power) {
+	public void setArmPower(double power) {
 		_intakeArm.set(ControlMode.PercentOutput, power);
 	}
 	
-	public void setLiftPosition(int position) {
+	public void setPosition(int position) {
 		_intakeArm.set(ControlMode.MotionMagic, position);
 	}
 	
-	public void setLiftCurrent(double current) {
+	public void setArmCurrent(double current) {
 		_intakeArm.set(ControlMode.Current, current);
 	}
 	
-	public int getLiftPosition() {
+	public int getPosition() {
 		return _intakeArm.getSelectedSensorPosition(0);
 	}
 	
-	public int getLiftError() {
+	public int getArmError() {
 		return _intakeArm.getClosedLoopError(0);
 	}
 	
-	public double getLiftCurrent() {
+	public double getArmCurrent() {
 		return _intakeArm.getOutputCurrent();
 	}
 	
@@ -168,11 +172,15 @@ public class Intake extends Subsystem {
     }
 
 	public void setArmPosition(Position position) {
-		this.setLiftPosition(position.getArmPosition());
+		this.setPosition(position.getArmPosition());
 	}
-
+	
 	public TargetCounter getTargetCounter() {
 		return _targetCounter;
+	}
+	
+	public double getPotentiometer() {
+		return _potentiometer.get();
 	}
 	
 	/*public void cyclePositionUp() {

@@ -23,19 +23,19 @@ public class OperateIntakeArm extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	intake.setLiftPower(power);
+    	intake.setArmPower(power);
     	
-    	SmartDashboard.putNumber("Intake Arm Error", intake.getLiftError());
+    	SmartDashboard.putNumber("Intake Arm Error", intake.getArmError());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return (lift.getPosition() >= 51500);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	intake.setLiftPosition(intake.getLiftPosition());
+    	intake.setPosition(intake.getPosition() + 50);
     }
 
     // Called when another command which requires one or more of the same

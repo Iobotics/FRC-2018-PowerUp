@@ -39,7 +39,7 @@ public class AutoLiftToPosition extends CommandBase {
     protected void execute() {
     	//lift.setPosition(position);
     	
-    	SmartDashboard.putNumber("Lift current", lift.getCurrent(1));
+    	SmartDashboard.putNumber("Lift current", lift.getCurrent());
     }
 
     // Make this return true when this Command no longer needs to run execute()

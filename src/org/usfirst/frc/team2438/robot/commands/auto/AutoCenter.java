@@ -1,6 +1,5 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -9,11 +8,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class AutoCenter extends CommandGroup {
-
-	public static enum Side {
-		left,
-		right
-	}
 	
     public AutoCenter() {
         // Add Commands here:
@@ -35,10 +29,10 @@ public class AutoCenter extends CommandGroup {
     	
     	addSequential(new AutoDriveStraight(0.0));
     	
-		Side side = Side.right;
+		AutoSide side = AutoSide.right;
 		double distance = 0;
     	double angle = 90.0;
-    	if(side == Side.right) {
+    	if(side == AutoSide.right) {
     		angle *= -1;
     		distance = 29;
     	}

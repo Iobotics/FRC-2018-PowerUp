@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
-import org.usfirst.frc.team2438.robot.commands.TargetCounter;
+import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -17,38 +17,40 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Lift extends Subsystem {
 	
 	public static enum Position {
-		home(0, 0),
-		autoSwitch(30500, 430),
-		autoScale(51500, 1000),
-		autoReverse(0, 0); // FIXME
+		home(0, 450),
+		autoSwitch(30500, 550),
+		autoScale(51500, 1340),
+		autoReverse(0, 0); // TODO
 		
-		private int liftPosition;
-		private int armPosition;
+		private int _liftPosition;
+		private int _armPosition;
 		
 		Position(int liftPosition, int armPosition) {
-			this.liftPosition = liftPosition;
-			this.armPosition = armPosition;
+			_liftPosition = liftPosition;
+			_armPosition = armPosition;
 		}
 		
-		int getLiftPosition() {
-			return liftPosition;
+		public int getLiftPosition() {
+			return _liftPosition;
 		}
 		
-		int getArmPosition() {
-			return armPosition;
+		public int getArmPosition() {
+			return _armPosition;
 		}
 	}
 	
 	private static final double kF = 0;
-	private static final double kP = 0.42;
+	private static final double kP = 0.46;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
-	private static final int LIFT_VELOCITY = 2200; // TODO
+	private static final int LIFT_VELOCITY = 6000; // TODO
 	private static final int MAX_LIFT_POSITION = 51000; // FIXME
 	
 	private static final double VOLTS_PER_INCH = 0.009766;
+	
+	private static final int ERROR_THRESHOLD = 320;
 	
 	private static final int TALON_TIMEOUT = 20;
 	
@@ -103,21 +105,15 @@ public class Lift extends Subsystem {
     	
     	_rangeSensor = new AnalogInput(0);
     	
-    	_targetCounter = new TargetCounter();
-    	System.out.println("First");
+    	_targetCounter = new TargetCounter(ERROR_THRESHOLD);
     }
     
     public void setPower(double power) { 
-    	_frontRightLift  .set(ControlMode.PercentOutput, power);
+    	_frontRightLift.set(ControlMode.PercentOutput, power);
     }
     
-    /**
-     * Sets the lift position
-     * @param input [-1, 1]
-     */
     public void setPosition(double input) {    	
     	_frontRightLift.set(ControlMode.MotionMagic, input);
-    	System.out.println("im working too");
     }
     
     public int getPosition() {
@@ -136,20 +132,8 @@ public class Lift extends Subsystem {
     	_backRightLift.set(ControlMode.Current, -current);
     }
     
-    public double getCurrent(int num) {
-    	double current = 0;
-    	
-    	switch(num) {
-    		case 1:
-    			current = _frontLeftLift.getOutputCurrent();
-    		case 2:
-    			current = _frontRightLift.getOutputCurrent();
-    		case 3:
-    			current = _backLeftLift.getOutputCurrent();
-    		case 4:
-    			current = _backRightLift.getOutputCurrent();
-    	}
-		return current;
+    public double getCurrent() {
+    	return _frontRightLift.getOutputCurrent();
 	}
     
     public double getError() {
@@ -157,8 +141,8 @@ public class Lift extends Subsystem {
     }
     
     /**
-     * Gets distance in inches
-     * @return distance
+     * Gets lift height from the range sensor in inches
+     * @return height
      */
     public double getHeight() {
     	double height = _rangeSensor.getAverageVoltage() / VOLTS_PER_INCH;
@@ -166,14 +150,10 @@ public class Lift extends Subsystem {
     	return height;
     }
     
-    public String getMode() {
-    	if (_frontRightLift.getControlMode() == ControlMode.MotionMagic) {
-    		return "Motion Magic";
-    	}
-    	else {
-    		return "Something Else";
-    	}
+    public ControlMode getMode() {
+    	return _frontRightLift.getControlMode();
     }
+    
     public void stop() {
     	_frontRightLift.set(ControlMode.PercentOutput, 0);
     }
@@ -193,7 +173,6 @@ public class Lift extends Subsystem {
 	}
 	
 	public TargetCounter getTargetCounter() {
-		System.out.println("Second");
 		return _targetCounter;
 	}
 	

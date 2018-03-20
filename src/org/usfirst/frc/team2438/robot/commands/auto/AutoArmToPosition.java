@@ -35,7 +35,7 @@ public class AutoArmToPosition extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	SmartDashboard.putNumber("Intake current", intake.getLiftCurrent());
+    	SmartDashboard.putNumber("Intake current", intake.getArmCurrent());
     }
     
     // Make this return true when this Command no longer needs to run execute()

@@ -2,6 +2,7 @@ package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
 import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,16 +12,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class AutoDriveStraight extends CommandBase {
 	
-	private static final double THRESHOLD = 0;
-	
-	private double errorThreshold = 10;
-	
-	private double _error;
+	private TargetCounter _targetCounter;
 	
 	private final double  _distance;
 	
 	public AutoDriveStraight(double inches) {
-    	this(inches, 4);
+    	this(inches, 10);
     }
 	
     public AutoDriveStraight(double inches, double timeout) {
@@ -39,27 +36,18 @@ public class AutoDriveStraight extends CommandBase {
     	drivetrain.setTargetDistance(_distance);
     	Timer.delay(0.5);
     	
-    	_error = 5.0;
+    	_targetCounter = drivetrain.getTargetCounter();
+    	_targetCounter.reset();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	SmartDashboard.putNumber("DriveStraight Setpoint", _distance);
-    	SmartDashboard.putNumber("DriveStraight Error", _error);
     	
-    	_error = drivetrain.getError();
-    }
-    
-    private boolean onTarget() {
-    	return false;
-    	//return (_error < THRESHOLD);
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	SmartDashboard.putBoolean("Done driving", this.onTarget() || this.isTimedOut());
-        
-        return this.onTarget() || this.isTimedOut();
+    protected boolean isFinished() {        
+        return _targetCounter.onTarget(drivetrain.getError()) || this.isTimedOut();
     
     }
 

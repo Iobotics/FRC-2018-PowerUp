@@ -21,26 +21,30 @@ public class Ramp extends Subsystem {
 		ramp
 	}
 	
-	// Boolean that tracks if the solenoids are activated
+	// Track if the solenoids are activated
 	private boolean leftSolenoidActivated = false;
 	private boolean rightSolenoidActivated = false;
 	
-	// Solenoid objects
-	private DoubleSolenoid _rightRamp;
 	private DoubleSolenoid _leftRamp;
+	private DoubleSolenoid _rightRamp;
 	
-	private Servo _rightServo;
 	private Servo _leftServo;
+	private Servo _rightServo;
+	
+	private RampPosition _leftServoPosition;
+	private RampPosition _rightServoPosition;
 	
 	public void init() {
-		//right solenoid uses slots 4 and 5 on the PCM
-		_rightRamp = new DoubleSolenoid(4,5);
 		//left solenoid uses slots 2 and 3 on the PCM
 		_leftRamp = new DoubleSolenoid(2,3);
+		//right solenoid uses slots 4 and 5 on the PCM
+		_rightRamp = new DoubleSolenoid(4,5);
 		
-		_rightServo = new Servo(0);
-		_leftServo = new Servo(1);
+		_leftServo = new Servo(0);
+		_rightServo = new Servo(1);
 		
+		_leftServoPosition = RampPosition.up;
+		_rightServoPosition = RampPosition.up;
 	}
 	
 	public void toggleLeftRamp() {
@@ -84,19 +88,42 @@ public class Ramp extends Subsystem {
 		toggleRightRamp();
 	}
 	
-	public void setRampPosition(RampPosition position) {
-		switch(position) {
+	public void dropLeftRamp() {
+		_leftServo.set(0.5);
+	}
+	
+	public void dropRightRamp() {
+		_rightServo.set(0.75);
+	}
+	
+	public void toggleLeftRampPosition() {
+		switch(_leftServoPosition) {
 			case up:
-				_leftServo.set(0);
-				_rightServo.set(0);
+				_leftServo.set(1.0);
+				_leftServoPosition = RampPosition.down;
 				break;
 			case down:
 				_leftServo.set(0.5);
-				_rightServo.set(0.5);
+				_leftServoPosition = RampPosition.ramp;
 				break;
 			case ramp:
-				_leftServo.set(1.0);
-				_rightServo.set(1.0);
+				_leftServo.set(0);
+				break;
+		}
+	}
+	
+	public void toggleRightRampPosition() {
+		switch(_rightServoPosition) {
+			case up:
+				_rightServo.setAngle(0);
+				_rightServoPosition = RampPosition.down;
+				break;
+			case down:
+				_rightServo.setAngle(90.0);
+				_rightServoPosition = RampPosition.ramp;
+				break;
+			case ramp:
+				_rightServo.setAngle(180.0);
 				break;
 		}
 	}

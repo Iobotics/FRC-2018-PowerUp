@@ -8,16 +8,21 @@ import edu.wpi.first.wpilibj.Timer;
  *
  */
 public class AutoShoot extends CommandBase {
+	
+	private double _power;
 
-    public AutoShoot() {
+    public AutoShoot(double power) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         requires(intake);
+        
+        _power = power;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	intake.setPower(-0.28);
+    	Timer.delay(1);
+    	intake.setPower(-_power);
     	Timer.delay(2);
     	intake.setPower(0);
     	Timer.delay(1);

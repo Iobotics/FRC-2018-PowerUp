@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands;
 
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
+import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,8 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Operate the lift
  */
 public class LiftToPosition extends CommandBase {
-	
-	private static final int ERROR_THRESHOLD = 250;
 	
 	private Position position;
 	private TargetCounter targetCounter;
@@ -27,21 +26,20 @@ public class LiftToPosition extends CommandBase {
     	//lift.setPosition(position);
 
     	targetCounter = lift.getTargetCounter();
+    	targetCounter.reset();
     	
     	lift.setPosition(position);
-    	Timer.delay(0.5);
+    	Timer.delay(0.1);
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	//lift.setPosition(position);
-    	
-    	SmartDashboard.putNumber("Lift current", lift.getCurrent(1));
+    protected void execute() {    	
+    	SmartDashboard.putNumber("Lift current", lift.getCurrent());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return targetCounter.onTarget(lift.getError(), ERROR_THRESHOLD);
+        return targetCounter.onTarget(lift.getError());
     }
 
     // Called once after isFinished returns true

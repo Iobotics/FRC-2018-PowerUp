@@ -2,6 +2,7 @@ package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
 import org.usfirst.frc.team2438.robot.commands.OperateTankDrive;
+import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -18,7 +19,6 @@ public class Drivetrain extends Subsystem {
 		MotionMagic,
 		Velocity
 	}
-	
 	
 	private static final double WHEEL_DIAMETER 		= 6; 	 	// inches
 	private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
@@ -48,12 +48,16 @@ public class Drivetrain extends Subsystem {
 	private static final int DRIVE_VELOCITY = 1228;
 	private static final int DRIVE_ACCELERATION = 1228;
 	
+	private static final int ERROR_THRESHOLD = 200;
+	
 	private static final int TALON_TIMEOUT = 20; // milliseconds
     
 	private TalonSRX _frontLeft;
     private TalonSRX _frontRight;
     private TalonSRX _backLeft;
     private TalonSRX _backRight;
+    
+    private TargetCounter _targetCounter;
 	
 	public void init() {
 		_frontLeft = new TalonSRX(RobotMap.frontLeftMotor);
@@ -113,6 +117,8 @@ public class Drivetrain extends Subsystem {
 		_backRight.config_kI(1, vkI, TALON_TIMEOUT);
 		_backRight.config_kD(1, vkD, TALON_TIMEOUT);
 		_backRight.config_IntegralZone(1, viZone, TALON_TIMEOUT);
+		
+		_targetCounter = new TargetCounter(ERROR_THRESHOLD);
     	
     	this.setProfileSlot(ProfileSlot.MotionMagic);
     	
@@ -208,6 +214,10 @@ public class Drivetrain extends Subsystem {
     
     public double getError() {
     	return _backLeft.getClosedLoopError(0);
+    }
+    
+    public TargetCounter getTargetCounter() {
+    	return _targetCounter;
     }
     
     public int getPosition() {
