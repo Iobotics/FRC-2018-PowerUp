@@ -17,9 +17,10 @@ public class Ramp extends Subsystem {
 	
 	public static enum RampPosition {
 		up,
-		down,
 		ramp
 	}
+	
+	private static final int ACTIVATION_TIME = 1000;
 	
 	// Track if the solenoids are activated
 	private boolean leftSolenoidActivated = false;
@@ -57,7 +58,7 @@ public class Ramp extends Subsystem {
 		leftSolenoidActivated = !leftSolenoidActivated;
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(ACTIVATION_TIME);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -75,7 +76,7 @@ public class Ramp extends Subsystem {
 		rightSolenoidActivated = !rightSolenoidActivated;
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(ACTIVATION_TIME);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -97,35 +98,21 @@ public class Ramp extends Subsystem {
 	}
 	
 	public void toggleLeftRampPosition() {
-		switch(_leftServoPosition) {
-			case up:
-				_leftServo.set(1.0);
-				_leftServoPosition = RampPosition.down;
-				break;
-			case down:
-				_leftServo.set(0.5);
-				_leftServoPosition = RampPosition.ramp;
-				break;
-			case ramp:
-				_leftServo.set(0);
-				break;
-		}
+		_leftServo.set(1.0);
+		_leftServoPosition = RampPosition.ramp;
 	}
 	
 	public void toggleRightRampPosition() {
-		switch(_rightServoPosition) {
-			case up:
-				_rightServo.setAngle(0);
-				_rightServoPosition = RampPosition.down;
-				break;
-			case down:
-				_rightServo.setAngle(90.0);
-				_rightServoPosition = RampPosition.ramp;
-				break;
-			case ramp:
-				_rightServo.setAngle(180.0);
-				break;
-		}
+		_rightServo.set(0);
+		_rightServoPosition = RampPosition.ramp;
+	}
+	
+	public void resetServos() {
+		_leftServo.set(0);
+		_rightServo.set(1.0);
+		
+		_leftServoPosition = RampPosition.up;
+		_rightServoPosition = RampPosition.up;
 	}
 	
     public void initDefaultCommand() {

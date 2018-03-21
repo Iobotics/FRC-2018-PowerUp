@@ -11,6 +11,8 @@ public class ResetEncoders extends CommandBase {
     	requires(drivetrain);
     	requires(lift);
     	requires(intake);
+    	
+    	this.setInterruptible(false);
     }
 
     // Called just before this Command runs the first time

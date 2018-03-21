@@ -11,47 +11,48 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class LiftToPosition extends CommandBase {
 	
-	private Position position;
-	private TargetCounter targetCounter;
+	private int _encoderPosition;
+	private TargetCounter _targetCounter;
 	
     public LiftToPosition(Position position) {
-        // Use requires() here to declare subsystem dependencies
+    	this(position.getLiftPosition());
+    }
+    
+    public LiftToPosition(int encoderPosition) {
     	requires(lift);
     	
-    	this.position = position;
+    	_encoderPosition = encoderPosition;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	//lift.setPosition(position);
-
-    	targetCounter = lift.getTargetCounter();
-    	targetCounter.reset();
+    	_targetCounter = lift.getTargetCounter();
+    	_targetCounter.reset();
     	
-    	lift.setPosition(position);
+    	lift.setPosition(_encoderPosition);
     	Timer.delay(0.1);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {    	
-    	SmartDashboard.putNumber("Lift current", lift.getCurrent());
+    	SmartDashboard.putNumber("Lift Error", lift.getError());
+    	SmartDashboard.putNumber("Lift Current", lift.getCurrent());
+    	SmartDashboard.putNumber("Lift Counter", _targetCounter.getCount());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return targetCounter.onTarget(lift.getError());
+        return _targetCounter.onTarget(lift.getError()) || (lift.getLimitSwitch() && lift.getPosition() < _encoderPosition);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	//lift.stop();
-    	targetCounter.reset();
+    	_targetCounter.reset();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	lift.stop();
     	end();
     }
 }

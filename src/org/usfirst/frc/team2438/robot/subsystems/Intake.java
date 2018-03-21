@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
- *
+ * Intake
  */
 public class Intake extends Subsystem {
 	
@@ -26,10 +26,12 @@ public class Intake extends Subsystem {
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
-	private static final int MM_VEL = 1500;
-	private static final int MM_ACC = 2000;
+	private static final int MM_VELOCITY = 1500;
+	private static final int MM_ACCELERATION = 2000;
 	
 	private static final int ERROR_THRESHOLD = 200;
+	
+	private static final int ENCODER_OFFSET = 60;
 	
 	private static final int TALON_TIMEOUT = 20;
 	
@@ -40,12 +42,12 @@ public class Intake extends Subsystem {
 	
 	private DoubleSolenoid _solenoid;
 	
-	private DigitalInput _switch;
+	private DigitalInput _limitSwitch;
 	private Potentiometer _potentiometer;
 	
-	private boolean _solenoidActivated = true;
-	
 	private TargetCounter _targetCounter;
+	
+	private boolean _solenoidActivated;
 	
 	public void init() {
 		_leftIntake = new TalonSRX(RobotMap.leftIntake);
@@ -54,8 +56,6 @@ public class Intake extends Subsystem {
 		_leftIntake.setInverted(true);
 		
 		_intakeArm = new TalonSRX(RobotMap.intakeArm);
-		
-		// Intake lift encoder //
 		_intakeArm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
 		_intakeArm.selectProfileSlot(0, 0);
 		_intakeArm.config_kF(0, kF, TALON_TIMEOUT);
@@ -63,24 +63,23 @@ public class Intake extends Subsystem {
 		_intakeArm.config_kI(0, kI, TALON_TIMEOUT);
 		_intakeArm.config_kD(0, kD, TALON_TIMEOUT);
 		_intakeArm.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-		_intakeArm.configMotionCruiseVelocity(MM_VEL, TALON_TIMEOUT);
-		_intakeArm.configMotionAcceleration(MM_ACC, TALON_TIMEOUT);
+		_intakeArm.configMotionCruiseVelocity(MM_VELOCITY, TALON_TIMEOUT);
+		_intakeArm.configMotionAcceleration(MM_ACCELERATION, TALON_TIMEOUT);
 		
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		_intakeArm.set(ControlMode.MotionMagic, 0);
 		
-		this.resetEncoder();
-		//this.setLiftPosition(0);
+		_intakeArm.configContinuousCurrentLimit(5, TALON_TIMEOUT);
+		_intakeArm.configPeakCurrentLimit(3, TALON_TIMEOUT);
+		_intakeArm.configPeakCurrentDuration(100, TALON_TIMEOUT);
+		_intakeArm.enableCurrentLimit(true);
 		
-		/*_intakeArm.configContinuousCurrentLimit(15, TALON_TIMEOUT);
-		_intakeArm.configPeakCurrentLimit(20, TALON_TIMEOUT);
-		_intakeArm.configPeakCurrentDuration(1000, TALON_TIMEOUT);
-		_intakeArm.enableCurrentLimit(false);*/
+		_solenoid = new DoubleSolenoid(RobotMap.intakeForwardChannel, RobotMap.intakeReverseChannel);
+		_solenoidActivated = true;
 		
-		//this.resetEncoder();
+		_limitSwitch = new DigitalInput(RobotMap.intakeLimitSwitch);
 		
-		_solenoid = new DoubleSolenoid(0, 1);
-		
-		_switch = new DigitalInput(0);
+		// TODO - Find range and offset
 		_potentiometer = new AnalogPotentiometer(1, 360, 0);
 		
 		_targetCounter = new TargetCounter(ERROR_THRESHOLD);
@@ -101,14 +100,18 @@ public class Intake extends Subsystem {
 	}
 	
 	public void setPosition(int position) {
-		_intakeArm.set(ControlMode.MotionMagic, position);
+		_intakeArm.set(ControlMode.MotionMagic, position + ENCODER_OFFSET);
 	}
 	
 	public void setArmCurrent(double current) {
 		_intakeArm.set(ControlMode.Current, current);
 	}
 	
-	public int getPosition() {
+	public void setArmPosition(Position position) {
+		this.setPosition(position.getArmPosition());
+	}
+	
+	public int getArmEncoderPosition() {
 		return _intakeArm.getSelectedSensorPosition(0);
 	}
 	
@@ -120,8 +123,11 @@ public class Intake extends Subsystem {
 		return _intakeArm.getOutputCurrent();
 	}
 	
+	public boolean aboveHorizontal() {
+		return (this.getArmEncoderPosition() > 480);
+	}
+	
 	public void resetEncoder() {
-		this.stop();
 		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
 	}
 	
@@ -144,11 +150,11 @@ public class Intake extends Subsystem {
 	}
 	
 	public boolean getLimitSwitch() {
-		return _switch.get();
+		return _limitSwitch.get();
 	}
 	
-	public void initSolenoids() {
-		_solenoid.set(Value.kForward);
+	public void setSolenoid(Value value) {
+		_solenoid.set(value);
 		
 		try {
 			Thread.sleep(500);
@@ -168,12 +174,7 @@ public class Intake extends Subsystem {
 	
     public void initDefaultCommand() {
     	setDefaultCommand(null);
-    	//setDefaultCommand(new OperateIntakeLift());
     }
-
-	public void setArmPosition(Position position) {
-		this.setPosition(position.getArmPosition());
-	}
 	
 	public TargetCounter getTargetCounter() {
 		return _targetCounter;
@@ -182,44 +183,4 @@ public class Intake extends Subsystem {
 	public double getPotentiometer() {
 		return _potentiometer.get();
 	}
-	
-	/*public void cyclePositionUp() {
-		switch(_armPosition) {
-			case home:
-				this.setLiftPosition(ArmPosition.autoSwitch.getPosition());
-				_armPosition = ArmPosition.autoSwitch;
-				break;
-			case autoSwitch:
-				this.setLiftPosition(ArmPosition.autoScale.getPosition());
-				_armPosition = ArmPosition.autoScale;
-				break;
-			case autoScale:
-				this.setLiftPosition(Position.autoReverse.getPosition());
-				armPosition = Position.autoReverse;
-				break;
-			default:
-				this.setLiftPosition(ArmPosition.home.getPosition());
-				_armPosition = ArmPosition.home;
-		}
-	}
-	
-	public void cyclePositionDown() {
-		switch(_armPosition) {
-			case autoReverse:
-				this.setLiftPosition(Position.autoScale.getPosition());
-				armPosition = Position.autoScale;
-				break;
-			case autoScale:
-				this.setLiftPosition(ArmPosition.autoSwitch.getPosition());
-				_armPosition = ArmPosition.autoSwitch;
-				break;				
-			case autoSwitch:
-				this.setLiftPosition(ArmPosition.home.getPosition());
-				_armPosition = ArmPosition.home;
-				break;		
-			default:
-				this.setLiftPosition(ArmPosition.home.getPosition());
-				_armPosition = ArmPosition.home;
-		}
-	}*/
 }

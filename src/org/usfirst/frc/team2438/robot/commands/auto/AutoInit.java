@@ -1,9 +1,12 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
+import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
 import org.usfirst.frc.team2438.robot.commands.CalibrateNavigationSensor;
+import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
 import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
@@ -29,8 +32,10 @@ public class AutoInit extends CommandGroup {
         // arm.
     	
     	addParallel(new CalibrateNavigationSensor());
-    	addParallel(new ResetEncoders());
-    	//addSequential(new DropRamp()); 
-    	//addSequential(new LiftToPosition(0));
+    	addSequential(new ResetEncoders());
+    	addSequential(new ArmToPosition(0));
+    	addSequential(new LiftToPosition(18660));
+    	addSequential(new ArmToPosition(-850));
+    	addSequential(new AutoToBottom());
     }
 }

@@ -15,8 +15,8 @@ public abstract class CommandBase extends Command {
     // Create a single static instance of all of your subsystems
 	public static final NavigationSensor navSensor = new NavigationSensor();
 	public static final Drivetrain drivetrain 	   = new Drivetrain();
-	public static final Lift lift = new Lift();
 	public static final Intake intake = new Intake();
+	public static final Lift lift = new Lift();
 	public static final Ramp ramp = new Ramp();
 	
 	public static void init() {
@@ -30,8 +30,8 @@ public abstract class CommandBase extends Command {
         // Show what command your subsystem is running on the SmartDashboard
         navSensor.init();
         drivetrain.init();
-        lift.init(); 
         intake.init();
+        lift.init();
         ramp.init();
     }
 

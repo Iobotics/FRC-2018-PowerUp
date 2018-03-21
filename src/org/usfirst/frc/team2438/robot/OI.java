@@ -2,7 +2,6 @@ package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.DropRamp;
 import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
-import org.usfirst.frc.team2438.robot.commands.LockRamp;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
 import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 import org.usfirst.frc.team2438.robot.commands.OperateLift;
@@ -41,18 +40,14 @@ public class OI {
 	private final JoystickButton _dropLeftRamp = new JoystickButton(_lStick, 10);
 	private final JoystickButton _dropRightRamp = new JoystickButton(_lStick, 11);
 	
-	// TODO - Repurpose for proper servo activation
-	//private final JoystickButton _activateServo = new JoystickButton(_lStick, 10);
-	//private final JoystickButton _deactivateServo = new JoystickButton(_rStick, 7);
-	
 	private final JoystickButton _solenoidButton = new JoystickButton(_lStick, 5);
 	
 	public OI() {
 		_intakeButton.whileHeld(new OperateIntake(1));
 		_outtakeButton.whileHeld(new OperateIntake(-1));
 		
-		_lowerLiftButton.whileHeld(new OperateLift(-0.1));
-		_raiseLiftButton.whileHeld(new OperateLift(0.15));
+		_lowerLiftButton.whileHeld(new OperateLift(-0.2));
+		_raiseLiftButton.whileHeld(new OperateLift(0.25));
 		
 		_homeButton.whenPressed(new LiftAndArmToPos(Position.home));
 		_switchButton.whenPressed(new LiftAndArmToPos(Position.autoSwitch));
@@ -66,9 +61,6 @@ public class OI {
 		
 		_dropLeftRamp.whenPressed(new DropRamp(RampSide.left));
 		_dropRightRamp.whenPressed(new DropRamp(RampSide.right));
-		
-		//_activateServo.whenPressed(new ActivateServo(RampPosition.ramp));
-		//_deactivateServo.whenPressed(new ActivateServo(RampPosition.up));
 		
 		_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
 	}

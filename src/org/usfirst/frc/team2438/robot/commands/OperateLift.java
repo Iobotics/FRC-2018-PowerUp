@@ -23,17 +23,18 @@ public class OperateLift extends CommandBase {
     protected void execute() {
     	lift.setPower(power);
     	
-    	SmartDashboard.putNumber("Lift current", lift.getCurrent());
+    	SmartDashboard.putNumber("Lift Error", lift.getError());
+    	SmartDashboard.putNumber("Lift Current", lift.getCurrent());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (intake.getPosition() < 480);
+        return (lift.getLimitSwitch() && power < 0);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	//lift.setPosition(lift.getPosition());
+    	//lift.setPosition(lift.getPosition()); TODO - Implement this
     	lift.stop();
     }
 

@@ -3,9 +3,10 @@ package org.usfirst.frc.team2438.robot;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
-import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
-import org.usfirst.frc.team2438.robot.commands.auto.AutoScale;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoInit;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoSide;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
+import org.usfirst.frc.team2438.robot.util.GameData;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -13,6 +14,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
@@ -27,12 +29,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot2018 extends IterativeRobot {
+	
+	private static AutoSide _side = AutoSide.left;
+	
+	public static GameData _gameData;
+	
+	String _rawData;
+	
 	Compressor _compressor;
 	PowerDistributionPanel _pdp;
 	Preferences _prefs;
-	UsbCamera _cameraOne;
-	UsbCamera _cameraTwo;
-
+	UsbCamera _camera;
+	
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
@@ -49,12 +57,10 @@ public class Robot2018 extends IterativeRobot {
 		_prefs = Preferences.getInstance();
 		
 		new Thread(() -> {
-			_cameraOne = CameraServer.getInstance().startAutomaticCapture();
-			_cameraTwo = CameraServer.getInstance().startAutomaticCapture();
-			_cameraOne.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
-			_cameraTwo.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
-            
-            CvSink cvSink = CameraServer.getInstance().getVideo(_cameraTwo);
+			_camera = CameraServer.getInstance().startAutomaticCapture();
+			_camera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
+			
+            CvSink cvSink = CameraServer.getInstance().getVideo(_camera);
             CvSource outputStream = CameraServer.getInstance().putVideo("Flip", 640, 480);
             
             Mat source = new Mat();
@@ -81,6 +87,8 @@ public class Robot2018 extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		
+		_rawData = DriverStation.getInstance().getGameSpecificMessage();
 	}
 
 	/**
@@ -97,7 +105,9 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		// pick auto command via program number //
-		(new AutoScale()).start();
+		_gameData = new GameData(_rawData);
+		
+		(new AutoInit()).start();
 	}
 
 	/**
@@ -112,8 +122,8 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		Scheduler.getInstance().run();
-
-		CommandBase.intake.initSolenoids();
+		
+		CommandBase.ramp.resetServos();
 
 		CommandBase.drivetrain.resetEncoders();
 		CommandBase.lift.resetEncoder();
@@ -129,11 +139,16 @@ public class Robot2018 extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		// TODO - Cut down on unnecessary telemetry
-		SmartDashboard.putNumber("Potentiometer", CommandBase.intake.getPotentiometer());
-		SmartDashboard.putNumber("Lift Position", CommandBase.lift.getPosition());
-		SmartDashboard.putNumber("Lift Error", CommandBase.lift.getError());
-		SmartDashboard.putNumber("Intake arm position", CommandBase.intake.getPosition());
-		SmartDashboard.putNumber("Intake Arm Current", CommandBase.intake.getArmCurrent());
+		SmartDashboard.putString("Intake Limit Switch", (CommandBase.intake.getLimitSwitch() ? "Detected" : "Not found"));
+		SmartDashboard.putString("Lift Limit Switch", (CommandBase.lift.getLimitSwitch() ? "Detected" : "Not found"));
 		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
+	}
+	
+	public static AutoSide getSide() {
+		return _side;
+	}
+	
+	public static GameData getGameData() {
+		return _gameData;
 	}
 }

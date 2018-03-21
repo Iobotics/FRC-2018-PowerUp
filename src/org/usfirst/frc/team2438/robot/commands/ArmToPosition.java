@@ -10,53 +10,57 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class ArmToPosition extends CommandBase {
 	
-	private Position position;
-	private int encoderPosition;
-	private TargetCounter targetCounter;
+	private int _encoderPosition;
+	private TargetCounter _targetCounter;
 	
-	public ArmToPosition(int encoderPosition) {
-		requires(intake);
-		
-		this.position = null;
-		this.encoderPosition = encoderPosition;
-	}
+	
 	
     public ArmToPosition(Position position) {
-        // Use requires() here to declare subsystem dependencies
+    	this(position.getArmPosition(), -1);
+    }
+    
+    public ArmToPosition(Position position, double timeout) {
+		this(position.getArmPosition(), -1);
+	}
+    
+    public ArmToPosition(int encoderPosition) {
+		this(encoderPosition, -1);
+	}
+    
+    public ArmToPosition(int encoderPosition, double timeout) {
     	requires(intake);
-    	
-    	this.position = position;
+		
+		_encoderPosition = encoderPosition;
+		
+		if(timeout > 0) {
+			this.setTimeout(timeout);
+		}
     }
 
     // Called just before this Command runs the first time
     protected void initialize() { 
     	//intake.setLiftPosition(position);
-    	targetCounter = intake.getTargetCounter();
-    	targetCounter.reset();
+    	_targetCounter = intake.getTargetCounter();
+    	_targetCounter.reset();
     	
-    	if(position == null) {
-    		intake.setPosition(encoderPosition + 60);
-    	}
-    	else {
-    		intake.setArmPosition(position);
-    	}
+    	intake.setPosition(_encoderPosition);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	SmartDashboard.putNumber("Arm Error", intake.getArmError());
-    	SmartDashboard.putNumber("Arm current", intake.getArmCurrent());
-    	SmartDashboard.putNumber("Counter", targetCounter.getCount());
+    	SmartDashboard.putNumber("Arm Current", intake.getArmCurrent());
+    	SmartDashboard.putNumber("Arm Counter", _targetCounter.getCount());
     }
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return targetCounter.onTarget(intake.getArmError());
+        return _targetCounter.onTarget(intake.getArmError()) || this.isTimedOut();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	targetCounter.reset();
+    	_targetCounter.reset();
     }
 
     // Called when another command which requires one or more of the same

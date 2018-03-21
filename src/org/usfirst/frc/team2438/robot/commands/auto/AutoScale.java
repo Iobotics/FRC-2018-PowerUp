@@ -1,7 +1,9 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
+import org.usfirst.frc.team2438.robot.Robot2018;
 import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
+import org.usfirst.frc.team2438.robot.util.GameData;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -29,10 +31,11 @@ public class AutoScale extends CommandGroup {
         // arm.
     	
     	//addSequential(new AutoInit());
+    	GameData data = Robot2018.getGameData();
 		
-    	AutoSide botSide = AutoSide.right;
-    	AutoSide switchSide = AutoSide.left;
-    	AutoSide scaleSide = AutoSide.right;
+    	AutoSide botSide = Robot2018.getSide();
+    	AutoSide switchSide = data.getCloseSwitch();
+    	AutoSide scaleSide = data.getScale();
     	
     	double extraDistance = 0;
     	
@@ -50,7 +53,7 @@ public class AutoScale extends CommandGroup {
 			extraDistance = 26.7;
 			
 			addParallel(new LiftAndArmToPos(Position.autoSwitch));
-			addSequential(new AutoDriveStraight(168.0));
+			addSequential(new AutoDriveStraight(148.0));
 
 			addSequential(new AutoTurn(90.0 * botSideCoefficient));
 

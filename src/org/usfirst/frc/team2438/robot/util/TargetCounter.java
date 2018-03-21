@@ -2,7 +2,7 @@ package org.usfirst.frc.team2438.robot.util;
 
 public class TargetCounter {
 	
-	private static final int COUNTER_THRESHOLD = 5;
+	private static final int COUNTER_THRESHOLD = 10;
 	
 	private int _targetCounter = 0;
 	private final double _errorThreshold;
