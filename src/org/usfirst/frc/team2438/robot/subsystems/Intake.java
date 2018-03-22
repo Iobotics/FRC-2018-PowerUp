@@ -87,8 +87,6 @@ public class Intake extends Subsystem {
 		
 		// Initialize the target counter
 		_targetCounter = new TargetCounter(ERROR_THRESHOLD);
-		
-		this.resetEncoder();
 	}
 	
 	public void setPower(double power) {

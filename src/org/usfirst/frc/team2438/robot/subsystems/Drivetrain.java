@@ -122,8 +122,6 @@ public class Drivetrain extends Subsystem {
     	
 		// Set the default profile slot to Motion Magic
     	this.setProfileSlot(ProfileSlot.MotionMagic);
-    	
-    	this.resetEncoders();
 	}
 	
 	/**

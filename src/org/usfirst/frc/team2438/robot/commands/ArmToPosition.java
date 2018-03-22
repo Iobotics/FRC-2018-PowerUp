@@ -3,6 +3,7 @@ package org.usfirst.frc.team2438.robot.commands;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -41,6 +42,7 @@ public class ArmToPosition extends CommandBase {
     	_targetCounter.reset();
     	
     	intake.setArmPosition(_encoderPosition);
+    	Timer.delay(0.1); // TODO - Test if needed
     }
 
     // Called repeatedly when this Command is scheduled to run

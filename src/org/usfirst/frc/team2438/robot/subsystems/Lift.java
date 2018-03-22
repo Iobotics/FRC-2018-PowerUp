@@ -52,7 +52,7 @@ public class Lift extends Subsystem {
 	// TODO - Tune PID constants
 	/* Motion Magic Constants */
 	private static final double kF = 0;
-	private static final double kP = 0.46;
+	private static final double kP = 0.35;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
@@ -125,8 +125,6 @@ public class Lift extends Subsystem {
     	
     	// Initialize the target counter
     	_targetCounter = new TargetCounter(ERROR_THRESHOLD);
-    	
-    	this.resetEncoder();
     }
     
     public void setPower(double power) { 
@@ -142,7 +140,7 @@ public class Lift extends Subsystem {
 		_liftPosition = liftPosition;
 	}
     
-    public void setPosition(double input) {    	
+    public void setPosition(double input) {
     	_frontRightLift.set(ControlMode.MotionMagic, input);
     }
     
