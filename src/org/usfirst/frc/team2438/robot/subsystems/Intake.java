@@ -2,48 +2,46 @@ package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
+import org.usfirst.frc.team2438.robot.util.Constants;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
  * Intake
  */
 public class Intake extends Subsystem {
 	
+	/* Motion Magic Constants */
 	private static final double kF = 0;
 	private static final double kP = 1.1;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
-	private static final int MM_VELOCITY = 1500;
-	private static final int MM_ACCELERATION = 2000;
+	// TODO - Slightly raise the velocity
+	private static final int INTAKE_VELOCITY = 1500;	 // Native units per 100 ms
+	private static final int INTAKE_ACCELERATION = 2000; // Native units per 100 ms
 	
-	private static final int ERROR_THRESHOLD = 200;
+	private static final int ERROR_THRESHOLD = 160; // Allowable error in native units
 	
-	private static final int ENCODER_OFFSET = 60;
-	
-	private static final int TALON_TIMEOUT = 20;
+	private static final int ENCODER_OFFSET = 60; // Encoder offset in native units
 	
 	private TalonSRX _leftIntake;
 	private TalonSRX _rightIntake;
 	
 	private TalonSRX _intakeArm;
 	
-	private DoubleSolenoid _solenoid;
+	private DoubleSolenoid _intakeSolenoid;
 	
 	private DigitalInput _limitSwitch;
-	private Potentiometer _potentiometer;
 	
 	private TargetCounter _targetCounter;
 	
@@ -53,36 +51,44 @@ public class Intake extends Subsystem {
 		_leftIntake = new TalonSRX(RobotMap.leftIntake);
 		_rightIntake = new TalonSRX(RobotMap.rightIntake);
 		
+		// Invert the left intake motor
 		_leftIntake.setInverted(true);
 		
 		_intakeArm = new TalonSRX(RobotMap.intakeArm);
-		_intakeArm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, TALON_TIMEOUT);
+		
+		/* Configure the intake arm encoder */
+		_intakeArm.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.TALON_TIMEOUT);
 		_intakeArm.selectProfileSlot(0, 0);
-		_intakeArm.config_kF(0, kF, TALON_TIMEOUT);
-		_intakeArm.config_kP(0, kP, TALON_TIMEOUT);
-		_intakeArm.config_kI(0, kI, TALON_TIMEOUT);
-		_intakeArm.config_kD(0, kD, TALON_TIMEOUT);
-		_intakeArm.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-		_intakeArm.configMotionCruiseVelocity(MM_VELOCITY, TALON_TIMEOUT);
-		_intakeArm.configMotionAcceleration(MM_ACCELERATION, TALON_TIMEOUT);
+		_intakeArm.config_kF(0, kF, Constants.TALON_TIMEOUT);
+		_intakeArm.config_kP(0, kP, Constants.TALON_TIMEOUT);
+		_intakeArm.config_kI(0, kI, Constants.TALON_TIMEOUT);
+		_intakeArm.config_kD(0, kD, Constants.TALON_TIMEOUT);
+		_intakeArm.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
+		_intakeArm.configMotionCruiseVelocity(INTAKE_VELOCITY, Constants.TALON_TIMEOUT);
+		_intakeArm.configMotionAcceleration(INTAKE_ACCELERATION, Constants.TALON_TIMEOUT);
 		
-		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-		_intakeArm.set(ControlMode.MotionMagic, 0);
+		_intakeArm.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
+		//_intakeArm.set(ControlMode.MotionMagic, 0); TODO
 		
-		_intakeArm.configContinuousCurrentLimit(5, TALON_TIMEOUT);
-		_intakeArm.configPeakCurrentLimit(3, TALON_TIMEOUT);
-		_intakeArm.configPeakCurrentDuration(100, TALON_TIMEOUT);
+		/* 
+		 * Set a current limit of 5 amps.
+		 * If it is greater than 5 amps for 100 ms, current drops to 3 amps.
+		 */
+		_intakeArm.configContinuousCurrentLimit(5, Constants.TALON_TIMEOUT);
+		_intakeArm.configPeakCurrentLimit(3, Constants.TALON_TIMEOUT);
+		_intakeArm.configPeakCurrentDuration(100, Constants.TALON_TIMEOUT);
 		_intakeArm.enableCurrentLimit(true);
 		
-		_solenoid = new DoubleSolenoid(RobotMap.intakeForwardChannel, RobotMap.intakeReverseChannel);
+		// Initalize the intake solenoid
+		_intakeSolenoid = new DoubleSolenoid(RobotMap.intakeForwardChannel, RobotMap.intakeReverseChannel);
 		_solenoidActivated = true;
 		
 		_limitSwitch = new DigitalInput(RobotMap.intakeLimitSwitch);
 		
-		// TODO - Find range and offset
-		_potentiometer = new AnalogPotentiometer(1, 360, 0);
-		
+		// Initialize the target counter
 		_targetCounter = new TargetCounter(ERROR_THRESHOLD);
+		
+		this.resetEncoder();
 	}
 	
 	public void setPower(double power) {
@@ -99,7 +105,15 @@ public class Intake extends Subsystem {
 		_intakeArm.set(ControlMode.PercentOutput, power);
 	}
 	
-	public void setPosition(int position) {
+	public double getArmPower() {
+		return _intakeArm.getMotorOutputPercent();
+	}
+	
+	public void setArmPosition(Position position) {
+		this.setArmPosition(position.getArmPosition());
+	}
+	
+	public void setArmPosition(int position) {
 		_intakeArm.set(ControlMode.MotionMagic, position + ENCODER_OFFSET);
 	}
 	
@@ -107,14 +121,18 @@ public class Intake extends Subsystem {
 		_intakeArm.set(ControlMode.Current, current);
 	}
 	
-	public void setArmPosition(Position position) {
-		this.setPosition(position.getArmPosition());
-	}
-	
+	/**
+	 * Gets the intake arm position in native units
+	 * @return position
+	 */
 	public int getArmEncoderPosition() {
 		return _intakeArm.getSelectedSensorPosition(0);
 	}
 	
+	/**
+	 * Gets the closed loop error of the intake arm in native units
+	 * @return error
+	 */
 	public int getArmError() {
 		return _intakeArm.getClosedLoopError(0);
 	}
@@ -123,46 +141,72 @@ public class Intake extends Subsystem {
 		return _intakeArm.getOutputCurrent();
 	}
 	
+	/**
+	 * Checks if the intake arm is above the horizontal
+	 * @return isAboveHorizontal
+	 */
+	// FIXME
 	public boolean aboveHorizontal() {
 		return (this.getArmEncoderPosition() > 480);
 	}
 	
+	/**
+	 * Resets the intake arm encoder
+	 */
 	public void resetEncoder() {
-		_intakeArm.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		_intakeArm.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
 	}
 	
+	/**
+	 * Toggle the intake solenoid
+	 */
 	public void toggleSolenoid() {
 		if(!_solenoidActivated) {
-			_solenoid.set(Value.kForward);
+			_intakeSolenoid.set(Value.kForward);
 		}
 		else {
-			_solenoid.set(Value.kReverse);
+			_intakeSolenoid.set(Value.kReverse);
 		}
 		_solenoidActivated = !_solenoidActivated;
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(Constants.SOLENOID_PERIOD);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		_solenoid.set(Value.kOff);
+		_intakeSolenoid.set(Value.kOff);
 	}
 	
+	/**
+	 * Gets the status of the intake limit switch
+	 * @return limitSwitch
+	 */
 	public boolean getLimitSwitch() {
 		return _limitSwitch.get();
 	}
 	
-	public void setSolenoid(Value value) {
-		_solenoid.set(value);
+	/**
+	 * Manually set the intake solenoid to a position
+	 * @param solenoidPosition
+	 */
+	public void setSolenoid(Value solenoidPosition) {
+		// Activate the solenoid
+		_intakeSolenoid.set(solenoidPosition);
 		
+		// Wait for the solenoid to activate
 		try {
-			Thread.sleep(500);
+			Thread.sleep(Constants.SOLENOID_PERIOD);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		_solenoid.set(Value.kOff);
+		// Turn the solenoid off
+		_intakeSolenoid.set(Value.kOff);
+	}
+	
+	public boolean canIntake(double power) {
+		return (!this.getLimitSwitch() || (this.getLimitSwitch() && (power < 0)));
 	}
 	
 	public void stop() {
@@ -172,15 +216,15 @@ public class Intake extends Subsystem {
 		_intakeArm.set(ControlMode.PercentOutput, 0);
 	}
 	
-    public void initDefaultCommand() {
-    	setDefaultCommand(null);
-    }
-	
+	/**
+     * Gets the drivetrain TargetCounter
+     * @return targetCounter
+     */
 	public TargetCounter getTargetCounter() {
 		return _targetCounter;
 	}
 	
-	public double getPotentiometer() {
-		return _potentiometer.get();
-	}
+    public void initDefaultCommand() {
+    	setDefaultCommand(null);
+    }
 }

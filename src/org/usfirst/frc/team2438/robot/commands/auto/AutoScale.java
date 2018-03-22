@@ -6,6 +6,7 @@ import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.GameData;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
@@ -75,7 +76,10 @@ public class AutoScale extends CommandGroup {
 			addSequential(new AutoTurn(90.0 * botSideCoefficient));
 		}*/
 
-		addSequential(new AutoShoot(1.0));
+		addSequential(new AutoOuttake(1.0));
+		addSequential(new WaitCommand(2.0));
+		addSequential(new AutoOuttake(0));
+		
 		addSequential(new LiftAndArmToPos(Position.home));
     }
 }

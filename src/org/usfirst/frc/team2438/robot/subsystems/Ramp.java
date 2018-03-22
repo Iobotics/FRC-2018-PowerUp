@@ -1,12 +1,15 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
+import org.usfirst.frc.team2438.robot.RobotMap;
+import org.usfirst.frc.team2438.robot.util.Constants;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Ramp
  */
 public class Ramp extends Subsystem {
 	
@@ -14,13 +17,6 @@ public class Ramp extends Subsystem {
 		left,
 		right
 	}
-	
-	public static enum RampPosition {
-		up,
-		ramp
-	}
-	
-	private static final int ACTIVATION_TIME = 1000;
 	
 	// Track if the solenoids are activated
 	private boolean leftSolenoidActivated = false;
@@ -32,23 +28,20 @@ public class Ramp extends Subsystem {
 	private Servo _leftServo;
 	private Servo _rightServo;
 	
-	private RampPosition _leftServoPosition;
-	private RampPosition _rightServoPosition;
-	
 	public void init() {
-		//left solenoid uses slots 2 and 3 on the PCM
-		_leftRamp = new DoubleSolenoid(2,3);
-		//right solenoid uses slots 4 and 5 on the PCM
-		_rightRamp = new DoubleSolenoid(4,5);
 		
-		_leftServo = new Servo(0);
-		_rightServo = new Servo(1);
+		/* TODO - Use RobotMap */
+		// Left solenoid uses slots 2 and 3 on the PCM
+		_leftRamp = new DoubleSolenoid(2, 3);
+		// Right solenoid uses slots 4 and 5 on the PCM
+		_rightRamp = new DoubleSolenoid(4, 5);
 		
-		_leftServoPosition = RampPosition.up;
-		_rightServoPosition = RampPosition.up;
+		_leftServo = new Servo(RobotMap.leftServo);
+		_rightServo = new Servo(RobotMap.rightServo);
 	}
 	
 	public void toggleLeftRamp() {
+		// Reverses the solenoid position
 		if(!leftSolenoidActivated) {
 			_leftRamp.set(Value.kForward);
 		}
@@ -57,17 +50,19 @@ public class Ramp extends Subsystem {
 		}
 		leftSolenoidActivated = !leftSolenoidActivated;
 		
+		// Wait for the solenoid to activate
 		try {
-			Thread.sleep(ACTIVATION_TIME);
+			Thread.sleep(Constants.SOLENOID_PERIOD);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+		// Turn the solenoid off
 		_leftRamp.set(Value.kOff);
 	}
 
 	public void toggleRightRamp() {
-		// Turns solenoid on if it is off
+		// Reverses the solenoid position
 		if(!rightSolenoidActivated) {
 			_rightRamp.set(Value.kForward);
 		} else {
@@ -75,44 +70,45 @@ public class Ramp extends Subsystem {
 		}
 		rightSolenoidActivated = !rightSolenoidActivated;
 		
+		// Wait for the solenoid to activate
 		try {
-			Thread.sleep(ACTIVATION_TIME);
+			Thread.sleep(Constants.SOLENOID_PERIOD);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+		// Turn the solenoid off
 		_rightRamp.set(Value.kOff);
 	}
 	
-	public void raiseRamps() {
+	/**
+	 * Toggle both ramps
+	 */
+	public void toggleRamps() {
 		toggleLeftRamp();
 		toggleRightRamp();
 	}
 	
+	/**
+	 * Release the left ramp
+	 */
 	public void dropLeftRamp() {
 		_leftServo.set(0.5);
 	}
 	
+	/**
+	 * Release the right ramp
+	 */
 	public void dropRightRamp() {
 		_rightServo.set(0.75);
 	}
 	
-	public void toggleLeftRampPosition() {
-		_leftServo.set(1.0);
-		_leftServoPosition = RampPosition.ramp;
-	}
-	
-	public void toggleRightRampPosition() {
-		_rightServo.set(0);
-		_rightServoPosition = RampPosition.ramp;
-	}
-	
+	/**
+	 * Reset both servos to their original position
+	 */
 	public void resetServos() {
 		_leftServo.set(0);
 		_rightServo.set(1.0);
-		
-		_leftServoPosition = RampPosition.up;
-		_rightServoPosition = RampPosition.up;
 	}
 	
     public void initDefaultCommand() {

@@ -2,6 +2,7 @@ package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
 import org.usfirst.frc.team2438.robot.commands.OperateTankDrive;
+import org.usfirst.frc.team2438.robot.util.Constants;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -20,37 +21,37 @@ public class Drivetrain extends Subsystem {
 		Velocity
 	}
 	
-	private static final double WHEEL_DIAMETER 		= 6; 	 	// inches
+	private static final double WHEEL_DIAMETER = 6; // inches
 	private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 	
 	private static final double COUNTS_PER_EDGE = 4;
 	private static final double GEAR_RATIO = 6; // 6:1 gear ratio
-	private static final double COUNTS_PER_ROTATION = 128 * COUNTS_PER_EDGE * GEAR_RATIO;  // ppr * 4 counts per edge * gear ratio
+	private static final double PULSES_PER_ROTATION = 128;
+	private static final double COUNTS_PER_ROTATION = PULSES_PER_ROTATION * COUNTS_PER_EDGE * GEAR_RATIO;
 	
-	public static final double UNITS_PER_INCH 		= COUNTS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
+	public static final double UNITS_PER_INCH = COUNTS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
 	
-	private static final double MAX_SPEED = 3800;
-	//Velocity Control Constants
-	private double vkF = 0.267;
-	private double vkP = 0.51;
-	private double vkI = 0.007;
-	private double vkD = 5.1;
-	private int viZone = 0;
-	    
-	//Motion Magic constants
+	private static final double MAX_SPEED = 3800; // Native units per 100 ms
+	
+	/* Motion Magic constants */
 	private static final double kF = 0;
 	private static final double kP = 0.5;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
+	/* Velocity Control Constants */
+	private static final double v_kF = 0.267;
+	private static final double v_kP = 0.51;
+	private static final double v_kI = 0.007;
+	private static final double v_kD = 5.1;
+	private static final int v_iZone = 0;
+	
 	// FIXME - Determine velocity
-	private static final int DRIVE_VELOCITY = 1228;
-	private static final int DRIVE_ACCELERATION = 1228;
+	private static final int DRIVE_VELOCITY = 1228;		// Native units per 100 ms
+	private static final int DRIVE_ACCELERATION = 1228; // Native units per 100 ms
 	
-	private static final int ERROR_THRESHOLD = 200;
-	
-	private static final int TALON_TIMEOUT = 20; // milliseconds
+	private static final int ERROR_THRESHOLD = 200; // Allowable error in native units
     
 	private TalonSRX _frontLeft;
     private TalonSRX _frontRight;
@@ -61,72 +62,72 @@ public class Drivetrain extends Subsystem {
 	
 	public void init() {
 		_frontLeft = new TalonSRX(RobotMap.frontLeftMotor);
-		_backLeft = new TalonSRX(RobotMap.backLeftMotor);
-		
 		_frontRight = new TalonSRX(RobotMap.frontRightMotor);
+		_backLeft = new TalonSRX(RobotMap.backLeftMotor);
 		_backRight = new TalonSRX(RobotMap.backRightMotor);
 		
+		// Reverse left side motors
 		_frontLeft.setInverted(true);
 		_backLeft.setInverted(true);
 		
-		// Left encoder //
+		// Set the front motors to follow the back
+		_frontLeft.follow(_backLeft);
+		_frontRight.follow(_backRight);
 		
-		//Motion Magic
+		/* Motion Magic */
 		_backLeft.setSensorPhase(true);
-		_backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
-		_backLeft.config_kF(0, kF, TALON_TIMEOUT);
-		_backLeft.config_kP(0, kP, TALON_TIMEOUT);
-		_backLeft.config_kI(0, kI, TALON_TIMEOUT);
-		_backLeft.config_kD(0, kD, TALON_TIMEOUT);
-		_backLeft.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-		_backLeft.configMotionCruiseVelocity(DRIVE_VELOCITY, TALON_TIMEOUT);
-		_backLeft.configMotionAcceleration(DRIVE_ACCELERATION, TALON_TIMEOUT);
+		_backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.TALON_TIMEOUT);
+		_backLeft.config_kF(0, kF, Constants.TALON_TIMEOUT);
+		_backLeft.config_kP(0, kP, Constants.TALON_TIMEOUT);
+		_backLeft.config_kI(0, kI, Constants.TALON_TIMEOUT);
+		_backLeft.config_kD(0, kD, Constants.TALON_TIMEOUT);
+		_backLeft.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
+		_backLeft.configMotionCruiseVelocity(DRIVE_VELOCITY, Constants.TALON_TIMEOUT);
+		_backLeft.configMotionAcceleration(DRIVE_ACCELERATION, Constants.TALON_TIMEOUT);
 		
-		//Velocity Control
-		_backLeft.configNominalOutputForward(0, TALON_TIMEOUT);
-		_backLeft.configNominalOutputReverse(0, TALON_TIMEOUT);
-		_backLeft.configPeakOutputForward(1, TALON_TIMEOUT);
-		_backLeft.configPeakOutputReverse(-1, TALON_TIMEOUT);
+		_backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.TALON_TIMEOUT);
+		_backRight.config_kF(0, kF, Constants.TALON_TIMEOUT);
+		_backRight.config_kP(0, kP, Constants.TALON_TIMEOUT);
+		_backRight.config_kI(0, kI, Constants.TALON_TIMEOUT);
+		_backRight.config_kD(0, kD, Constants.TALON_TIMEOUT);
+		_backRight.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
+		_backRight.configMotionCruiseVelocity(DRIVE_VELOCITY, Constants.TALON_TIMEOUT);
+		_backRight.configMotionAcceleration(DRIVE_ACCELERATION, Constants.TALON_TIMEOUT);
 		
-		_backLeft.config_kF(1, vkF, TALON_TIMEOUT);
-		_backLeft.config_kP(1, vkP, TALON_TIMEOUT);
-		_backLeft.config_kI(1, vkI, TALON_TIMEOUT);
-		_backLeft.config_kD(1, vkD, TALON_TIMEOUT);
-		_backLeft.config_IntegralZone(1, viZone, TALON_TIMEOUT);
-    	
-    	// Right encoder //
+		/* Velocity Control */
+		_backLeft.configNominalOutputForward(0, Constants.TALON_TIMEOUT);
+		_backLeft.configNominalOutputReverse(0, Constants.TALON_TIMEOUT);
+		_backLeft.configPeakOutputForward(1, Constants.TALON_TIMEOUT);
+		_backLeft.configPeakOutputReverse(-1, Constants.TALON_TIMEOUT);
 		
-		//Motion Magic
-		_backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
-		_backRight.config_kF(0, kF, TALON_TIMEOUT);
-		_backRight.config_kP(0, kP, TALON_TIMEOUT);
-		_backRight.config_kI(0, kI, TALON_TIMEOUT);
-		_backRight.config_kD(0, kD, TALON_TIMEOUT);
-		_backRight.config_IntegralZone(0, iZone, TALON_TIMEOUT);
-		_backRight.configMotionCruiseVelocity(DRIVE_VELOCITY, TALON_TIMEOUT);
-		_backRight.configMotionAcceleration(DRIVE_ACCELERATION, TALON_TIMEOUT);
+		_backLeft.config_kF(1, v_kF, Constants.TALON_TIMEOUT);
+		_backLeft.config_kP(1, v_kP, Constants.TALON_TIMEOUT);
+		_backLeft.config_kI(1, v_kI, Constants.TALON_TIMEOUT);
+		_backLeft.config_kD(1, v_kD, Constants.TALON_TIMEOUT);
+		_backLeft.config_IntegralZone(1, v_iZone, Constants.TALON_TIMEOUT);
 		
-		//Velocity Control
-		_backRight.configNominalOutputForward(0, TALON_TIMEOUT);
-		_backRight.configNominalOutputReverse(0, TALON_TIMEOUT);
-		_backRight.configPeakOutputForward(1, TALON_TIMEOUT);
-		_backRight.configPeakOutputReverse(-1, TALON_TIMEOUT);
+		_backRight.configNominalOutputForward(0, Constants.TALON_TIMEOUT);
+		_backRight.configNominalOutputReverse(0, Constants.TALON_TIMEOUT);
+		_backRight.configPeakOutputForward(1, Constants.TALON_TIMEOUT);
+		_backRight.configPeakOutputReverse(-1, Constants.TALON_TIMEOUT);
 		
-		_backRight.config_kF(1, vkF, TALON_TIMEOUT);
-		_backRight.config_kP(1, vkP, TALON_TIMEOUT);
-		_backRight.config_kI(1, vkI, TALON_TIMEOUT);
-		_backRight.config_kD(1, vkD, TALON_TIMEOUT);
-		_backRight.config_IntegralZone(1, viZone, TALON_TIMEOUT);
+		_backRight.config_kF(1, v_kF, Constants.TALON_TIMEOUT);
+		_backRight.config_kP(1, v_kP, Constants.TALON_TIMEOUT);
+		_backRight.config_kI(1, v_kI, Constants.TALON_TIMEOUT);
+		_backRight.config_kD(1, v_kD, Constants.TALON_TIMEOUT);
+		_backRight.config_IntegralZone(1, v_iZone, Constants.TALON_TIMEOUT);
 		
+		// Initialize the target counter
 		_targetCounter = new TargetCounter(ERROR_THRESHOLD);
     	
+		// Set the default profile slot to Motion Magic
     	this.setProfileSlot(ProfileSlot.MotionMagic);
     	
     	this.resetEncoders();
 	}
 	
 	/**
-	 * Sets tank mode
+	 * Drives in tank mode
 	 * @param left
 	 * @param right
 	 */
@@ -139,7 +140,7 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	/**
-	 * Sets arcade mode
+	 * Drives in arcade mode
 	 * @param x
 	 * @param y
 	 */
@@ -151,14 +152,18 @@ public class Drivetrain extends Subsystem {
 		_backRight.set(ControlMode.PercentOutput,  -x + y);
 	}
 
-	public void setProfileSlot(ProfileSlot slot){
-		if(slot == ProfileSlot.MotionMagic) {
+	/**
+	 * Selects the drivetrain profile slot
+	 * @param profile
+	 */
+	public void setProfileSlot(ProfileSlot profile){
+		if(profile == ProfileSlot.MotionMagic) {
 			_frontLeft.selectProfileSlot(0, 0);
 			_frontRight.selectProfileSlot(0, 0);
 			_backLeft.selectProfileSlot(0, 0);
 			_backRight.selectProfileSlot(0, 0);
 		}
-		else if (slot == ProfileSlot.Velocity) {
+		else if (profile == ProfileSlot.Velocity) {
 			_frontLeft.selectProfileSlot(1, 0);
 			_frontRight.selectProfileSlot(1, 0);
 			_backLeft.selectProfileSlot(1, 0);
@@ -166,23 +171,28 @@ public class Drivetrain extends Subsystem {
 		}
 	}
 	
+	/**
+	 * Sets the motors to move a given distance using Motion Magic
+	 * @param distance
+	 */
 	public void setTargetDistance(double distance) {
-		_frontLeft.follow(_backLeft);
-		_frontRight.follow(_backRight);
-		
+		// Change the profile slot to Motion Magic
 		setProfileSlot(ProfileSlot.MotionMagic);
-		System.out.println("I'm working! Distance: " + distance + ", Encoder Position: " + this.getLeftEncoder());
 		
+		// Move the motors
 		_backLeft.set(ControlMode.MotionMagic, distance);
 		_backRight.set(ControlMode.MotionMagic, distance);
 	}
 	
+	/**
+	 * Sets the motors to move at a give velocity using PID
+	 * @param distance
+	 */
 	public void setVelocity(double rightVelocity, double leftVelocity) {
-		_frontLeft.follow(_backLeft);
-		_frontRight.follow(_backRight);
-		
+		// Change the profile slot to Velocity PID
 		setProfileSlot(ProfileSlot.Velocity);
 		
+		// FIXME - Remove max speed constant
 		_backLeft.set(ControlMode.Velocity, leftVelocity * MAX_SPEED);
 		_backRight.set(ControlMode.Velocity, rightVelocity * MAX_SPEED);
 	}
@@ -204,36 +214,36 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public void resetEncoders() {		
-		_backLeft.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-		_backRight.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		_backLeft.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
+		_backRight.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
 	}
 
+	/**
+	 * Gets the output current of the back left motor
+	 * @return current
+	 */
     public double getCurrent() {
-		return _frontLeft.getOutputCurrent();
+		return _backLeft.getOutputCurrent();
 	}
     
+    /**
+     * Gets the closed loop error of the back left motor
+     * @return error
+     */
     public double getError() {
     	return _backLeft.getClosedLoopError(0);
     }
     
+    /**
+     * Gets the drivetrain TargetCounter
+     * @return targetCounter
+     */
     public TargetCounter getTargetCounter() {
     	return _targetCounter;
     }
-    
-    public int getPosition() {
-    	return _frontLeft.getSelectedSensorPosition(0);
-    }
-    
-	public void setLeftEncoderPosition(int encoderUnits) {
-		_frontLeft.setSelectedSensorPosition(encoderUnits, 0, TALON_TIMEOUT);
-	}
-	
-	public void setRightEncoderPosition(int encoderUnits) {
-		_frontRight.setSelectedSensorPosition(encoderUnits, 0, TALON_TIMEOUT);
-	}
 	
 	public void initDefaultCommand() {
-        setDefaultCommand(new OperateTankDrive()); 
+		setDefaultCommand(new OperateTankDrive()); 
     	//setDefaultCommand(null); 
     }
 }

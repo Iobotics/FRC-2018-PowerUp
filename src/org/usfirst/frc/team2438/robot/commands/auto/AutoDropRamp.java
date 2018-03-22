@@ -1,26 +1,22 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampSide;
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
 /**
  *
  */
-public class OperateRamp extends CommandBase {
-	
-	private RampSide side;
-	
-    public OperateRamp(RampSide side) {
+public class AutoDropRamp extends CommandBase {
+
+    public AutoDropRamp() {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
     	requires(ramp);
-    	this.side = side;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	if(side == RampSide.left) {
-    		ramp.toggleLeftRamp();
-    	} else {
-    		ramp.toggleRightRamp();
-    	}
+    	ramp.dropLeftRamp();
+    	ramp.dropRightRamp();
     }
 
     // Called repeatedly when this Command is scheduled to run

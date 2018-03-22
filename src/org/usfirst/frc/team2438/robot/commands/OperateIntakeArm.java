@@ -1,9 +1,11 @@
 package org.usfirst.frc.team2438.robot.commands;
 
+import org.usfirst.frc.team2438.robot.subsystems.Lift;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- *
+ * Operate the intake arm
  */
 public class OperateIntakeArm extends CommandBase {
 	
@@ -31,12 +33,12 @@ public class OperateIntakeArm extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (lift.getPosition() >= 51500);
+        return (lift.getLiftEncoderPosition() >= Lift.MAX_LIFT_POSITION);
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	intake.setPosition(intake.getArmEncoderPosition() + 50);
+    	intake.setArmPosition(intake.getArmEncoderPosition());
     }
 
     // Called when another command which requires one or more of the same

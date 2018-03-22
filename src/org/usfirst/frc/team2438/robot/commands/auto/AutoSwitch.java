@@ -4,6 +4,7 @@ import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
@@ -38,7 +39,9 @@ public class AutoSwitch extends CommandGroup {
     	
     	addSequential(new AutoDriveStraight(16));
     	
-    	addSequential(new AutoShoot(0.28));
+    	addSequential(new AutoOuttake(0.28));
+		addSequential(new WaitCommand(2.0));
+		addSequential(new AutoOuttake(0));
     	
     	addSequential(new AutoDriveStraight(-20));
     	

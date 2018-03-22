@@ -6,21 +6,19 @@ import org.usfirst.frc.team2438.robot.util.TargetCounter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Operate the lift
+ * Move the intake arm to a given position
  */
 public class ArmToPosition extends CommandBase {
 	
 	private int _encoderPosition;
 	private TargetCounter _targetCounter;
 	
-	
-	
     public ArmToPosition(Position position) {
     	this(position.getArmPosition(), -1);
     }
     
     public ArmToPosition(Position position, double timeout) {
-		this(position.getArmPosition(), -1);
+		this(position.getArmPosition(), timeout);
 	}
     
     public ArmToPosition(int encoderPosition) {
@@ -39,11 +37,10 @@ public class ArmToPosition extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() { 
-    	//intake.setLiftPosition(position);
     	_targetCounter = intake.getTargetCounter();
     	_targetCounter.reset();
     	
-    	intake.setPosition(_encoderPosition);
+    	intake.setArmPosition(_encoderPosition);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -65,7 +62,5 @@ public class ArmToPosition extends CommandBase {
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
-    protected void interrupted() {
-    	end();
-    }
+    protected void interrupted() { }
 }

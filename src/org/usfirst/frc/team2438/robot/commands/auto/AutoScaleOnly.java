@@ -1,7 +1,5 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
-import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;

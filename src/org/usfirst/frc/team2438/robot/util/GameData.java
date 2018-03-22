@@ -5,52 +5,80 @@ import java.util.List;
 
 import org.usfirst.frc.team2438.robot.commands.auto.AutoSide;
 
+/**
+ * Store and process the field data
+ * @author Iobotics
+ */
 public class GameData {
 	
 	private String _rawData = "SSS";
-	private List<AutoSide> _sides;
+	private List<AutoSide> _plateSides;
 	
 	public GameData(String data) {
+		// Ignore input if invalid
 		if(data != null && data.length() == 3) {
 			_rawData = data;
 		}
 		
-		_sides = new ArrayList<AutoSide>();
+		_plateSides = new ArrayList<AutoSide>();
 		
-		this.convertString();
+		this.processData();
 	}
-		
-	private void convertString() {
+	
+	/**
+	 * Processes the data string and stores the data in a List
+	 */
+	private void processData() {
 		for(char side : _rawData.toCharArray()) {	
 			if(side == 'L') {
-				_sides.add(AutoSide.left);
+				_plateSides.add(AutoSide.left);
 			}
 			else if(side == 'R') {
-				_sides.add(AutoSide.right);
+				_plateSides.add(AutoSide.right);
 			}
 			else {
-				_sides.add(AutoSide.unknown);
+				_plateSides.add(AutoSide.unknown);
 			}
 		}
 	}
 	
+	/**
+	 * Gets the raw data string
+	 * @return rawData
+	 */
 	public String getRawData() {
 		return _rawData;
 	}
 	
-	public List<AutoSide> getSides() {
-		return _sides;
+	/**
+	 * Gets the List of plate sides
+	 * @return sides
+	 */
+	public List<AutoSide> getPlateSides() {
+		return _plateSides;
 	}
 	
+	/**
+	 * Gets the side of the switch closest to the driver station
+	 * @return side
+	 */
 	public AutoSide getCloseSwitch() {
-		return _sides.get(0);
+		return _plateSides.get(0);
 	}
 	
+	/**
+	 * Gets the side of the scale
+	 * @return side
+	 */
 	public AutoSide getScale() {
-		return _sides.get(1);
+		return _plateSides.get(1);
 	}
 	
+	/**
+	 * Gets the side of the switch farthest from the driver station
+	 * @return side
+	 */
 	public AutoSide getFarSwitch() {
-		return _sides.get(1);
+		return _plateSides.get(1);
 	}
 }

@@ -5,7 +5,6 @@ import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -32,18 +31,15 @@ public class AutoDriveStraight extends CommandBase {
     
     // Called just before this Command runs the first time
     protected void initialize() {
-    	drivetrain.resetEncoders();
     	drivetrain.setTargetDistance(_distance);
-    	Timer.delay(0.5);
+    	Timer.delay(0.5); // TODO - Test if needed
     	
     	_targetCounter = drivetrain.getTargetCounter();
     	_targetCounter.reset();
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	
-    }
+    protected void execute() { }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {        
@@ -53,7 +49,8 @@ public class AutoDriveStraight extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	drivetrain.setTank(0.0, 0.0);
+    	drivetrain.setTank(0, 0);
+    	_targetCounter.reset();
     }
 
     // Called when another command which requires one or more of the same

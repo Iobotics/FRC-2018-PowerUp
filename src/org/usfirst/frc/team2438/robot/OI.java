@@ -1,12 +1,11 @@
 package org.usfirst.frc.team2438.robot;
 
-import org.usfirst.frc.team2438.robot.commands.DropRamp;
 import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
 import org.usfirst.frc.team2438.robot.commands.OperateIntake;
 import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
 import org.usfirst.frc.team2438.robot.commands.OperateLift;
-import org.usfirst.frc.team2438.robot.commands.OperateRamp;
 import org.usfirst.frc.team2438.robot.commands.ToggleIntakeSolenoid;
+import org.usfirst.frc.team2438.robot.commands.ToggleRamp;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampSide;
 
@@ -21,11 +20,8 @@ public class OI {
 	private final Joystick _lStick = new Joystick(2);
 	private final Joystick _rStick = new Joystick(3);
 	
-	private final JoystickButton _intakeButton = new JoystickButton(_rStick, 1);
 	private final JoystickButton _outtakeButton = new JoystickButton(_lStick, 1);
-	
-	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 6);
-	private final JoystickButton _lowerLiftButton = new JoystickButton(_rStick, 7);
+	private final JoystickButton _intakeButton = new JoystickButton(_rStick, 1);
 	
 	private final JoystickButton _homeButton = new JoystickButton(_rStick, 2);
 	private final JoystickButton _switchButton = new JoystickButton(_rStick, 3);
@@ -34,17 +30,20 @@ public class OI {
 	private final JoystickButton _lowerIntakeButton = new JoystickButton(_lStick, 2);
 	private final JoystickButton _raiseIntakeButton = new JoystickButton(_lStick, 3);
 	
-	private final JoystickButton _raiseRightRamp = new JoystickButton(_lStick, 8);
-	private final JoystickButton _raiseLeftRamp = new JoystickButton(_lStick, 9);
-
-	private final JoystickButton _dropLeftRamp = new JoystickButton(_lStick, 10);
-	private final JoystickButton _dropRightRamp = new JoystickButton(_lStick, 11);
+	private final JoystickButton _raiseLiftButton = new JoystickButton(_rStick, 6);
+	private final JoystickButton _lowerLiftButton = new JoystickButton(_rStick, 7);	
 	
 	private final JoystickButton _solenoidButton = new JoystickButton(_lStick, 5);
 	
+	private final JoystickButton _raiseLeftRamp = new JoystickButton(_lStick, 8);
+	private final JoystickButton _raiseRightRamp = new JoystickButton(_lStick, 9);
+
+	private final JoystickButton _dropLeftRamp = new JoystickButton(_rStick, 8);
+	private final JoystickButton _dropRightRamp = new JoystickButton(_rStick, 9);
+	
 	public OI() {
-		_intakeButton.whileHeld(new OperateIntake(1));
 		_outtakeButton.whileHeld(new OperateIntake(-1));
+		_intakeButton.whileHeld(new OperateIntake(1));
 		
 		_lowerLiftButton.whileHeld(new OperateLift(-0.2));
 		_raiseLiftButton.whileHeld(new OperateLift(0.25));
@@ -53,16 +52,16 @@ public class OI {
 		_switchButton.whenPressed(new LiftAndArmToPos(Position.autoSwitch));
 		_scaleButton.whenPressed(new LiftAndArmToPos(Position.autoScale));
 		
-		_lowerIntakeButton.whileHeld(new OperateIntakeArm(-0.3));
+		_lowerIntakeButton.whileHeld(new OperateIntakeArm(-0.25));
 		_raiseIntakeButton.whileHeld(new OperateIntakeArm(0.3));
 		
-		_raiseLeftRamp.whenPressed(new OperateRamp(RampSide.left));
-		_raiseRightRamp.whenPressed(new OperateRamp(RampSide.right));
-		
-		_dropLeftRamp.whenPressed(new DropRamp(RampSide.left));
-		_dropRightRamp.whenPressed(new DropRamp(RampSide.right));
-		
 		_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
+		
+		_raiseLeftRamp.whenPressed(new ToggleRamp(RampSide.left));
+		_raiseRightRamp.whenPressed(new ToggleRamp(RampSide.right));
+		
+		_dropLeftRamp.whenPressed(new ToggleRamp(RampSide.left));
+		_dropRightRamp.whenPressed(new ToggleRamp(RampSide.right));
 	}
 	
 	public double getLeftX() {

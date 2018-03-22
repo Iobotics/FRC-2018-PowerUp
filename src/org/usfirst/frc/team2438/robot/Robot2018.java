@@ -1,18 +1,12 @@
 package org.usfirst.frc.team2438.robot;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
+import org.usfirst.frc.team2438.robot.commands.CalibrateNavigationSensor;
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
-import org.usfirst.frc.team2438.robot.commands.auto.AutoInit;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoSide;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoTest;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.GameData;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -32,14 +26,13 @@ public class Robot2018 extends IterativeRobot {
 	
 	private static AutoSide _side = AutoSide.left;
 	
-	public static GameData _gameData;
+	private static GameData _gameData;
 	
 	String _rawData;
 	
 	Compressor _compressor;
 	PowerDistributionPanel _pdp;
 	Preferences _prefs;
-	UsbCamera _camera;
 	
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -56,24 +49,9 @@ public class Robot2018 extends IterativeRobot {
 
 		_prefs = Preferences.getInstance();
 		
-		new Thread(() -> {
-			_camera = CameraServer.getInstance().startAutomaticCapture();
-			_camera.setVideoMode(PixelFormat.kYUYV, 320, 240, 10);
-			
-            CvSink cvSink = CameraServer.getInstance().getVideo(_camera);
-            CvSource outputStream = CameraServer.getInstance().putVideo("Flip", 640, 480);
-            
-            Mat source = new Mat();
-            Mat output = new Mat();
-            
-            while(!Thread.interrupted()) {
-                cvSink.grabFrame(source);
-                Core.flip(source, output, 0);
-                outputStream.putFrame(output);
-            }
-        }).start();
-		
 		CommandBase.init();
+		
+		(new CalibrateNavigationSensor()).start();
 	}
 
 	/**
@@ -107,7 +85,7 @@ public class Robot2018 extends IterativeRobot {
 		// pick auto command via program number //
 		_gameData = new GameData(_rawData);
 		
-		(new AutoInit()).start();
+		(new AutoTest()).start();
 	}
 
 	/**
@@ -116,20 +94,17 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
 	}
 
 	@Override
-	public void teleopInit() {
-		Scheduler.getInstance().run();
-		
+	public void teleopInit() {		
 		CommandBase.ramp.resetServos();
 
 		CommandBase.drivetrain.resetEncoders();
 		CommandBase.lift.resetEncoder();
 		CommandBase.intake.resetEncoder();
 		
-		CommandBase.intake.setPosition(Position.home.getArmPosition());
+		CommandBase.intake.setArmPosition(Position.home.getArmPosition());
 	}
 
 	/**
@@ -141,7 +116,8 @@ public class Robot2018 extends IterativeRobot {
 		// TODO - Cut down on unnecessary telemetry
 		SmartDashboard.putString("Intake Limit Switch", (CommandBase.intake.getLimitSwitch() ? "Detected" : "Not found"));
 		SmartDashboard.putString("Lift Limit Switch", (CommandBase.lift.getLimitSwitch() ? "Detected" : "Not found"));
-		SmartDashboard.putNumber("Heading", CommandBase.navSensor.getGyro());
+		
+		this.debug();
 	}
 	
 	public static AutoSide getSide() {
@@ -150,5 +126,15 @@ public class Robot2018 extends IterativeRobot {
 	
 	public static GameData getGameData() {
 		return _gameData;
+	}
+	
+	private void debug() {
+		//CommandBase.navSensor.debug();
+		/*CommandBase.drivetrain.debug();
+        //CommandBase.ledSystem.debug();
+		CommandBase.intake.debug();
+		CommandBase.camera.debug();
+		CommandBase.lift.debug();
+		CommandBase.ramp.debug();*/
 	}
 }

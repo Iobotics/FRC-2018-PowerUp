@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
-import org.usfirst.frc.team2438.robot.commands.CalibrateNavigationSensor;
 import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
 import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
 
@@ -10,9 +9,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoInit extends CommandGroup {
+public class AutoTest extends CommandGroup {
 
-    public AutoInit() {
+    public AutoTest() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -30,11 +29,11 @@ public class AutoInit extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	addParallel(new CalibrateNavigationSensor());
+    	System.out.println("Resetting encoders...");
     	addSequential(new ResetEncoders());
+    	System.out.println("Done!");
     	addSequential(new ArmToPosition(0));
-    	addSequential(new LiftToPosition(18660));
-    	addSequential(new ArmToPosition(-850));
+    	addSequential(new LiftToPosition(5000));
     	//addSequential(new AutoToBottom());
     	//addSequential(new ArmToPosition(-1280));
     }

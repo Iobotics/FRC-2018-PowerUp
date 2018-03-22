@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Operate the lift
+ * Move the lift to the given position
  */
 public class LiftToPosition extends CommandBase {
 	
@@ -30,7 +30,7 @@ public class LiftToPosition extends CommandBase {
     	_targetCounter.reset();
     	
     	lift.setPosition(_encoderPosition);
-    	Timer.delay(0.1);
+    	Timer.delay(0.1); // TODO - Test if needed
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -42,7 +42,7 @@ public class LiftToPosition extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return _targetCounter.onTarget(lift.getError()) || (lift.getLimitSwitch() && lift.getPosition() < _encoderPosition);
+        return _targetCounter.onTarget(lift.getError()) || lift.withinEncoderRange(_encoderPosition);
     }
 
     // Called once after isFinished returns true

@@ -16,19 +16,21 @@ public class OperateIntake extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	// If the intake doesn't have a box in it, lower the intake arm
+    	if(!intake.getLimitSwitch()) {
+    		intake.setArmPosition(0);
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(!intake.getLimitSwitch() || intake.getLimitSwitch() && power < 0) {
-    		if(power > 0) {
-    			intake.setPosition(0);
-    		}
+    	if(intake.canIntake(power)) {
+    		
     		if(lift.getLiftPosition() == Position.autoSwitch) {
-    			intake.setPower(power * 0.28);
-    		} else {
-    			intake.setPower(power);
+    			power *= 0.28;
     		}
+    		
+    		intake.setPower(power);
     	}
     }
 
@@ -39,7 +41,7 @@ public class OperateIntake extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	intake.setPosition(Position.home.getArmPosition());
+    	intake.setArmPosition(Position.home.getArmPosition());
     	intake.setPower(0);
     }
 

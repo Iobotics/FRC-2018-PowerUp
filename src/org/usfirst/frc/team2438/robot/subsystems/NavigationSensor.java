@@ -28,6 +28,10 @@ public class NavigationSensor extends Subsystem implements PIDSource {
         }
 	}
 	
+	/**
+	 * Checks if the gyro is calibrating
+	 * @return isCalibrating
+	 */
 	public boolean isCalibrating() {
 		return _ahrs.isCalibrating();
 	}
@@ -36,6 +40,10 @@ public class NavigationSensor extends Subsystem implements PIDSource {
 		_ahrs.zeroYaw();
 	}
 	
+	/**
+	 * Gets the gyro angle in degrees [-180, 180]
+	 * @return yaw
+	 */
 	public double getGyro() {
 		return _ahrs.getYaw();
 	}
