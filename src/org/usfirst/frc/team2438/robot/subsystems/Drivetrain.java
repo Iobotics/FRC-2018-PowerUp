@@ -74,6 +74,12 @@ public class Drivetrain extends Subsystem {
 		_frontLeft.follow(_backLeft);
 		_frontRight.follow(_backRight);
 		
+		/* Set deadband */
+		_frontLeft.configNeutralDeadband(Constants.DEADBAND, Constants.TALON_TIMEOUT);
+		_frontRight.configNeutralDeadband(Constants.DEADBAND, Constants.TALON_TIMEOUT);
+		_backLeft.configNeutralDeadband(Constants.DEADBAND, Constants.TALON_TIMEOUT);
+		_backRight.configNeutralDeadband(Constants.DEADBAND, Constants.TALON_TIMEOUT);
+		
 		/* Motion Magic */
 		_backLeft.setSensorPhase(true);
 		_backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.TALON_TIMEOUT);
@@ -244,5 +250,9 @@ public class Drivetrain extends Subsystem {
 		setDefaultCommand(new OperateTankDrive()); 
     	//setDefaultCommand(null); 
     }
+
+	public void stop() {
+		this.setTank(0, 0);
+	}
 }
 

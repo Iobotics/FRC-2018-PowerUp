@@ -33,7 +33,7 @@ public class OperateIntakeArm extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (lift.getLiftEncoderPosition() >= Lift.MAX_LIFT_POSITION);
+        return false;
     }
 
     // Called once after isFinished returns true

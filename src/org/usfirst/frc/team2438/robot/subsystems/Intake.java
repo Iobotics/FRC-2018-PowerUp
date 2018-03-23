@@ -215,7 +215,7 @@ public class Intake extends Subsystem {
 	}
 	
 	/**
-     * Gets the drivetrain TargetCounter
+     * Gets the intake TargetCounter
      * @return targetCounter
      */
 	public TargetCounter getTargetCounter() {

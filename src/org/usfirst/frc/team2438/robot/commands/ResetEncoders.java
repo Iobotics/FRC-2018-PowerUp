@@ -17,9 +17,16 @@ public class ResetEncoders extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	drivetrain.stop();
+    	lift.stop();
+    	intake.stop();
+    	
     	drivetrain.resetEncoders();
 		lift.resetEncoder();
 		intake.resetEncoder();
+		
+		lift.setPosition(0);
+		intake.setArmPosition(0);
     }
 
     // Called repeatedly when this Command is scheduled to run

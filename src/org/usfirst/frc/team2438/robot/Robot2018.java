@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -29,6 +31,9 @@ public class Robot2018 extends IterativeRobot {
 	private static GameData _gameData;
 	
 	String _rawData;
+	SendableChooser<AutoSide> _chooser;
+	
+	Command _autoCommand;
 	
 	Compressor _compressor;
 	PowerDistributionPanel _pdp;
@@ -48,6 +53,13 @@ public class Robot2018 extends IterativeRobot {
 		_compressor.start();
 
 		_prefs = Preferences.getInstance();
+		
+		_chooser = new SendableChooser<AutoSide>();
+		_chooser.addDefault("Unknown", AutoSide.unknown);
+		_chooser.addObject("Left", AutoSide.left);
+		_chooser.addObject("Right", AutoSide.right);
+		
+		SmartDashboard.putData("Auto Side", _chooser);
 		
 		CommandBase.init();
 		
@@ -82,10 +94,15 @@ public class Robot2018 extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		// pick auto command via program number //
-		_gameData = new GameData(_rawData);
+		// Pick auto side via a SendableChooser //
+		//_side = _chooser.getSelected();
+		_rawData = "LLR";
+		_side = AutoSide.left;
 		
-		(new AutoTest()).start();
+		_gameData = new GameData(_rawData);
+				
+		_autoCommand = new AutoTest();
+		_autoCommand.start();
 	}
 
 	/**
@@ -94,11 +111,23 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		
+		SmartDashboard.putString("Auto Side Data", _chooser.getSelected().toString());
+		SmartDashboard.putString("Auto Data", _rawData);
 	}
 
 	@Override
-	public void teleopInit() {		
-		CommandBase.ramp.resetServos();
+	public void teleopInit() {
+		
+		if (_autoCommand != null) {
+			_autoCommand.cancel();
+		}
+		
+		//CommandBase.ramp.resetServos();
+		
+		CommandBase.drivetrain.stop();
+		CommandBase.lift.stop();
+		CommandBase.intake.stop();
 
 		CommandBase.drivetrain.resetEncoders();
 		CommandBase.lift.resetEncoder();
@@ -114,8 +143,8 @@ public class Robot2018 extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		// TODO - Cut down on unnecessary telemetry
-		SmartDashboard.putString("Intake Limit Switch", (CommandBase.intake.getLimitSwitch() ? "Detected" : "Not found"));
-		SmartDashboard.putString("Lift Limit Switch", (CommandBase.lift.getLimitSwitch() ? "Detected" : "Not found"));
+		//SmartDashboard.putString("Intake Limit Switch", (CommandBase.intake.getLimitSwitch() ? "Detected" : "Not found"));
+		//SmartDashboard.putString("Lift Limit Switch", (CommandBase.lift.getLimitSwitch() ? "Detected" : "Not found"));
 		
 		this.debug();
 	}

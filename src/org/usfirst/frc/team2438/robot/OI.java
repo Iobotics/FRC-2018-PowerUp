@@ -52,8 +52,8 @@ public class OI {
 		_switchButton.whenPressed(new LiftAndArmToPos(Position.autoSwitch));
 		_scaleButton.whenPressed(new LiftAndArmToPos(Position.autoScale));
 		
-		_lowerIntakeButton.whileHeld(new OperateIntakeArm(-0.25));
-		_raiseIntakeButton.whileHeld(new OperateIntakeArm(0.3));
+		_lowerIntakeButton.whileHeld(new OperateIntakeArm(-0.4));
+		_raiseIntakeButton.whileHeld(new OperateIntakeArm(0.5));
 		
 		_solenoidButton.whenPressed(new ToggleIntakeSolenoid());
 		

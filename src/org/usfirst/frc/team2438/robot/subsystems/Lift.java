@@ -20,8 +20,8 @@ public class Lift extends Subsystem {
 	public static enum Position {
 		 // TODO - Find encoder values
 		home(0, 450),
-		autoSwitch(30500, 550),
-		autoScale(51500, 1340),
+		autoSwitch(24300, 450),
+		autoScale(52500, 1230),
 		autoReverse(51500, 0);
 		
 		private int _liftPosition;
@@ -52,16 +52,16 @@ public class Lift extends Subsystem {
 	// TODO - Tune PID constants
 	/* Motion Magic Constants */
 	private static final double kF = 0;
-	private static final double kP = 0.35;
+	private static final double kP = 0.4;
 	private static final double kI = 0;
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
 	// TODO - Change the lift velocity
-	public static final int LIFT_VELOCITY = 6000;	  // Native units per 100 ms
-	public static final int LIFT_ACCELERATION = 6000; // Native units per 100 ms
+	public static final int LIFT_VELOCITY = 2000;	  // Native units per 100 ms
+	public static final int LIFT_ACCELERATION = 2000; // Native units per 100 ms
 	
-	public static final int MAX_LIFT_POSITION = 51500; // Max lift position in native units
+	public static final int MAX_LIFT_POSITION = 53000; // Max lift position in native units
 	
 	private static final int ERROR_THRESHOLD = 320;  // Allowable error in native units
 	
@@ -71,6 +71,7 @@ public class Lift extends Subsystem {
 	private TalonSRX _backRightLift;
 	
 	private Position _liftPosition;
+	private int _setpoint;
 	
 	private TargetCounter _targetCounter;
 	
@@ -87,7 +88,7 @@ public class Lift extends Subsystem {
     	_backLeftLift.setInverted(true);
     	
     	// Reverse the encoder readings
-    	_frontRightLift.setSensorPhase(true);
+    	_backLeftLift.setSensorPhase(true);
     	
     	/* Set the lift motors to brake mode */
     	_frontLeftLift.setNeutralMode(NeutralMode.Brake);
@@ -96,30 +97,30 @@ public class Lift extends Subsystem {
     	_backRightLift.setNeutralMode(NeutralMode.Brake);
     	
     	// Set the lift motors to follow the front right master motor
-    	_frontLeftLift.follow(_frontRightLift);
-    	_backLeftLift.follow(_frontRightLift);
-    	_backRightLift.follow(_frontRightLift);
+    	_frontLeftLift.follow(_backLeftLift);
+    	_frontRightLift.follow(_backLeftLift);
+    	_backRightLift.follow(_backLeftLift);
     	
     	/* Configure the lift motor encoder */
-    	_frontRightLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.TALON_TIMEOUT);
-    	_frontRightLift.selectProfileSlot(0, 0);
-    	_frontRightLift.config_kF(0, kF, Constants.TALON_TIMEOUT);
-    	_frontRightLift.config_kP(0, kP, Constants.TALON_TIMEOUT);
-    	_frontRightLift.config_kI(0, kI, Constants.TALON_TIMEOUT);
-    	_frontRightLift.config_kD(0, kD, Constants.TALON_TIMEOUT);
-    	_frontRightLift.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
-    	_frontRightLift.configMotionCruiseVelocity(LIFT_VELOCITY, Constants.TALON_TIMEOUT);
-    	_frontRightLift.configMotionAcceleration(LIFT_ACCELERATION, Constants.TALON_TIMEOUT);
+    	_backLeftLift.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.TALON_TIMEOUT);
+    	_backLeftLift.selectProfileSlot(0, 0);
+    	_backLeftLift.config_kF(0, kF, Constants.TALON_TIMEOUT);
+    	_backLeftLift.config_kP(0, kP, Constants.TALON_TIMEOUT);
+    	_backLeftLift.config_kI(0, kI, Constants.TALON_TIMEOUT);
+    	_backLeftLift.config_kD(0, kD, Constants.TALON_TIMEOUT);
+    	_backLeftLift.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
+    	_backLeftLift.configMotionCruiseVelocity(LIFT_VELOCITY, Constants.TALON_TIMEOUT);
+    	_backLeftLift.configMotionAcceleration(LIFT_ACCELERATION, Constants.TALON_TIMEOUT);
     	
     	/* Configure a current limit on the front right master motor */
-    	_frontRightLift.configContinuousCurrentLimit(15, Constants.TALON_TIMEOUT);
-    	_frontRightLift.configPeakCurrentLimit(12, Constants.TALON_TIMEOUT);
-    	_frontRightLift.configPeakCurrentDuration(100, Constants.TALON_TIMEOUT);
-    	_frontRightLift.enableCurrentLimit(true);
+    	_backLeftLift.configContinuousCurrentLimit(15, Constants.TALON_TIMEOUT);
+    	_backLeftLift.configPeakCurrentLimit(12, Constants.TALON_TIMEOUT);
+    	_backLeftLift.configPeakCurrentDuration(100, Constants.TALON_TIMEOUT);
+    	_backLeftLift.enableCurrentLimit(true);
     	
-    	// TODO - Enable the forward soft limit?
-    	/*_frontRightLift.configForwardSoftLimitThreshold(51000, Constants.TALON_TIMEOUT);
-    	_frontRightLift.configForwardSoftLimitEnable(true, Constants.TALON_TIMEOUT);*/
+    	// TODO - Enable the forward soft limit
+    	/*_backLeftLift.configForwardSoftLimitThreshold(51000, Constants.TALON_TIMEOUT);
+    	_backLeftLift.configForwardSoftLimitEnable(true, Constants.TALON_TIMEOUT);*/
     	
     	_limitSwitch = new DigitalInput(RobotMap.liftLimitSwitch);
     	
@@ -128,11 +129,11 @@ public class Lift extends Subsystem {
     }
     
     public void setPower(double power) { 
-    	_frontRightLift.set(ControlMode.PercentOutput, power);
+    	_backLeftLift.set(ControlMode.PercentOutput, power);
     }
     
     public double getPower() {
-    	return _frontRightLift.getMotorOutputPercent();
+    	return _backLeftLift.getMotorOutputPercent();
     }
     
     public void setPosition(Position liftPosition) {
@@ -140,12 +141,13 @@ public class Lift extends Subsystem {
 		_liftPosition = liftPosition;
 	}
     
-    public void setPosition(double input) {
-    	_frontRightLift.set(ControlMode.MotionMagic, input);
+    public void setPosition(int input) {
+    	_backLeftLift.set(ControlMode.MotionMagic, input);
+    	_setpoint = input;
     }
     
     public int getLiftEncoderPosition() {
-    	return _frontRightLift.getSelectedSensorPosition(0);
+    	return _backLeftLift.getSelectedSensorPosition(0);
     }
     
     public Position getLiftPosition() {
@@ -153,23 +155,23 @@ public class Lift extends Subsystem {
 	}
     
     public void resetEncoder() {
-    	_frontRightLift.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
+    	_backLeftLift.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
     }
     
     public void setCurrent(double current) {    	
-    	_frontRightLift.set(ControlMode.Current, current);
+    	_backLeftLift.set(ControlMode.Current, current);
     }
     
     public double getCurrent() {
-    	return _frontRightLift.getOutputCurrent();
+    	return _backLeftLift.getOutputCurrent();
 	}
     
     public double getError() {
-    	return _frontRightLift.getClosedLoopError(0);
+    	return _setpoint - _backLeftLift.getSelectedSensorPosition(0);
     }
     
     public void stop() {
-    	_frontRightLift.set(ControlMode.PercentOutput, 0);
+    	_backLeftLift.set(ControlMode.PercentOutput, 0);
     }
     
     /**
@@ -200,7 +202,7 @@ public class Lift extends Subsystem {
     }
     
     /**
-     * Gets the drivetrain TargetCounter
+     * Gets the lift TargetCounter
      * @return targetCounter
      */
     public TargetCounter getTargetCounter() {

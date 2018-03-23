@@ -25,6 +25,8 @@ public class OperateLift extends CommandBase {
     		lift.setPower(power);
     	}
     	
+    	SmartDashboard.putNumber("Lift Position", CommandBase.lift.getLiftEncoderPosition());
+    	
     	SmartDashboard.putNumber("Lift Error", lift.getError());
     	SmartDashboard.putNumber("Lift Current", lift.getCurrent());
     }
@@ -36,7 +38,8 @@ public class OperateLift extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	lift.setPosition(lift.getLiftEncoderPosition());
+    	//lift.setPosition(lift.getLiftEncoderPosition());
+    	lift.stop();
     }
 
     // Called when another command which requires one or more of the same

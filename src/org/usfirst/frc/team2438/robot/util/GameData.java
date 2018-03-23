@@ -79,6 +79,6 @@ public class GameData {
 	 * @return side
 	 */
 	public AutoSide getFarSwitch() {
-		return _plateSides.get(1);
+		return _plateSides.get(2);
 	}
 }

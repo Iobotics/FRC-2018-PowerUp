@@ -3,7 +3,6 @@ package org.usfirst.frc.team2438.robot.commands;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -42,7 +41,6 @@ public class ArmToPosition extends CommandBase {
     	_targetCounter.reset();
     	
     	intake.setArmPosition(_encoderPosition);
-    	Timer.delay(0.1); // TODO - Test if needed
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -50,6 +48,8 @@ public class ArmToPosition extends CommandBase {
     	SmartDashboard.putNumber("Arm Error", intake.getArmError());
     	SmartDashboard.putNumber("Arm Current", intake.getArmCurrent());
     	SmartDashboard.putNumber("Arm Counter", _targetCounter.getCount());
+    	
+    	intake.setArmPosition(_encoderPosition);
     }
     
     // Make this return true when this Command no longer needs to run execute()
@@ -58,11 +58,13 @@ public class ArmToPosition extends CommandBase {
     }
 
     // Called once after isFinished returns true
-    protected void end() {
+    protected void end() {    	
     	_targetCounter.reset();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
-    protected void interrupted() { }
+    protected void interrupted() {
+    	end();
+    }
 }

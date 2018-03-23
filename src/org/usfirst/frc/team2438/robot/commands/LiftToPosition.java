@@ -30,7 +30,6 @@ public class LiftToPosition extends CommandBase {
     	_targetCounter.reset();
     	
     	lift.setPosition(_encoderPosition);
-    	Timer.delay(0.1); // TODO - Test if needed
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -38,6 +37,8 @@ public class LiftToPosition extends CommandBase {
     	SmartDashboard.putNumber("Lift Error", lift.getError());
     	SmartDashboard.putNumber("Lift Current", lift.getCurrent());
     	SmartDashboard.putNumber("Lift Counter", _targetCounter.getCount());
+    	
+    	lift.setPosition(_encoderPosition);
     }
 
     // Make this return true when this Command no longer needs to run execute()

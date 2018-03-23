@@ -38,7 +38,7 @@ public abstract class CommandBase extends Command {
         intake.init();
         camera.init();
         lift.init();
-        ramp.init();
+        //ramp.init();
     }
 
     public CommandBase(String name) {

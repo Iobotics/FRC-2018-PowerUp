@@ -1,10 +1,10 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
-import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
 import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
@@ -29,11 +29,14 @@ public class AutoTest extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	System.out.println("Resetting encoders...");
-    	addSequential(new ResetEncoders());
-    	System.out.println("Done!");
-    	addSequential(new ArmToPosition(0));
-    	addSequential(new LiftToPosition(5000));
+    	addSequential(new ArmToPosition(-1500));
+    	
+    	//addSequential(new ResetEncoders());
+    	//addSequential(new WaitCommand(0.5));
+    	
+    	//addSequential(new ArmToPosition(0));
+    	
+    	//addSequential(new AutoSwitch());
     	//addSequential(new AutoToBottom());
     	//addSequential(new ArmToPosition(-1280));
     }

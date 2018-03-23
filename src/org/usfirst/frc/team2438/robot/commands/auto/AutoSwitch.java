@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
+import org.usfirst.frc.team2438.robot.Robot2018;
 import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
@@ -29,13 +30,22 @@ public class AutoSwitch extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	addSequential(new AutoInit());
+    	AutoSide _switchSide = Robot2018.getGameData().getCloseSwitch();
+    	AutoSide _robotSide = Robot2018.getSide();
     	
     	addParallel(new AutoDriveStraight(156));
     	
+    	if(_robotSide == AutoSide.right && _switchSide == AutoSide.right) {
+    		addSequential(new AutoTurn(-90));
+    	} else if(_robotSide == AutoSide.left && _switchSide == AutoSide.left) {
+    		addSequential(new AutoTurn(90));
+    	} else {
+    		return;
+    	}
+    	
     	addSequential(new LiftAndArmToPos(Position.autoSwitch));
     	
-    	addSequential(new AutoTurn(-90));
+    	addSequential(new WaitCommand(1));
     	
     	addSequential(new AutoDriveStraight(16));
     	
