@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Drivetrain
@@ -247,14 +248,22 @@ public class Drivetrain extends Subsystem {
     public TargetCounter getTargetCounter() {
     	return _targetCounter;
     }
+    
+    public void stop() {
+		this.setTank(0, 0);
+	}
+    
+    public void debug() {
+    	SmartDashboard.putNumber("drive-left-power", _frontLeft.getMotorOutputPercent());
+    	SmartDashboard.putNumber("drive-right-power", _frontRight.getMotorOutputPercent());
+    	
+    	SmartDashboard.putNumber("drive-left-distance", this.getLeftEncoder());
+    	SmartDashboard.putNumber("drive-right-distance", this.getRightEncoder());
+    }
 	
 	public void initDefaultCommand() {
 		setDefaultCommand(new OperateTankDrive()); 
     	//setDefaultCommand(null); 
     }
-
-	public void stop() {
-		this.setTank(0, 0);
-	}
 }
 

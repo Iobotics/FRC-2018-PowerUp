@@ -8,10 +8,10 @@ package org.usfirst.frc.team2438.robot;
  */
 public class RobotMap {
 	// Talons //
-	public static final int frontLeftMotor   = 1;
-	public static final int frontRightMotor  = 2;
-	public static final int backLeftMotor    = 3;
-	public static final int backRightMotor   = 4;
+	public static final int frontLeftMotor  = 1;
+	public static final int frontRightMotor = 2;
+	public static final int backLeftMotor   = 3;
+	public static final int backRightMotor  = 4;
 	
 	public static final int frontLeftLift  = 5;
 	public static final int frontRightLift = 6;
@@ -25,7 +25,7 @@ public class RobotMap {
 	
 	// DIO //
 	public static final int intakeLimitSwitch = 0;
-	public static final int liftLimitSwitch = 1;
+	public static final int liftLimitSwitch   = 1;
 	
 	// Pneumatics //
 	public static final int intakeForwardChannel = 0;
@@ -35,6 +35,6 @@ public class RobotMap {
 	public static final int distanceSensor = 0;
 	
 	// PWM //
-	public static final int leftServo = 0;
+	public static final int leftServo  = 0;
 	public static final int rightServo = 1;	
 }

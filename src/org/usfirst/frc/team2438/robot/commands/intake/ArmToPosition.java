@@ -41,6 +41,7 @@ public class ArmToPosition extends CommandBase {
     	_targetCounter = intake.getTargetCounter();
     	_targetCounter.reset();
     	
+    	System.out.println("Set intake arm target to: " + _encoderPosition);
     	intake.setArmPosition(_encoderPosition);
     }
 
@@ -55,14 +56,12 @@ public class ArmToPosition extends CommandBase {
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if(_targetCounter.onTarget(intake.getArmError()) || this.isTimedOut()) {
-    		System.out.println("Arm finished at position: " + intake.getArmEncoderPosition());
-    	}
         return _targetCounter.onTarget(intake.getArmError()) || this.isTimedOut();
     }
 
     // Called once after isFinished returns true
-    protected void end() {    	
+    protected void end() {
+    	System.out.println("Intake arm finished at: " + intake.getArmEncoderPosition());
     	_targetCounter.reset();
     }
 

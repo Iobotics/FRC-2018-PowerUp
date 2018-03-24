@@ -1,12 +1,12 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
-import org.usfirst.frc.team2438.robot.commands.auto.AutoSwitch;
-import org.usfirst.frc.team2438.robot.commands.auto.AutoSide;
+import org.usfirst.frc.team2438.robot.commands.TeleopInit;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoCenter;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoSide;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoSwitch;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoTest;
 import org.usfirst.frc.team2438.robot.commands.navsensor.CalibrateNavigationSensor;
-import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.GameData;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -28,12 +28,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot2018 extends IterativeRobot {
 	
-	private static AutoSide _side = AutoSide.left;
-	
 	private static GameData _gameData;
+	private static AutoSide _robotSide = AutoSide.left;
 	
 	String _rawData;
-	SendableChooser<Command> _autoChooser;
+	
+	SendableChooser<Command>  _autoChooser;
 	SendableChooser<AutoSide> _sideChooser;
 	
 	Command _autoCommand;
@@ -57,16 +57,18 @@ public class Robot2018 extends IterativeRobot {
 
 		_prefs = Preferences.getInstance();
 		
+		_autoChooser = new SendableChooser<Command>();
+		_autoChooser.addDefault("Auto switch", new AutoSwitch());
+		_autoChooser.addObject("Auto center", new AutoCenter());
+		_autoChooser.addObject("Auto drive straight", new AutoTest());
+		
 		_sideChooser = new SendableChooser<AutoSide>();
 		_sideChooser.addDefault("Unknown", AutoSide.unknown);
 		_sideChooser.addObject("Left", AutoSide.left);
 		_sideChooser.addObject("Right", AutoSide.right);
 		
-		_autoChooser = new SendableChooser<Command>();
-		_autoChooser.addDefault("Auto Switch", new AutoCenter());
-		_autoChooser.addObject("Auto Center", new AutoSwitch());
-		
-		SmartDashboard.putData("Auto Side", _sideChooser);
+		SmartDashboard.putData("Auto command chooser", _autoChooser);
+		SmartDashboard.putData("Auto side chooser", _sideChooser);
 		
 		CommandBase.init();
 		
@@ -85,8 +87,6 @@ public class Robot2018 extends IterativeRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		
-		SmartDashboard.putNumber("Heading", CommandBase.navsensor.getGyro());
-		
 		_rawData = DriverStation.getInstance().getGameSpecificMessage();
 	}
 
@@ -103,13 +103,13 @@ public class Robot2018 extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		_side = _sideChooser.getSelected();
-		
-		_gameData = new GameData(_rawData);
+		_robotSide = _sideChooser.getSelected();
 		
 		//_autoCommand = _autoChooser.getSelected();
 		_autoCommand = (new AutoTest());
 		_autoCommand.start();
+		
+		_gameData = new GameData(_rawData);
 	}
 
 	/**
@@ -119,28 +119,16 @@ public class Robot2018 extends IterativeRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		
-		SmartDashboard.putString("Auto Side Data", _sideChooser.getSelected().toString());
-		SmartDashboard.putString("Auto Data", _rawData);
+		SmartDashboard.putString("Auto side data", _rawData);
 	}
 
 	@Override
 	public void teleopInit() {
-		
 		if (_autoCommand != null) {
 			_autoCommand.cancel();
 		}
 		
-		//CommandBase.ramp.resetServos();
-		
-		CommandBase.drivetrain.stop();
-		CommandBase.lift.stop();
-		CommandBase.intake.stop();
-
-		CommandBase.drivetrain.resetEncoders();
-		CommandBase.lift.resetEncoder();
-		CommandBase.intake.resetEncoder();
-		
-		CommandBase.intake.setArmPosition(Position.home.getArmPosition());
+		(new TeleopInit()).start();
 	}
 
 	/**
@@ -149,15 +137,12 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		// TODO - Cut down on unnecessary telemetry
-		//SmartDashboard.putString("Intake Limit Switch", (CommandBase.intake.getLimitSwitch() ? "Detected" : "Not found"));
-		//SmartDashboard.putString("Lift Limit Switch", (CommandBase.lift.getLimitSwitch() ? "Detected" : "Not found"));
 		
 		this.debug();
 	}
 	
 	public static AutoSide getSide() {
-		return _side;
+		return _robotSide;
 	}
 	
 	public static GameData getGameData() {
@@ -165,12 +150,12 @@ public class Robot2018 extends IterativeRobot {
 	}
 	
 	private void debug() {
-		//CommandBase.navSensor.debug();
-		/*CommandBase.drivetrain.debug();
+		//CommandBase.navsensor.debug();
+		//CommandBase.drivetrain.debug();
         //CommandBase.ledSystem.debug();
-		CommandBase.intake.debug();
-		CommandBase.camera.debug();
-		CommandBase.lift.debug();
-		CommandBase.ramp.debug();*/
+		//CommandBase.intake.debug();
+		//CommandBase.camera.debug();
+		//CommandBase.lift.debug();
+		//CommandBase.ramp.debug();
 	}
 }

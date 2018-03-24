@@ -36,7 +36,7 @@ public abstract class CommandBase extends Command {
         drivetrain.init();
         //ledSystem.init();
         intake.init();
-        camera.init();
+        //camera.init();
         lift.init();
         //ramp.init();
     }

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Ramp
@@ -19,8 +20,8 @@ public class Ramp extends Subsystem {
 	}
 	
 	// Track if the solenoids are activated
-	private boolean leftSolenoidActivated = false;
-	private boolean rightSolenoidActivated = false;
+	private boolean _leftSolenoidActivated  = false;
+	private boolean _rightSolenoidActivated = false;
 	
 	private DoubleSolenoid _leftRamp;
 	private DoubleSolenoid _rightRamp;
@@ -42,13 +43,13 @@ public class Ramp extends Subsystem {
 	
 	public void toggleLeftRamp() {
 		// Reverses the solenoid position
-		if(!leftSolenoidActivated) {
+		if(!_leftSolenoidActivated) {
 			_leftRamp.set(Value.kForward);
 		}
 		else {
 			_leftRamp.set(Value.kReverse);
 		}
-		leftSolenoidActivated = !leftSolenoidActivated;
+		_leftSolenoidActivated = !_leftSolenoidActivated;
 		
 		// Wait for the solenoid to activate
 		try {
@@ -63,12 +64,12 @@ public class Ramp extends Subsystem {
 
 	public void toggleRightRamp() {
 		// Reverses the solenoid position
-		if(!rightSolenoidActivated) {
+		if(!_rightSolenoidActivated) {
 			_rightRamp.set(Value.kForward);
 		} else {
 			_rightRamp.set(Value.kReverse);
 		}
-		rightSolenoidActivated = !rightSolenoidActivated;
+		_rightSolenoidActivated = !_rightSolenoidActivated;
 		
 		// Wait for the solenoid to activate
 		try {
@@ -109,6 +110,10 @@ public class Ramp extends Subsystem {
 	public void resetServos() {
 		_leftServo.set(0);
 		_rightServo.set(1.0);
+	}
+	
+	public void debug() {
+		SmartDashboard.putBoolean("Ramp down", _leftSolenoidActivated);
 	}
 	
     public void initDefaultCommand() {

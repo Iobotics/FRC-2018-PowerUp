@@ -1,25 +1,28 @@
 package org.usfirst.frc.team2438.robot.commands;
 
-/**
- * Reset all subsystem encoders
- */
-public class ResetEncoders extends CommandBase {
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
-    public ResetEncoders() {
+/**
+ *
+ */
+public class TeleopInit extends CommandBase {
+
+    public TeleopInit() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(drivetrain);
     	requires(lift);
     	requires(intake);
-    	
-    	this.setInterruptible(false);
+    	requires(ramp);
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() { }
+    protected void initialize() {
+    }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() { }
+    protected void execute() {
+    }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
@@ -28,15 +31,17 @@ public class ResetEncoders extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	drivetrain.stop();
-    	lift.stop();
-    	intake.stop();
-    	
-    	drivetrain.resetEncoders();
-		lift.resetEncoder();
-		intake.resetEncoder();
+    	//CommandBase.ramp.resetServos();
 		
-		intake.setArmPosition(0);
+    	CommandBase.drivetrain.stop();
+    	CommandBase.lift.stop();
+    	CommandBase.intake.stop();
+
+    	CommandBase.drivetrain.resetEncoders();
+    	CommandBase.lift.resetEncoder();
+    	CommandBase.intake.resetEncoder();
+    			
+    	CommandBase.intake.setArmPosition(Position.home.getArmPosition());
     }
 
     // Called when another command which requires one or more of the same

@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Lift
@@ -208,6 +209,12 @@ public class Lift extends Subsystem {
     public TargetCounter getTargetCounter() {
 		return _targetCounter;
 	}
+    
+    public void debug() {
+    	SmartDashboard.putNumber("Lift position", this.getLiftEncoderPosition());
+    	SmartDashboard.putNumber("Lift error", this.getError());
+    	SmartDashboard.putNumber("Lift current", this.getCurrent());
+    }
 
     public void initDefaultCommand() {
     	setDefaultCommand(null);

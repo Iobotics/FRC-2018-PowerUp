@@ -29,6 +29,7 @@ public class LiftToPosition extends CommandBase {
     	_targetCounter = lift.getTargetCounter();
     	_targetCounter.reset();
     	
+    	System.out.println("Set lift target to: " + _encoderPosition);
     	lift.setPosition(_encoderPosition);
     }
 
@@ -43,14 +44,12 @@ public class LiftToPosition extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if(_targetCounter.onTarget(lift.getError()) || lift.withinEncoderRange(_encoderPosition)) {
-    		System.out.println("Lift finished at position: " + lift.getLiftEncoderPosition());
-    	}
         return _targetCounter.onTarget(lift.getError()) || lift.withinEncoderRange(_encoderPosition);
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("Lift finished at: " + lift.getLiftEncoderPosition());
     	_targetCounter.reset();
     }
 

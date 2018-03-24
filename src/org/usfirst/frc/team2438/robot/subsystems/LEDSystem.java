@@ -3,6 +3,7 @@ package org.usfirst.frc.team2438.robot.subsystems;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * LED System
@@ -41,6 +42,10 @@ public class LEDSystem extends Subsystem {
     public void stop() {
     	_leds.write(I2C_ADDRESS, 0);
     	_leds.free();
+    }
+    
+    public void debug() {
+    	SmartDashboard.putBoolean("LEDs connected", !_leds.addressOnly());
     }
 
     public void initDefaultCommand() {

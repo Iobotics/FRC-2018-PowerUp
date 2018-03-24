@@ -5,13 +5,17 @@ import org.usfirst.frc.team2438.robot.commands.CommandBase;
 /**
  * Drive for a given amount of time
  */
-public class DriveByTime extends CommandBase {
+public class AutoTimedDrive extends CommandBase {
 	
 	private double _timeout;
 
-    public DriveByTime(double timeout) {
+    public AutoTimedDrive(double timeout) {
         // Use requires() here to declare subsystem dependencies
         requires(drivetrain);
+        
+        if(timeout < 0) {
+        	throw new IllegalArgumentException("Timeout is too small!");
+        }
         
         _timeout = timeout;
     }
@@ -39,6 +43,7 @@ public class DriveByTime extends CommandBase {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	System.err.println("AutoTimedDrive interrupted!");
     	end();
     }
 }

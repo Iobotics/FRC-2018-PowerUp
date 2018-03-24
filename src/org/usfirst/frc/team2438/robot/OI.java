@@ -22,11 +22,11 @@ public class OI {
 	private final Joystick _rStick = new Joystick(3);
 	
 	private final JoystickButton _outtakeButton = new JoystickButton(_lStick, 1);
-	private final JoystickButton _intakeButton = new JoystickButton(_rStick, 1);
+	private final JoystickButton _intakeButton  = new JoystickButton(_rStick, 1);
 	
-	private final JoystickButton _homeButton = new JoystickButton(_rStick, 2);
+	private final JoystickButton _homeButton   = new JoystickButton(_rStick, 2);
 	private final JoystickButton _switchButton = new JoystickButton(_rStick, 3);
-	private final JoystickButton _scaleButton = new JoystickButton(_rStick, 4);
+	private final JoystickButton _scaleButton  = new JoystickButton(_rStick, 4);
 	
 	private final JoystickButton _lowerIntakeButton = new JoystickButton(_lStick, 2);
 	private final JoystickButton _raiseIntakeButton = new JoystickButton(_lStick, 3);
@@ -36,10 +36,10 @@ public class OI {
 	
 	private final JoystickButton _solenoidButton = new JoystickButton(_lStick, 5);
 	
-	private final JoystickButton _raiseLeftRamp = new JoystickButton(_lStick, 8);
+	private final JoystickButton _raiseLeftRamp  = new JoystickButton(_lStick, 8);
 	private final JoystickButton _raiseRightRamp = new JoystickButton(_lStick, 9);
 
-	private final JoystickButton _dropLeftRamp = new JoystickButton(_rStick, 8);
+	private final JoystickButton _dropLeftRamp  = new JoystickButton(_rStick, 8);
 	private final JoystickButton _dropRightRamp = new JoystickButton(_rStick, 9);
 	
 	private final JoystickButton _resetEncoders = new JoystickButton(_lStick, 6);

@@ -41,22 +41,31 @@ public class AutoCenter extends CommandGroup {
     	}
     	
     	addSequential(new ResetEncoders());
-    	System.out.println("Set arm position");
+    	
     	addSequential(new ArmToPosition(-1400));
     	addSequential(new WaitCommand(2));
+    	
     	addSequential(new ResetEncoders());
-    	System.out.println();
+    	
     	addSequential(new LiftAndArmToPos(Position.autoSwitch));
+    	
     	addSequential(new AutoDriveStraight(39));
+    	
     	addSequential(new AutoTurn(90 * autoSide));
     	addSequential(new WaitCommand(0.5));
+    	
     	addSequential(new AutoDriveStraight(55));
     	addSequential(new WaitCommand(0.5));
+    	
     	addSequential(new AutoTurn(-90 * autoSide));
     	addSequential(new WaitCommand(0.5));
+    	
     	addSequential(new AutoDriveStraight(74));
+    	
     	addSequential(new AutoOuttake(2));
+    	
     	addSequential(new AutoDriveStraight(-14));
+    	
     	addSequential(new LiftAndArmToPos(Position.home));
     }
 }

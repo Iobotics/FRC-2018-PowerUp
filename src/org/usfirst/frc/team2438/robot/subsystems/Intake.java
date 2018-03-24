@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Intake
@@ -220,6 +221,12 @@ public class Intake extends Subsystem {
      */
 	public TargetCounter getTargetCounter() {
 		return _targetCounter;
+	}
+	
+	public void debug() {
+		SmartDashboard.putNumber("Intake arm position", _intakeArm.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Intake arm error", _intakeArm.getClosedLoopError(0));
+		SmartDashboard.putNumber("Intake arm current", _intakeArm.getOutputCurrent());
 	}
 	
     public void initDefaultCommand() {
