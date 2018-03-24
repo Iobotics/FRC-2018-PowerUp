@@ -1,9 +1,11 @@
 package org.usfirst.frc.team2438.robot;
 
-import org.usfirst.frc.team2438.robot.commands.CalibrateNavigationSensor;
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoSwitch;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoSide;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoCenter;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoTest;
+import org.usfirst.frc.team2438.robot.commands.navsensor.CalibrateNavigationSensor;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.GameData;
 
@@ -31,7 +33,8 @@ public class Robot2018 extends IterativeRobot {
 	private static GameData _gameData;
 	
 	String _rawData;
-	SendableChooser<AutoSide> _chooser;
+	SendableChooser<Command> _autoChooser;
+	SendableChooser<AutoSide> _sideChooser;
 	
 	Command _autoCommand;
 	
@@ -54,12 +57,16 @@ public class Robot2018 extends IterativeRobot {
 
 		_prefs = Preferences.getInstance();
 		
-		_chooser = new SendableChooser<AutoSide>();
-		_chooser.addDefault("Unknown", AutoSide.unknown);
-		_chooser.addObject("Left", AutoSide.left);
-		_chooser.addObject("Right", AutoSide.right);
+		_sideChooser = new SendableChooser<AutoSide>();
+		_sideChooser.addDefault("Unknown", AutoSide.unknown);
+		_sideChooser.addObject("Left", AutoSide.left);
+		_sideChooser.addObject("Right", AutoSide.right);
 		
-		SmartDashboard.putData("Auto Side", _chooser);
+		_autoChooser = new SendableChooser<Command>();
+		_autoChooser.addDefault("Auto Switch", new AutoCenter());
+		_autoChooser.addObject("Auto Center", new AutoSwitch());
+		
+		SmartDashboard.putData("Auto Side", _sideChooser);
 		
 		CommandBase.init();
 		
@@ -78,6 +85,8 @@ public class Robot2018 extends IterativeRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		
+		SmartDashboard.putNumber("Heading", CommandBase.navsensor.getGyro());
+		
 		_rawData = DriverStation.getInstance().getGameSpecificMessage();
 	}
 
@@ -94,14 +103,12 @@ public class Robot2018 extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		// Pick auto side via a SendableChooser //
-		//_side = _chooser.getSelected();
-		_rawData = "LLR";
-		_side = AutoSide.left;
+		_side = _sideChooser.getSelected();
 		
 		_gameData = new GameData(_rawData);
-				
-		_autoCommand = new AutoTest();
+		
+		//_autoCommand = _autoChooser.getSelected();
+		_autoCommand = (new AutoTest());
 		_autoCommand.start();
 	}
 
@@ -112,7 +119,7 @@ public class Robot2018 extends IterativeRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		
-		SmartDashboard.putString("Auto Side Data", _chooser.getSelected().toString());
+		SmartDashboard.putString("Auto Side Data", _sideChooser.getSelected().toString());
 		SmartDashboard.putString("Auto Data", _rawData);
 	}
 

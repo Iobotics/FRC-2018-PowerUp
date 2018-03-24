@@ -1,5 +1,6 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.intake;
 
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 /**

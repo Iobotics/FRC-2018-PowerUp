@@ -1,38 +1,39 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.subsystems.Lift;
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
 /**
- * Operate LEDs
+ * Drive for a given amount of time
  */
-@SuppressWarnings("unused")
-public class OperateLights extends CommandBase {
+public class DriveByTime extends CommandBase {
+	
+	private double _timeout;
 
-    public OperateLights() {
+    public DriveByTime(double timeout) {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(ledSystem);
+        requires(drivetrain);
+        
+        _timeout = timeout;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	this.setTimeout(_timeout);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//int numLights = Math.round((float) ((lift.getPosition() / Lift.MAX_LIFT_POSITION) * 10));
-    	int numLights = Math.round((float) (((oi.getRightThrottle() + 1) / 2) * 10));
-    	ledSystem.enableLights(numLights);
+    	drivetrain.setTank(-0.5, -0.5);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return this.isTimedOut();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	ledSystem.stop();
+    	drivetrain.stop();
     }
 
     // Called when another command which requires one or more of the same

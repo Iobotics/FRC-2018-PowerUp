@@ -1,9 +1,9 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.lift;
 
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -43,6 +43,9 @@ public class LiftToPosition extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	if(_targetCounter.onTarget(lift.getError()) || lift.withinEncoderRange(_encoderPosition)) {
+    		System.out.println("Lift finished at position: " + lift.getLiftEncoderPosition());
+    	}
         return _targetCounter.onTarget(lift.getError()) || lift.withinEncoderRange(_encoderPosition);
     }
 
@@ -54,6 +57,7 @@ public class LiftToPosition extends CommandBase {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	System.err.println("LiftToPosition was interrupted!");
     	end();
     }
 }

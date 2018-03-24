@@ -19,8 +19,8 @@ public class Lift extends Subsystem {
 	
 	public static enum Position {
 		 // TODO - Find encoder values
-		home(0, 450),
-		autoSwitch(24300, 450),
+		home(0, 500),
+		autoSwitch(24300, 500),
 		autoScale(52500, 1230),
 		autoReverse(51500, 0);
 		

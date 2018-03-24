@@ -1,9 +1,9 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
-import org.usfirst.frc.team2438.robot.commands.CalibrateNavigationSensor;
-import org.usfirst.frc.team2438.robot.commands.LiftToPosition;
 import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
+import org.usfirst.frc.team2438.robot.commands.intake.ArmToPosition;
+import org.usfirst.frc.team2438.robot.commands.lift.LiftToPosition;
+import org.usfirst.frc.team2438.robot.commands.navsensor.CalibrateNavigationSensor;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

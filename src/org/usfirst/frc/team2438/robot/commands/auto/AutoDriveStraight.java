@@ -4,7 +4,7 @@ import org.usfirst.frc.team2438.robot.commands.CommandBase;
 import org.usfirst.frc.team2438.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -13,7 +13,7 @@ public class AutoDriveStraight extends CommandBase {
 	
 	private TargetCounter _targetCounter;
 	
-	private final double  _distance;
+	private final double  _encoderPosition;
 	
 	public AutoDriveStraight(double inches) {
     	this(inches, 10);
@@ -22,7 +22,7 @@ public class AutoDriveStraight extends CommandBase {
     public AutoDriveStraight(double inches, double timeout) {
     	requires(drivetrain);
     	
-    	_distance = inches * Drivetrain.UNITS_PER_INCH;
+    	_encoderPosition = inches * Drivetrain.UNITS_PER_INCH;
     	
     	if(timeout > 0) {
     		this.setTimeout(timeout);
@@ -31,20 +31,26 @@ public class AutoDriveStraight extends CommandBase {
     
     // Called just before this Command runs the first time
     protected void initialize() {
-    	drivetrain.setTargetDistance(_distance);
-    	Timer.delay(0.5); // TODO - Test if needed
-    	
     	_targetCounter = drivetrain.getTargetCounter();
     	_targetCounter.reset();
+    	
+    	drivetrain.resetEncoders();
+    	
+    	drivetrain.setTargetDistance(_encoderPosition);
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() { }
+    protected void execute() {
+    	SmartDashboard.putNumber("Drivetrain position", drivetrain.getLeftEncoder());
+    	SmartDashboard.putNumber("Drivetrain error", drivetrain.getError(_encoderPosition));
+    	SmartDashboard.putNumber("Drivetrain counter", drivetrain.getTargetCounter().getCount());
+    	
+    	drivetrain.setTargetDistance(_encoderPosition);
+    }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {        
-        return _targetCounter.onTarget(drivetrain.getError()) || this.isTimedOut();
-    
+    protected boolean isFinished() {
+        return _targetCounter.onTarget(drivetrain.getError(_encoderPosition)) || this.isTimedOut();
     }
 
     // Called once after isFinished returns true
@@ -56,6 +62,7 @@ public class AutoDriveStraight extends CommandBase {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	System.err.println("AutoDriveStraight interrupted!");
     	this.end();
     }
 }

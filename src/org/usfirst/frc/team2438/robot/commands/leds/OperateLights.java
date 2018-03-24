@@ -1,22 +1,18 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.leds;
 
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 import org.usfirst.frc.team2438.robot.subsystems.Lift;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
- * Operate the intake arm
+ * Operate LEDs
  */
-public class OperateIntakeArm extends CommandBase {
-	
-	private double power;
-	
-    public OperateIntakeArm(double power) {
+@SuppressWarnings("unused")
+public class OperateLights extends CommandBase {
+
+    public OperateLights() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(intake);
-    	
-    	this.power = power;
+    	requires(ledSystem);
     }
 
     // Called just before this Command runs the first time
@@ -25,10 +21,10 @@ public class OperateIntakeArm extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	intake.setArmPower(power);
-    	
-    	SmartDashboard.putNumber("Arm Error", intake.getArmError());
-    	SmartDashboard.putNumber("Arm Current", intake.getArmCurrent());
+    	//int numLights = Math.round((float) ((lift.getPosition() / Lift.MAX_LIFT_POSITION) * 10));
+    	//int numLights = Math.round((float) (((oi.getRightThrottle() + 1) / 2) * 10));
+    	int numLights = 57;
+    	ledSystem.enableLights(numLights);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -38,7 +34,7 @@ public class OperateIntakeArm extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	intake.setArmPosition(intake.getArmEncoderPosition());
+    	ledSystem.stop();
     }
 
     // Called when another command which requires one or more of the same

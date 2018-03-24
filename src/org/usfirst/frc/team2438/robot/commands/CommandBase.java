@@ -16,7 +16,7 @@ public abstract class CommandBase extends Command {
 
 	public static OI oi;
     // Create a single static instance of all of your subsystems
-	public static final NavigationSensor navSensor = new NavigationSensor();
+	public static final NavigationSensor navsensor = new NavigationSensor();
 	public static final Drivetrain drivetrain 	   = new Drivetrain();
 	public static final LEDSystem ledSystem = new LEDSystem();
 	public static final Intake intake = new Intake();
@@ -32,7 +32,7 @@ public abstract class CommandBase extends Command {
         // news. Don't move it.
         oi = new OI();
 
-        navSensor.init();
+        navsensor.init();
         drivetrain.init();
         //ledSystem.init();
         intake.init();

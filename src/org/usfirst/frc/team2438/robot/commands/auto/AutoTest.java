@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.ArmToPosition;
 import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
+import org.usfirst.frc.team2438.robot.commands.intake.ArmToPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
@@ -28,16 +28,11 @@ public class AutoTest extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	
-    	addSequential(new ArmToPosition(-1500));
-    	
-    	//addSequential(new ResetEncoders());
-    	//addSequential(new WaitCommand(0.5));
-    	
-    	//addSequential(new ArmToPosition(0));
-    	
-    	//addSequential(new AutoSwitch());
-    	//addSequential(new AutoToBottom());
-    	//addSequential(new ArmToPosition(-1280));
+    		
+    	addSequential(new ResetEncoders());
+    	addSequential(new AutoDriveStraight(130));
+    	addSequential(new ResetEncoders());
+    	addSequential(new ArmToPosition(-1400));
+    	addSequential(new WaitCommand(2)); 
     }
 }

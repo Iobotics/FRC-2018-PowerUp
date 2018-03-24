@@ -1,14 +1,19 @@
 package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.OperateIntake;
+import org.usfirst.frc.team2438.robot.Robot2018;
+import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
+import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
+import org.usfirst.frc.team2438.robot.commands.intake.ArmToPosition;
+import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
  */
 public class AutoCenter extends CommandGroup {
-	
+
     public AutoCenter() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -27,34 +32,31 @@ public class AutoCenter extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	addSequential(new AutoDriveStraight(0.0));
+    	AutoSide switchSide = Robot2018.getGameData().getCloseSwitch();
     	
-		AutoSide side = AutoSide.right;
-		double distance = 0;
-    	double angle = 90.0;
-    	if(side == AutoSide.right) {
-    		angle *= -1;
-    		distance = 29;
+    	int autoSide = 1;
+    	
+    	if(switchSide == AutoSide.left) {
+    		autoSide = -1;
     	}
-    	else {
-    		distance = 130;
-    	}
-
     	
-    	addSequential(new AutoTurn(angle));
-    	
-    	addSequential(new AutoDriveStraight(distance));
-    	
-    	angle *= -1;
-    	addSequential(new AutoTurn(angle));
-    	
-    	//addParallel(new LiftToPosition(25000));
-    	addSequential(new AutoDriveStraight(20.0));
-    	
-    	if(side != null) {
-    		addSequential(new OperateIntake(-1.0));
-    	} else {
-    		this.end();
-    	}
+    	addSequential(new ResetEncoders());
+    	System.out.println("Set arm position");
+    	addSequential(new ArmToPosition(-1400));
+    	addSequential(new WaitCommand(2));
+    	addSequential(new ResetEncoders());
+    	System.out.println();
+    	addSequential(new LiftAndArmToPos(Position.autoSwitch));
+    	addSequential(new AutoDriveStraight(39));
+    	addSequential(new AutoTurn(90 * autoSide));
+    	addSequential(new WaitCommand(0.5));
+    	addSequential(new AutoDriveStraight(55));
+    	addSequential(new WaitCommand(0.5));
+    	addSequential(new AutoTurn(-90 * autoSide));
+    	addSequential(new WaitCommand(0.5));
+    	addSequential(new AutoDriveStraight(74));
+    	addSequential(new AutoOuttake(2));
+    	addSequential(new AutoDriveStraight(-14));
+    	addSequential(new LiftAndArmToPos(Position.home));
     }
 }

@@ -1,16 +1,22 @@
-package org.usfirst.frc.team2438.robot.commands.auto;
+package org.usfirst.frc.team2438.robot.commands.intake;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
-/**
- *
- */
-public class AutoToBottom extends CommandBase {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-    public AutoToBottom() {
+/**
+ * Operate the intake arm
+ */
+public class OperateIntakeArm extends CommandBase {
+	
+	private double power;
+	
+    public OperateIntakeArm(double power) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(lift);
+    	requires(intake);
+    	
+    	this.power = power;
     }
 
     // Called just before this Command runs the first time
@@ -19,17 +25,20 @@ public class AutoToBottom extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	lift.setPower(-0.15);
+    	intake.setArmPower(power);
+    	
+    	SmartDashboard.putNumber("Arm Error", intake.getArmError());
+    	SmartDashboard.putNumber("Arm Current", intake.getArmCurrent());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return lift.getLimitSwitch();
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	lift.stop();
+    	intake.setArmPosition(intake.getArmEncoderPosition());
     }
 
     // Called when another command which requires one or more of the same

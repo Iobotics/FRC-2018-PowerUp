@@ -2,6 +2,8 @@ package org.usfirst.frc.team2438.robot.commands.auto;
 
 import org.usfirst.frc.team2438.robot.Robot2018;
 import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
+import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
+import org.usfirst.frc.team2438.robot.commands.intake.ArmToPosition;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -11,7 +13,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
  *
  */
 public class AutoSwitch extends CommandGroup {
-
+	
     public AutoSwitch() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -30,30 +32,25 @@ public class AutoSwitch extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	AutoSide _switchSide = Robot2018.getGameData().getCloseSwitch();
-    	AutoSide _robotSide = Robot2018.getSide();
+    	AutoSide botSide = Robot2018.getSide();
+    	AutoSide switchSide = Robot2018.getGameData().getCloseSwitch();
+    		
+    	addSequential(new ResetEncoders());
     	
-    	addParallel(new AutoDriveStraight(156));
+    	addSequential(new ArmToPosition(-1400));
+    	addSequential(new WaitCommand(2));
     	
-    	if(_robotSide == AutoSide.right && _switchSide == AutoSide.right) {
-    		addSequential(new AutoTurn(-90));
-    	} else if(_robotSide == AutoSide.left && _switchSide == AutoSide.left) {
-    		addSequential(new AutoTurn(90));
-    	} else {
-    		return;
-    	}
+    	addSequential(new ResetEncoders());
     	
     	addSequential(new LiftAndArmToPos(Position.autoSwitch));
     	
-    	addSequential(new WaitCommand(1));
+    	addSequential(new AutoDriveStraight(130));
     	
-    	addSequential(new AutoDriveStraight(16));
+    	if(botSide == switchSide) {
+    		addSequential(new AutoOuttake(2));
+    	}
     	
-    	addSequential(new AutoOuttake(0.28));
-		addSequential(new WaitCommand(2.0));
-		addSequential(new AutoOuttake(0));
-    	
-    	addSequential(new AutoDriveStraight(-20));
+    	addSequential(new AutoDriveStraight(-14));
     	
     	addSequential(new LiftAndArmToPos(Position.home));
     }

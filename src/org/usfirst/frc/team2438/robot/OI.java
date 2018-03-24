@@ -1,11 +1,12 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.LiftAndArmToPos;
-import org.usfirst.frc.team2438.robot.commands.OperateIntake;
-import org.usfirst.frc.team2438.robot.commands.OperateIntakeArm;
-import org.usfirst.frc.team2438.robot.commands.OperateLift;
-import org.usfirst.frc.team2438.robot.commands.ToggleIntakeSolenoid;
+import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
 import org.usfirst.frc.team2438.robot.commands.ToggleRamp;
+import org.usfirst.frc.team2438.robot.commands.intake.OperateIntake;
+import org.usfirst.frc.team2438.robot.commands.intake.OperateIntakeArm;
+import org.usfirst.frc.team2438.robot.commands.intake.ToggleIntakeSolenoid;
+import org.usfirst.frc.team2438.robot.commands.lift.OperateLift;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.subsystems.Ramp.RampSide;
 
@@ -41,6 +42,8 @@ public class OI {
 	private final JoystickButton _dropLeftRamp = new JoystickButton(_rStick, 8);
 	private final JoystickButton _dropRightRamp = new JoystickButton(_rStick, 9);
 	
+	private final JoystickButton _resetEncoders = new JoystickButton(_lStick, 6);
+	
 	public OI() {
 		_outtakeButton.whileHeld(new OperateIntake(-1));
 		_intakeButton.whileHeld(new OperateIntake(1));
@@ -62,6 +65,8 @@ public class OI {
 		
 		_dropLeftRamp.whenPressed(new ToggleRamp(RampSide.left));
 		_dropRightRamp.whenPressed(new ToggleRamp(RampSide.right));
+		
+		_resetEncoders.whenPressed(new ResetEncoders());
 	}
 	
 	public double getLeftX() {

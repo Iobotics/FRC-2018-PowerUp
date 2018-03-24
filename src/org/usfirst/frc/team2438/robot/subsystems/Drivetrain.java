@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2438.robot.subsystems;
 
 import org.usfirst.frc.team2438.robot.RobotMap;
-import org.usfirst.frc.team2438.robot.commands.OperateTankDrive;
+import org.usfirst.frc.team2438.robot.commands.drivetrain.OperateTankDrive;
 import org.usfirst.frc.team2438.robot.util.Constants;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
@@ -26,8 +26,8 @@ public class Drivetrain extends Subsystem {
 	
 	private static final double COUNTS_PER_EDGE = 4;
 	private static final double GEAR_RATIO = 6; // 6:1 gear ratio
-	private static final double PULSES_PER_ROTATION = 128;
-	private static final double COUNTS_PER_ROTATION = PULSES_PER_ROTATION * COUNTS_PER_EDGE * GEAR_RATIO;
+	private static final double PULSES_PER_ROTATION = 256;
+	private static final double COUNTS_PER_ROTATION = PULSES_PER_ROTATION * COUNTS_PER_EDGE *  GEAR_RATIO;
 	
 	public static final double UNITS_PER_INCH = COUNTS_PER_ROTATION / WHEEL_CIRCUMFERENCE;
 	
@@ -41,15 +41,15 @@ public class Drivetrain extends Subsystem {
 	private static final int iZone = 0;
 	
 	/* Velocity Control Constants */
-	private static final double v_kF = 0.267;
-	private static final double v_kP = 0.51;
-	private static final double v_kI = 0.007;
-	private static final double v_kD = 5.1;
+	private static final double v_kF = 0.48;
+	private static final double v_kP = 0.8;
+	private static final double v_kI = 0.00;
+	private static final double v_kD = 4;
 	private static final int v_iZone = 0;
 	
 	// FIXME - Determine velocity
-	private static final int DRIVE_VELOCITY = 1228;		// Native units per 100 ms
-	private static final int DRIVE_ACCELERATION = 1228; // Native units per 100 ms
+	private static final int DRIVE_VELOCITY = 2456;		// Native units per 100 ms
+	private static final int DRIVE_ACCELERATION = 2456; // Native units per 100 ms
 	
 	private static final int ERROR_THRESHOLD = 200; // Allowable error in native units
     
@@ -71,8 +71,8 @@ public class Drivetrain extends Subsystem {
 		_backLeft.setInverted(true);
 		
 		// Set the front motors to follow the back
-		_frontLeft.follow(_backLeft);
-		_frontRight.follow(_backRight);
+		_backLeft.follow(_frontLeft);
+		_backRight.follow(_frontRight);
 		
 		/* Set deadband */
 		_frontLeft.configNeutralDeadband(Constants.DEADBAND, Constants.TALON_TIMEOUT);
@@ -81,24 +81,25 @@ public class Drivetrain extends Subsystem {
 		_backRight.configNeutralDeadband(Constants.DEADBAND, Constants.TALON_TIMEOUT);
 		
 		/* Motion Magic */
-		_backLeft.setSensorPhase(true);
-		_backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.TALON_TIMEOUT);
-		_backLeft.config_kF(0, kF, Constants.TALON_TIMEOUT);
-		_backLeft.config_kP(0, kP, Constants.TALON_TIMEOUT);
-		_backLeft.config_kI(0, kI, Constants.TALON_TIMEOUT);
-		_backLeft.config_kD(0, kD, Constants.TALON_TIMEOUT);
-		_backLeft.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
-		_backLeft.configMotionCruiseVelocity(DRIVE_VELOCITY, Constants.TALON_TIMEOUT);
-		_backLeft.configMotionAcceleration(DRIVE_ACCELERATION, Constants.TALON_TIMEOUT);
+		_frontLeft.setSensorPhase(true);
+		_frontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.TALON_TIMEOUT);
+		_frontLeft.config_kF(0, kF, Constants.TALON_TIMEOUT);
+		_frontLeft.config_kP(0, kP, Constants.TALON_TIMEOUT);
+		_frontLeft.config_kI(0, kI, Constants.TALON_TIMEOUT);
+		_frontLeft.config_kD(0, kD, Constants.TALON_TIMEOUT);
+		_frontLeft.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
+		_frontLeft.configMotionCruiseVelocity(DRIVE_VELOCITY, Constants.TALON_TIMEOUT);
+		_frontLeft.configMotionAcceleration(DRIVE_ACCELERATION, Constants.TALON_TIMEOUT);
 		
-		_backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.TALON_TIMEOUT);
-		_backRight.config_kF(0, kF, Constants.TALON_TIMEOUT);
-		_backRight.config_kP(0, kP, Constants.TALON_TIMEOUT);
-		_backRight.config_kI(0, kI, Constants.TALON_TIMEOUT);
-		_backRight.config_kD(0, kD, Constants.TALON_TIMEOUT);
-		_backRight.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
-		_backRight.configMotionCruiseVelocity(DRIVE_VELOCITY, Constants.TALON_TIMEOUT);
-		_backRight.configMotionAcceleration(DRIVE_ACCELERATION, Constants.TALON_TIMEOUT);
+		_frontRight.setSensorPhase(true);
+		_frontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.TALON_TIMEOUT);
+		_frontRight.config_kF(0, kF, Constants.TALON_TIMEOUT);
+		_frontRight.config_kP(0, kP, Constants.TALON_TIMEOUT);
+		_frontRight.config_kI(0, kI, Constants.TALON_TIMEOUT);
+		_frontRight.config_kD(0, kD, Constants.TALON_TIMEOUT);
+		_frontRight.config_IntegralZone(0, iZone, Constants.TALON_TIMEOUT);
+		_frontRight.configMotionCruiseVelocity(DRIVE_VELOCITY, Constants.TALON_TIMEOUT);
+		_frontRight.configMotionAcceleration(DRIVE_ACCELERATION, Constants.TALON_TIMEOUT);
 		
 		/* Velocity Control */
 		_backLeft.configNominalOutputForward(0, Constants.TALON_TIMEOUT);
@@ -184,8 +185,8 @@ public class Drivetrain extends Subsystem {
 		setProfileSlot(ProfileSlot.MotionMagic);
 		
 		// Move the motors
-		_backLeft.set(ControlMode.MotionMagic, distance);
-		_backRight.set(ControlMode.MotionMagic, distance);
+		_frontLeft.set(ControlMode.MotionMagic, distance);
+		_frontRight.set(ControlMode.MotionMagic, distance);
 	}
 	
 	/**
@@ -218,8 +219,8 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public void resetEncoders() {		
-		_backLeft.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
-		_backRight.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
+		_frontLeft.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
+		_frontRight.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
 	}
 
 	/**
@@ -231,11 +232,12 @@ public class Drivetrain extends Subsystem {
 	}
     
     /**
-     * Gets the closed loop error of the back left motor
+     * Gets the closed loop error of the front left motor
      * @return error
      */
-    public double getError() {
-    	return _backLeft.getClosedLoopError(0);
+    public double getError(double setpoint) {
+    	return setpoint - _frontLeft.getSelectedSensorPosition(0);
+    	//return _frontLeft.getClosedLoopError(0);
     }
     
     /**

@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.navsensor;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
@@ -10,7 +10,7 @@ public class CalibrateNavigationSensor extends CommandBase {
 	//private static final int TIMEOUT_SECS = 10;
 	
     public CalibrateNavigationSensor() {
-    	requires(navSensor);
+    	requires(navsensor);
     	this.setRunWhenDisabled(true);
     	//this.setTimeout(TIMEOUT_SECS);
     }
@@ -25,12 +25,12 @@ public class CalibrateNavigationSensor extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !navSensor.isCalibrating() || this.isTimedOut();
+        return !navsensor.isCalibrating() || this.isTimedOut();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	navSensor.zeroGyro();
+    	navsensor.zeroGyro();
     }
 
     // Called when another command which requires one or more of the same

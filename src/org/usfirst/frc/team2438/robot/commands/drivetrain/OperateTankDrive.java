@@ -1,4 +1,6 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.drivetrain;
+
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
 /**
  * Operate tank drive

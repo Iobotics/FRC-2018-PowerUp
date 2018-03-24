@@ -1,5 +1,6 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.intake;
 
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 import org.usfirst.frc.team2438.robot.subsystems.Lift.Position;
 import org.usfirst.frc.team2438.robot.util.TargetCounter;
 
@@ -54,6 +55,9 @@ public class ArmToPosition extends CommandBase {
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	if(_targetCounter.onTarget(intake.getArmError()) || this.isTimedOut()) {
+    		System.out.println("Arm finished at position: " + intake.getArmEncoderPosition());
+    	}
         return _targetCounter.onTarget(intake.getArmError()) || this.isTimedOut();
     }
 
@@ -65,6 +69,7 @@ public class ArmToPosition extends CommandBase {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	System.err.println("ArmToPosition was interrupted!");
     	end();
     }
 }

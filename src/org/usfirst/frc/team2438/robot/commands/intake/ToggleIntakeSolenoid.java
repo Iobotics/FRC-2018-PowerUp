@@ -1,4 +1,6 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.intake;
+
+import org.usfirst.frc.team2438.robot.commands.CommandBase;
 
 /**
  * Toggle the intake solenoid
@@ -14,6 +16,7 @@ public class ToggleIntakeSolenoid extends CommandBase {
     // Called just before this Command runs the first time
     protected void initialize() {
     	intake.toggleSolenoid();
+    	System.out.println("Solenoid actuated");
     }
 
     // Called repeatedly when this Command is scheduled to run

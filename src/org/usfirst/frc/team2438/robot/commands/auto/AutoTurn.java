@@ -20,21 +20,21 @@ public class AutoTurn extends CommandBase implements PIDOutput {
 	private PIDController _pid;
 	private TargetCounter _targetCounter;
 	
-	private final double kP = 0.0015;
+	private final double kP = 0.0044;
 	private final double kI = 0;
 	private final double kD = 0;
 	
 	public AutoTurn(double degrees) {
-		this(degrees, 0.7, 2.4);
+		this(degrees, 0.7, -1);
 	}
 	
 	public AutoTurn(double degrees, double power) {
-		this(degrees, power, 2.4);
+		this(degrees, power, -1);
 	}
 	
     public AutoTurn(double degrees, double power, double timeout) {
         requires(drivetrain);
-        requires(navSensor);
+        requires(navsensor);
         
         _degrees = degrees;
         
@@ -43,7 +43,7 @@ public class AutoTurn extends CommandBase implements PIDOutput {
         }
         
         //Sets up PID variables
-        _pid = new PIDController(kP, kI, kD, navSensor, this);
+        _pid = new PIDController(kP, kI, kD, navsensor, this);
         _pid.setAbsoluteTolerance(GYRO_TOLERANCE);
         _pid.setInputRange(-180.0, 180.0);
         _pid.setOutputRange(-power, power);
@@ -52,8 +52,8 @@ public class AutoTurn extends CommandBase implements PIDOutput {
 
     //Sets the target then start PID
     protected void initialize() {
-    	navSensor.zeroGyro();
-    	Timer.delay(0.75);
+    	navsensor.zeroGyro();
+    	Timer.delay(0.5);
     	drivetrain.resetEncoders();
     	_pid.reset();
     	_pid.setSetpoint(_degrees);
@@ -64,9 +64,12 @@ public class AutoTurn extends CommandBase implements PIDOutput {
     }
    
     protected void execute() {
-    	SmartDashboard.putNumber("Heading", navSensor.getGyro());
+    	SmartDashboard.putNumber("Heading", navsensor.getGyro());
     	SmartDashboard.putNumber("Drive setpoint", _pid.getSetpoint());
     	SmartDashboard.putNumber("Drive Turn error", _pid.getError());
+    	
+    	SmartDashboard.putNumber("Drivetrain position", drivetrain.getLeftEncoder());
+    	SmartDashboard.putNumber("Drivetrain counter", drivetrain.getTargetCounter().getCount());
     }
  
     //Finishes When On target or Timed Out
@@ -76,10 +79,11 @@ public class AutoTurn extends CommandBase implements PIDOutput {
 
     protected void end() {
     	_pid.disable();
-    	drivetrain.setVelocity(0, 0);
+    	drivetrain.setTank(0, 0);
     }
 
     protected void interrupted() {
+    	System.err.println("AutoTurn interrupted!");
     	end();
     }
 
