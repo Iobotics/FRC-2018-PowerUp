@@ -8,7 +8,7 @@ import org.usfirst.frc.team2438.robot.commands.navsensor.CalibrateNavigationSens
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- *
+ * Initialize auto
  */
 public class AutoInit extends CommandGroup {
 
@@ -32,10 +32,15 @@ public class AutoInit extends CommandGroup {
     	
     	addParallel(new CalibrateNavigationSensor());
     	addSequential(new ResetEncoders());
+    	
     	addSequential(new ArmToPosition(0));
+    	
     	addSequential(new LiftToPosition(18660));
+    	
     	addSequential(new ArmToPosition(-850));
+    	
     	//addSequential(new AutoToBottom());
+    	
     	//addSequential(new ArmToPosition(-1280));
     }
 }

@@ -1,8 +1,10 @@
 package org.usfirst.frc.team2438.robot;
 
 import org.usfirst.frc.team2438.robot.commands.CommandBase;
+import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
 import org.usfirst.frc.team2438.robot.commands.TeleopInit;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoCenter;
+import org.usfirst.frc.team2438.robot.commands.auto.AutoReverse;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoSide;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoSwitch;
 import org.usfirst.frc.team2438.robot.commands.auto.AutoTest;
@@ -33,8 +35,7 @@ public class Robot2018 extends IterativeRobot {
 	
 	String _rawData;
 	
-	SendableChooser<Command>  _autoChooser;
-	SendableChooser<AutoSide> _sideChooser;
+	SendableChooser<AutoSide> _sideChooser = new SendableChooser<AutoSide>();
 	
 	Command _autoCommand;
 	
@@ -57,21 +58,9 @@ public class Robot2018 extends IterativeRobot {
 
 		_prefs = Preferences.getInstance();
 		
-		_autoChooser = new SendableChooser<Command>();
-		_autoChooser.addDefault("Auto switch", new AutoSwitch());
-		_autoChooser.addObject("Auto center", new AutoCenter());
-		_autoChooser.addObject("Auto drive straight", new AutoTest());
-		
-		_sideChooser = new SendableChooser<AutoSide>();
-		_sideChooser.addDefault("Unknown", AutoSide.unknown);
-		_sideChooser.addObject("Left", AutoSide.left);
-		_sideChooser.addObject("Right", AutoSide.right);
-		
-		SmartDashboard.putData("Auto command chooser", _autoChooser);
-		SmartDashboard.putData("Auto side chooser", _sideChooser);
-		
 		CommandBase.init();
 		
+		System.out.println("Calibrating NavX-MXP...");
 		(new CalibrateNavigationSensor()).start();
 	}
 
@@ -82,6 +71,11 @@ public class Robot2018 extends IterativeRobot {
 	 */
 	public void disabledInit() {
 		SmartDashboard.putData(Scheduler.getInstance());
+		
+		this.initChoosers();
+		
+		System.out.println("Resetting encoders...");
+		(new ResetEncoders()).start();
 	}
 
 	public void disabledPeriodic() {
@@ -105,7 +99,6 @@ public class Robot2018 extends IterativeRobot {
 	public void autonomousInit() {
 		_robotSide = _sideChooser.getSelected();
 		
-		//_autoCommand = _autoChooser.getSelected();
 		_autoCommand = (new AutoTest());
 		_autoCommand.start();
 		
@@ -118,8 +111,6 @@ public class Robot2018 extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		
-		SmartDashboard.putString("Auto side data", _rawData);
 	}
 
 	@Override
@@ -139,6 +130,19 @@ public class Robot2018 extends IterativeRobot {
 		Scheduler.getInstance().run();
 		
 		this.debug();
+	}
+	
+	/**
+	 * Initialize the auto and side choosers
+	 */
+	public void initChoosers() {
+		_sideChooser.addDefault("Unknown", AutoSide.unknown);
+		_sideChooser.addObject("Left", AutoSide.left);
+		_sideChooser.addObject("Right", AutoSide.right);
+		
+		SmartDashboard.putData("Auto side chooser", _sideChooser);
+		
+		_robotSide = _sideChooser.getSelected();
 	}
 	
 	public static AutoSide getSide() {

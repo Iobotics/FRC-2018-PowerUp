@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
- *
+ * Drive forward and put a cube in the switch
  */
 public class AutoSwitch extends CommandGroup {
-	
+    
     public AutoSwitch() {
-        // Add Commands here:
+    	// Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
         // these will run in order.
@@ -49,7 +49,6 @@ public class AutoSwitch extends CommandGroup {
     	if(botSide == switchSide) {
     		addSequential(new AutoOuttake(2));
     	}
-    	
     	addSequential(new AutoDriveStraight(-14));
     	
     	addSequential(new LiftAndArmToPos(Position.home));

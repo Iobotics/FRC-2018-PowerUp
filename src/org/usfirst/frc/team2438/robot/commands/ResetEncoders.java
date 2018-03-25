@@ -28,15 +28,9 @@ public class ResetEncoders extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-    	drivetrain.stop();
-    	lift.stop();
-    	intake.stop();
-    	
     	drivetrain.resetEncoders();
 		lift.resetEncoder();
 		intake.resetEncoder();
-		
-		intake.setArmPosition(0);
     }
 
     // Called when another command which requires one or more of the same

@@ -7,7 +7,7 @@ import org.usfirst.frc.team2438.robot.util.TargetCounter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- *
+ * Auto drive straight a given distance
  */
 public class AutoDriveStraight extends CommandBase {
 	

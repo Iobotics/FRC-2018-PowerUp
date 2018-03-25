@@ -50,6 +50,7 @@ public class LiftToPosition extends CommandBase {
     // Called once after isFinished returns true
     protected void end() {
     	System.out.println("Lift finished at: " + lift.getLiftEncoderPosition());
+    	System.out.println();
     	_targetCounter.reset();
     }
 

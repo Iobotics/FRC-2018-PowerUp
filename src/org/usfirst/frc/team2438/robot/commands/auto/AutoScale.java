@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
  *
  */
 public class AutoScale extends CommandGroup {
-
+	
     public AutoScale() {
         // Add Commands here:
         // e.g. addSequential(new Command1());

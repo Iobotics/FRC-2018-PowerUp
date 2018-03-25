@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
- *
+ * Start in the center and put a power cube on the alliance color's switch
  */
 public class AutoCenter extends CommandGroup {
-
-    public AutoCenter() {
-        // Add Commands here:
+	
+	public AutoCenter() {
+		// Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
         // these will run in order.
@@ -67,5 +67,5 @@ public class AutoCenter extends CommandGroup {
     	addSequential(new AutoDriveStraight(-14));
     	
     	addSequential(new LiftAndArmToPos(Position.home));
-    }
+	}
 }

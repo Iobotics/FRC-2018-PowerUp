@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
- *
+ * Reverse into the switch and lower the intake arm
  */
 public class AutoTest extends CommandGroup {
 
@@ -30,9 +30,10 @@ public class AutoTest extends CommandGroup {
         // arm.
     		
     	addSequential(new ResetEncoders());
-    	addSequential(new AutoDriveStraight(130));
-    	addSequential(new ResetEncoders());
+    	
     	addSequential(new ArmToPosition(-1400));
-    	addSequential(new WaitCommand(2)); 
+    	addSequential(new WaitCommand(2));
+    	
+    	addSequential(new AutoDriveStraight(100));
     }
 }

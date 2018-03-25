@@ -50,7 +50,6 @@ public class Lift extends Subsystem {
 		}
 	}
 	
-	// TODO - Tune PID constants
 	/* Motion Magic Constants */
 	private static final double kF = 0;
 	private static final double kP = 0.4;
@@ -58,9 +57,8 @@ public class Lift extends Subsystem {
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
-	// TODO - Change the lift velocity
-	public static final int LIFT_VELOCITY = 2000;	  // Native units per 100 ms
-	public static final int LIFT_ACCELERATION = 2000; // Native units per 100 ms
+	public static final int LIFT_VELOCITY = 4000;	  // Native units per 100 ms
+	public static final int LIFT_ACCELERATION = 4000; // Native units per 100 ms
 	
 	public static final int MAX_LIFT_POSITION = 53000; // Max lift position in native units
 	
@@ -118,10 +116,6 @@ public class Lift extends Subsystem {
     	_backLeftLift.configPeakCurrentLimit(12, Constants.TALON_TIMEOUT);
     	_backLeftLift.configPeakCurrentDuration(100, Constants.TALON_TIMEOUT);
     	_backLeftLift.enableCurrentLimit(true);
-    	
-    	// TODO - Enable the forward soft limit
-    	/*_backLeftLift.configForwardSoftLimitThreshold(51000, Constants.TALON_TIMEOUT);
-    	_backLeftLift.configForwardSoftLimitEnable(true, Constants.TALON_TIMEOUT);*/
     	
     	_limitSwitch = new DigitalInput(RobotMap.liftLimitSwitch);
     	

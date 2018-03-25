@@ -1,15 +1,17 @@
-package org.usfirst.frc.team2438.robot.commands;
+package org.usfirst.frc.team2438.robot.commands.auto;
 
-import org.usfirst.frc.team2438.robot.commands.lift.LiftToPosition;
+import org.usfirst.frc.team2438.robot.commands.ResetEncoders;
+import org.usfirst.frc.team2438.robot.commands.intake.ArmToPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
- * Initialize teleop
+ * Reverse into the switch and lower the intake arm
  */
-public class TeleopInit extends CommandGroup {
-
-    public TeleopInit() {
+public class AutoReverse extends CommandGroup {
+	
+    public AutoReverse() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -26,10 +28,12 @@ public class TeleopInit extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	
-    	addSequential(new StopRobot());
+    		
     	addSequential(new ResetEncoders());
     	
-    	addSequential(new LiftToPosition(0));
+    	addSequential(new AutoDriveStraight(-100));
+    	
+    	addSequential(new ArmToPosition(-1400));
+    	addSequential(new WaitCommand(2)); 
     }
 }

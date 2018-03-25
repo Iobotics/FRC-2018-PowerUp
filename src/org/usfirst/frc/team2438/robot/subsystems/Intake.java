@@ -27,9 +27,9 @@ public class Intake extends Subsystem {
 	private static final double kD = 0;
 	private static final int iZone = 0;
 	
-	// TODO - Slightly raise the velocity
-	private static final int INTAKE_VELOCITY = 1500;	 // Native units per 100 ms
-	private static final int INTAKE_ACCELERATION = 2000; // Native units per 100 ms
+	// TODO - Check velocity
+	private static final int INTAKE_VELOCITY = 1700;	 // Native units per 100 ms
+	private static final int INTAKE_ACCELERATION = 2100; // Native units per 100 ms
 	
 	private static final int ERROR_THRESHOLD = 160; // Allowable error in native units
 	
@@ -46,6 +46,7 @@ public class Intake extends Subsystem {
 	
 	private TargetCounter _targetCounter;
 	
+	private double _setpoint;
 	private boolean _solenoidActivated;
 	
 	public void init() {
@@ -69,7 +70,6 @@ public class Intake extends Subsystem {
 		_intakeArm.configMotionAcceleration(INTAKE_ACCELERATION, Constants.TALON_TIMEOUT);
 		
 		_intakeArm.setSelectedSensorPosition(0, 0, Constants.TALON_TIMEOUT);
-		//_intakeArm.set(ControlMode.MotionMagic, 0); TODO
 		
 		/* 
 		 * Set a current limit of 5 amps.
@@ -80,7 +80,7 @@ public class Intake extends Subsystem {
 		_intakeArm.configPeakCurrentDuration(100, Constants.TALON_TIMEOUT);
 		_intakeArm.enableCurrentLimit(true);
 		
-		// Initalize the intake solenoid
+		// Initialize the intake solenoid
 		_intakeSolenoid = new DoubleSolenoid(RobotMap.intakeForwardChannel, RobotMap.intakeReverseChannel);
 		_solenoidActivated = true;
 		
@@ -114,6 +114,7 @@ public class Intake extends Subsystem {
 	
 	public void setArmPosition(int position) {
 		_intakeArm.set(ControlMode.MotionMagic, position + ENCODER_OFFSET);
+		_setpoint = position + ENCODER_OFFSET;
 	}
 	
 	public void setArmCurrent(double current) {
@@ -133,6 +134,7 @@ public class Intake extends Subsystem {
 	 * @return error
 	 */
 	public int getArmError() {
+		//return _intakeArm.getClosedLoopTarget(0) - _intakeArm.getSelectedSensorPosition(0);
 		return _intakeArm.getClosedLoopError(0);
 	}
 	

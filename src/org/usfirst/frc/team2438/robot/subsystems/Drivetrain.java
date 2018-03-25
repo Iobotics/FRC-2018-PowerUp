@@ -48,9 +48,8 @@ public class Drivetrain extends Subsystem {
 	private static final double v_kD = 4;
 	private static final int v_iZone = 0;
 	
-	// FIXME - Determine velocity
-	private static final int DRIVE_VELOCITY = 2456;		// Native units per 100 ms
-	private static final int DRIVE_ACCELERATION = 2456; // Native units per 100 ms
+	private static final int DRIVE_VELOCITY = 2460;		// Native units per 100 ms
+	private static final int DRIVE_ACCELERATION = 2460; // Native units per 100 ms
 	
 	private static final int ERROR_THRESHOLD = 200; // Allowable error in native units
     
@@ -198,7 +197,6 @@ public class Drivetrain extends Subsystem {
 		// Change the profile slot to Velocity PID
 		setProfileSlot(ProfileSlot.Velocity);
 		
-		// FIXME - Remove max speed constant
 		_backLeft.set(ControlMode.Velocity, leftVelocity * MAX_SPEED);
 		_backRight.set(ControlMode.Velocity, rightVelocity * MAX_SPEED);
 	}

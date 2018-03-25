@@ -1,22 +1,22 @@
-package org.usfirst.frc.team2438.robot.commands.auto;
-
-import org.usfirst.frc.team2438.robot.commands.CommandBase;
+package org.usfirst.frc.team2438.robot.commands;
 
 /**
- *
+ * Stop the robot
  */
-public class AutoDropRamp extends CommandBase {
+public class StopRobot extends CommandBase {
 
-    public AutoDropRamp() {
+    public StopRobot() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(ramp);
+    	requires(drivetrain);
+    	requires(lift);
+    	requires(intake);
+    	
+    	this.setInterruptible(false);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	ramp.dropLeftRamp();
-    	ramp.dropRightRamp();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -30,11 +30,14 @@ public class AutoDropRamp extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
+    	drivetrain.stop();
+    	lift.stop();
+    	intake.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	end();
+    	this.end();
     }
 }

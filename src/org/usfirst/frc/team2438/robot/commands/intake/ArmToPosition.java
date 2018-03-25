@@ -62,6 +62,7 @@ public class ArmToPosition extends CommandBase {
     // Called once after isFinished returns true
     protected void end() {
     	System.out.println("Intake arm finished at: " + intake.getArmEncoderPosition());
+    	System.out.println();
     	_targetCounter.reset();
     }
 

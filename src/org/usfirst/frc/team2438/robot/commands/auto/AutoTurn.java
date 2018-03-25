@@ -21,7 +21,7 @@ public class AutoTurn extends CommandBase implements PIDOutput {
 	private TargetCounter _targetCounter;
 	
 	private final double kP = 0.0044;
-	private final double kI = 0;
+	private final double kI = 0.05;
 	private final double kD = 0;
 	
 	public AutoTurn(double degrees) {
